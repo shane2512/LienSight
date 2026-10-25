@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "source": "NYC Open Data ACRIS Document Control Codes, dataset 7isb-wh4c (verified 2026-10-25). ACRIS has NO lis pendens/notice-of-pendency/foreclosure doc type: those are court/county-clerk filings.",
+  "adverse": ["FL", "FTL", "NTXL", "TLS", "LOCC", "JUDG"],
+  "discharge": ["RFL", "RFTL", "DTL", "DPFTL", "WFL", "RTXL", "TOLCC", "PWFL", "PRFL"]
+}
