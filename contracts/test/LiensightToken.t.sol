@@ -165,4 +165,22 @@ contract LiensightTokenTest is Test {
         assertLt(g - gasleft(), 1_500_000);
         assertTrue(token.restricted());
     }
+
+    function test_issuerCanRotateExpectedWorkflowOwner() public {
+        vm.prank(issuer);
+        token.setExpectedWorkflowOwner(alice);
+        vm.prank(receiver);
+        token.onReport(_meta(alice), abi.encode(KEY, keccak256("s"), _one(keccak256("d")), _none()));
+        assertTrue(token.restricted());
+        // old owner is now rejected
+        vm.prank(receiver);
+        vm.expectRevert(LiensightToken.WrongWorkflowOwner.selector);
+        token.onReport(_meta(owner), abi.encode(KEY, keccak256("s2"), _one(keccak256("d2")), _none()));
+    }
+
+    function test_nonIssuerCannotRotateWorkflowOwner() public {
+        vm.prank(alice);
+        vm.expectRevert(LiensightToken.NotIssuer.selector);
+        token.setExpectedWorkflowOwner(alice);
+    }
 }

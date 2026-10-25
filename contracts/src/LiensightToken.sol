@@ -23,7 +23,7 @@ contract LiensightToken is ERC20 {
     address public immutable reportReceiver;
     bytes32 public immutable codeMapHash;
     /// Only reports from workflows owned by this address are accepted (the forwarder is shared by all workflows).
-    address public immutable expectedWorkflowOwner;
+    address public expectedWorkflowOwner;
     bytes32 public immutable propertyKey;
 
     bool public restricted;
@@ -76,6 +76,12 @@ contract LiensightToken is ERC20 {
 
     function supportsInterface(bytes4 id) external pure returns (bool) {
         return id == 0x805f2132 || id == 0x01ffc9a7;
+    }
+
+    /// Issuer may rotate the accepted workflow owner (e.g. simulator -> deployed CRE workflow).
+    function setExpectedWorkflowOwner(address newOwner) external {
+        if (msg.sender != issuerMultisig) revert NotIssuer();
+        expectedWorkflowOwner = newOwner;
     }
 
     /// @param reviewedCitedHash the citedHash the multisig reviewed; reverts if new liens landed since.
