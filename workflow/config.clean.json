@@ -1,0 +1,7 @@
+{
+  "schedule": "0 */10 * * * *",
+  "bbl": { "borough": 1, "block": 905, "lot": 1347 },
+  "tokenAddress": "0x0000000000000000000000000000000000000001",
+  "chainSelectorName": "ethereum-testnet-sepolia",
+  "gasLimit": "500000"
+}

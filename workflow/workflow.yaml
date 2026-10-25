@@ -5,3 +5,11 @@ staging-settings:
     workflow-path: "./main.ts"
     config-path: "./config.staging.json"
     secrets-path: ""
+
+clean-settings:
+  user-workflow:
+    workflow-name: "liensight-clean"
+  workflow-artifacts:
+    workflow-path: "./main.ts"
+    config-path: "./config.clean.json"
+    secrets-path: ""

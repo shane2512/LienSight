@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Liensight</title>
+<style>
+:root{--bg:#fff;--fg:#17202a;--mut:#667;--bad:#b3261e;--ok:#1a7f37;--line:#d8dee4}
+@media(prefers-color-scheme:dark){:root{--bg:#111418;--fg:#e6e9ee;--mut:#9aa4b2;--bad:#ff8a80;--ok:#6fdc8c;--line:#2b323b}}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,sans-serif}
+main{max-width:720px;margin:0 auto;padding:24px 16px}
+input,button{font:inherit;padding:8px;border:1px solid var(--line);border-radius:6px;background:transparent;color:inherit;width:100%;box-sizing:border-box}
+button{cursor:pointer;font-weight:600}.row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.bad{color:var(--bad)}.ok{color:var(--ok)}.mut{color:var(--mut);font-size:14px}
+table{width:100%;border-collapse:collapse}td,th{border-bottom:1px solid var(--line);padding:6px;text-align:left}
+</style></head><body><main>
+<h1>Liensight</h1>
+<p>Chain-enforced warning when a lien hits the property behind your token. This page runs the same check the Chainlink CRE workflow runs, live against NYC ACRIS.</p>
+<div class="row"><input id="b" placeholder="borough 1-5" value="2"><input id="k" placeholder="block" value="5789"><input id="l" placeholder="lot" value="1022"></div>
+<button id="go">Check property</button>
+<p id="status" class="mut"></p><div id="out"></div>
+<p class="mut">The token is SPV equity, not title. The restriction is issuer-governed. Adverse set: federal liens, tax-lien sales, common-charge liens, judgments (ACRIS has no lis pendens type).</p>
+<script>
+const ADVERSE=["FL","FTL","NTXL","TLS","LOCC","JUDG"],DISCHARGE=["RFL","RFTL","DTL","DPFTL","WFL","RTXL","TOLCC","PWFL","PRFL"];
+const B="https://data.cityofnewyork.us/resource";
+const q=p=>Object.entries(p).map(([k,v])=>encodeURIComponent(k)+"="+encodeURIComponent(v)).join("&");
+const $=id=>document.getElementById(id);
+async function get(u){const r=await fetch(u);if(!r.ok)throw new Error("ACRIS "+r.status);return r.json()}
+$("go").onclick=async()=>{
+  const b=+$("b").value,k=+$("k").value,l=+$("l").value;
+  $("status").textContent="Querying ACRIS...";$("out").innerHTML="";
+  try{
+    const legals=await get(`${B}/8h5j-fqxa.json?`+q({$select:"document_id",$where:`borough='${b}' AND block='${k}' AND lot='${l}'`,$limit:5000}));
+    const ids=legals.map(x=>x.document_id),master=[];
+    for(let i=0;i<ids.length;i+=80)master.push(...await get(`${B}/bnx9-e6tj.json?`+q({$select:"document_id,doc_type",$where:`document_id in(${ids.slice(i,i+80).map(x=>`'${x}'`).join(",")})`,$limit:5000})));
+    const docs=[...new Map(master.map(m=>[m.document_id,m.doc_type])).entries()].sort(([a],[c])=>a<c?-1:1);
+    const adv=docs.filter(([,t])=>ADVERSE.includes(t)),dis=docs.filter(([,t])=>DISCHARGE.includes(t));
+    $("status").innerHTML=adv.length?`<b class="bad">TRANSFERS RESTRICTED: ${adv.length} adverse filing(s)</b>`:`<b class="ok">No adverse filings: transfers open</b>`;
+    if(dis.length)$("status").innerHTML+=` <span class="mut">(${dis.length} discharge filing(s): issuer may clear)</span>`;
+    $("out").innerHTML="<table><tr><th>Document</th><th>Type</th><th>Class</th></tr>"+docs.map(([id,t])=>`<tr><td><a href="https://a836-acris.nyc.gov/DS/DocumentSearch/DocumentDetail?doc_id=${id}" target="_blank" rel="noopener">${id}</a></td><td>${t}</td><td class="${ADVERSE.includes(t)?"bad":""}">${ADVERSE.includes(t)?"adverse":DISCHARGE.includes(t)?"discharge":""}</td></tr>`).join("")+"</table>";
+  }catch(e){$("status").textContent="Error: "+e.message+" (state unchanged: fail static)"}
+};
+</script></main></body></html>
