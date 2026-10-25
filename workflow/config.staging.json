@@ -1,7 +1,7 @@
 {
   "schedule": "0 */10 * * * *",
   "bbl": { "borough": 2, "block": 5789, "lot": 1022 },
-  "tokenAddress": "0x0000000000000000000000000000000000000001",
+  "tokenAddress": "0xfF5718a3893C323a11Ef1Ab2946ce01aa6b0c772",
   "chainSelectorName": "ethereum-testnet-sepolia",
   "gasLimit": "10000000"
 }
