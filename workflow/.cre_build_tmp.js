@@ -21276,13 +21276,15 @@ function getArrayComponents(type) {
   const matches = type.match(/^(.*)\[(\d+)?\]$/);
   return matches ? [matches[2] ? Number(matches[2]) : null, matches[1]] : undefined;
 }
+var LIMIT = 5000;
 var BASE = "https://data.cityofnewyork.us/resource";
 var query = (p) => Object.entries(p).map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join("&");
 function legalsUrl(bbl) {
   const q = query({
     $select: "document_id",
     $where: `borough='${bbl.borough}' AND block='${bbl.block}' AND lot='${bbl.lot}'`,
-    $limit: "5000"
+    $order: "document_id",
+    $limit: String(LIMIT)
   });
   return `${BASE}/8h5j-fqxa.json?${q}`;
 }
@@ -21290,7 +21292,8 @@ function masterUrl(ids) {
   const q = query({
     $select: "document_id,doc_type",
     $where: `document_id in(${ids.map((i) => `'${i}'`).join(",")})`,
-    $limit: "5000"
+    $order: "document_id",
+    $limit: String(LIMIT)
   });
   return `${BASE}/bnx9-e6tj.json?${q}`;
 }
@@ -21307,7 +21310,17 @@ function docSetHash(docs) {
 `)));
 }
 function docIdToBytes32(documentId) {
+  if (!/^\d+$/.test(documentId))
+    return keccak2562(toBytes4(documentId));
   return `0x${BigInt(documentId).toString(16).padStart(64, "0")}`;
+}
+function assertComplete(rows) {
+  if (rows.length >= LIMIT)
+    throw new Error(`ACRIS response truncated at ${LIMIT} rows`);
+}
+function assertNonEmpty(docs) {
+  if (docs.length === 0)
+    throw new Error("no ACRIS documents for this BBL; refusing to report");
 }
 function classify(docs, map) {
   const adverse = [];
@@ -21342,7 +21355,9 @@ var fetchDocs = (sendRequester, config) => {
     const r = sendRequester.sendRequest({ method: "GET", url }).result();
     if (r.statusCode !== 200)
       throw new Error(`ACRIS request failed: ${r.statusCode}`);
-    return JSON.parse(Buffer.from(r.body).toString("utf-8"));
+    const rows = JSON.parse(Buffer.from(r.body).toString("utf-8"));
+    assertComplete(rows);
+    return rows;
   };
   const legals = get(legalsUrl(config.bbl));
   const master = [];
@@ -21355,6 +21370,7 @@ var onCronTrigger = (runtime, payload) => {
     throw new Error("Scheduled execution time is required");
   const docsJson = new cre.capabilities.HTTPClient().sendRequest(runtime, fetchDocs, consensusIdenticalAggregation())(runtime.config).result();
   const docs = JSON.parse(docsJson);
+  assertNonEmpty(docs);
   const { payload: reportPayload, adverse } = buildReport(runtime.config.bbl, docs, codeMap_default);
   runtime.log(`ACRIS docs=${docs.length} adverse=${adverse.map((d) => `${d.documentId}:${d.docType}`).join(",") || "none"}`);
   const network = getNetwork({ chainFamily: "evm", chainSelectorName: runtime.config.chainSelectorName, isTestnet: true });

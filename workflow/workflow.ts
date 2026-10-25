@@ -11,7 +11,7 @@ import {
 } from "@chainlink/cre-sdk";
 import { z } from "zod";
 import codeMap from "./src/codeMap.json";
-import { canonicalDocs, legalsUrl, masterUrl } from "./src/acris";
+import { assertComplete, assertNonEmpty, canonicalDocs, legalsUrl, masterUrl } from "./src/acris";
 import { buildReport } from "./src/report";
 import type { AcrisDoc } from "./src/classify";
 
@@ -31,7 +31,9 @@ const fetchDocs = (sendRequester: HTTPSendRequester, config: Config): string => 
   const get = (url: string): any[] => {
     const r = sendRequester.sendRequest({ method: "GET", url }).result();
     if (r.statusCode !== 200) throw new Error(`ACRIS request failed: ${r.statusCode}`); // fail static: no report
-    return JSON.parse(Buffer.from(r.body).toString("utf-8"));
+    const rows = JSON.parse(Buffer.from(r.body).toString("utf-8"));
+    assertComplete(rows);
+    return rows;
   };
   const legals = get(legalsUrl(config.bbl as any));
   const master: any[] = [];
@@ -47,6 +49,7 @@ export const onCronTrigger = (runtime: Runtime<Config>, payload: CronPayload): s
     .sendRequest(runtime, fetchDocs, consensusIdenticalAggregation<string>())(runtime.config)
     .result();
   const docs: AcrisDoc[] = JSON.parse(docsJson);
+  assertNonEmpty(docs);
 
   const { payload: reportPayload, adverse } = buildReport(runtime.config.bbl as any, docs, codeMap);
   runtime.log(`ACRIS docs=${docs.length} adverse=${adverse.map((d) => `${d.documentId}:${d.docType}`).join(",") || "none"}`);

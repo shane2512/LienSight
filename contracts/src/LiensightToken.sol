@@ -10,6 +10,10 @@ contract LiensightToken is ERC20 {
     error TransferRestricted();
     error NotReceiver();
     error NotIssuer();
+    error BadMetadata();
+    error WrongWorkflowOwner();
+    error WrongProperty();
+    error ReviewMismatch();
 
     event Restricted(bytes32 docSetHash, bytes32[] docIds);
     event Cleared(string reason);
@@ -18,27 +22,37 @@ contract LiensightToken is ERC20 {
     address public immutable issuerMultisig;
     address public immutable reportReceiver;
     bytes32 public immutable codeMapHash;
+    /// Only reports from workflows owned by this address are accepted (the forwarder is shared by all workflows).
+    address public immutable expectedWorkflowOwner;
+    bytes32 public immutable propertyKey;
 
     bool public restricted;
     bytes32 public lastDocSetHash;
-    bytes32[] public citedDocIds;
+    /// keccak256(abi.encode(bytes32[])) of the liens cited by the current restriction. Full list is in the Restricted event.
+    bytes32 public citedHash;
     /// Adverse docs already reported once. A cleared lien never re-restricts.
     mapping(bytes32 => bool) public seenAdverse;
 
-    constructor(string memory name_, string memory symbol_, address issuerMultisig_, address reportReceiver_, bytes32 codeMapHash_)
+    constructor(string memory name_, string memory symbol_, address issuerMultisig_, address reportReceiver_, bytes32 codeMapHash_, address expectedWorkflowOwner_, bytes32 propertyKey_)
         ERC20(name_, symbol_)
     {
         issuerMultisig = issuerMultisig_;
         reportReceiver = reportReceiver_;
         codeMapHash = codeMapHash_;
+        expectedWorkflowOwner = expectedWorkflowOwner_;
+        propertyKey = propertyKey_;
         _mint(issuerMultisig_, 1_000_000 ether);
     }
 
     /// IReceiver: called by the CRE forwarder with (metadata, abi-encoded report).
-    function onReport(bytes calldata, bytes calldata report) external {
+    function onReport(bytes calldata metadata, bytes calldata report) external {
         if (msg.sender != reportReceiver) revert NotReceiver();
-        (, bytes32 docSetHash, bytes32[] memory adverse, bytes32[] memory discharge) =
+        // forwarder metadata (packed): workflowId(32) | workflowName(10) | workflowOwner(20)
+        if (metadata.length < 62) revert BadMetadata();
+        if (address(bytes20(metadata[42:62])) != expectedWorkflowOwner) revert WrongWorkflowOwner();
+        (bytes32 key, bytes32 docSetHash, bytes32[] memory adverse, bytes32[] memory discharge) =
             abi.decode(report, (bytes32, bytes32, bytes32[], bytes32[]));
+        if (key != propertyKey) revert WrongProperty();
         if (docSetHash == lastDocSetHash) return;
         lastDocSetHash = docSetHash;
 
@@ -54,7 +68,7 @@ contract LiensightToken is ERC20 {
             bytes32[] memory cited = new bytes32[](n);
             for (uint256 i; i < n; i++) cited[i] = fresh[i];
             restricted = true;
-            citedDocIds = cited;
+            citedHash = keccak256(abi.encode(cited));
             emit Restricted(docSetHash, cited);
         }
         if (discharge.length > 0) emit ClearSuggested(discharge);
@@ -64,10 +78,12 @@ contract LiensightToken is ERC20 {
         return id == 0x805f2132 || id == 0x01ffc9a7;
     }
 
-    function clearRestriction(string calldata reason) external {
+    /// @param reviewedCitedHash the citedHash the multisig reviewed; reverts if new liens landed since.
+    function clearRestriction(bytes32 reviewedCitedHash, string calldata reason) external {
         if (msg.sender != issuerMultisig) revert NotIssuer();
+        if (reviewedCitedHash != citedHash) revert ReviewMismatch();
         restricted = false;
-        delete citedDocIds;
+        citedHash = bytes32(0);
         emit Cleared(reason);
     }
 

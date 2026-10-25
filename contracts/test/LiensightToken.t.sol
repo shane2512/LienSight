@@ -9,11 +9,12 @@ contract LiensightTokenTest is Test {
     address issuer = address(0x15);
     address receiver = address(0xCE); // stands in for the CRE KeystoneForwarder
     address alice = address(0xA11CE);
+    address owner = address(0xB0B);
     bytes32 constant KEY = keccak256("BBL:2-05789-1022");
     bytes32 constant CODEMAP = keccak256("codemap-v1");
 
     function setUp() public {
-        token = new LiensightToken("Liensight SPV", "LSPV", issuer, receiver, CODEMAP);
+        token = new LiensightToken("Liensight SPV", "LSPV", issuer, receiver, CODEMAP, owner, KEY);
     }
 
     function _one(bytes32 a) internal pure returns (bytes32[] memory arr) {
@@ -25,9 +26,19 @@ contract LiensightTokenTest is Test {
         return new bytes32[](0);
     }
 
+    function _meta(address wfOwner) internal pure returns (bytes memory) {
+        return abi.encodePacked(bytes32(uint256(1)), bytes10("liensight"), wfOwner);
+    }
+
     function _send(bytes32 setHash, bytes32[] memory adverse, bytes32[] memory discharge) internal {
         vm.prank(receiver);
-        token.onReport("", abi.encode(KEY, setHash, adverse, discharge));
+        token.onReport(_meta(owner), abi.encode(KEY, setHash, adverse, discharge));
+    }
+
+    function _clear(string memory why) internal {
+        bytes32 h = token.citedHash();
+        vm.prank(issuer);
+        token.clearRestriction(h, why);
     }
 
     function _restrict() internal {
@@ -43,7 +54,7 @@ contract LiensightTokenTest is Test {
     function test_onReportWithAdverseDocRestrictsTransfers() public {
         _restrict();
         assertTrue(token.restricted());
-        assertEq(token.citedDocIds(0), keccak256("doc-LOCC-1"));
+        assertEq(token.citedHash(), keccak256(abi.encode(_one(keccak256("doc-LOCC-1")))));
         vm.prank(issuer);
         vm.expectRevert(LiensightToken.TransferRestricted.selector);
         token.transfer(alice, 10);
@@ -52,20 +63,20 @@ contract LiensightTokenTest is Test {
     function test_onReportFromNonReceiverReverts() public {
         vm.prank(alice);
         vm.expectRevert(LiensightToken.NotReceiver.selector);
-        token.onReport("", abi.encode(KEY, keccak256("set1"), _one(keccak256("d")), _none()));
+        token.onReport(_meta(owner), abi.encode(KEY, keccak256("set1"), _one(keccak256("d")), _none()));
     }
 
     function test_onlyIssuerCanClear() public {
         _restrict();
+        bytes32 h = token.citedHash();
         vm.prank(alice);
         vm.expectRevert(LiensightToken.NotIssuer.selector);
-        token.clearRestriction("nope");
+        token.clearRestriction(h, "nope");
     }
 
     function test_clearReenablesTransfers() public {
         _restrict();
-        vm.prank(issuer);
-        token.clearRestriction("lien discharged, counsel confirmed");
+        _clear("reviewed");
         assertFalse(token.restricted());
         vm.prank(issuer);
         token.transfer(alice, 10);
@@ -82,8 +93,7 @@ contract LiensightTokenTest is Test {
 
     function test_unchangedDocSetHashIsNoOp() public {
         _restrict();
-        vm.prank(issuer);
-        token.clearRestriction("ok");
+        _clear("reviewed");
         _send(keccak256("set1"), _one(keccak256("doc-LOCC-1")), _none());
         assertFalse(token.restricted());
     }
@@ -96,8 +106,7 @@ contract LiensightTokenTest is Test {
 
     function test_clearedLienDoesNotRestrictAgainOnUnrelatedFiling() public {
         _restrict();
-        vm.prank(issuer);
-        token.clearRestriction("known lien, accepted");
+        _clear("reviewed");
         // a new, unrelated filing changes the set; the same old lien is still listed as adverse
         _send(keccak256("set2"), _one(keccak256("doc-LOCC-1")), _none());
         assertFalse(token.restricted());
@@ -105,18 +114,55 @@ contract LiensightTokenTest is Test {
 
     function test_newLienAfterClearRestrictsAgain() public {
         _restrict();
-        vm.prank(issuer);
-        token.clearRestriction("ok");
+        _clear("reviewed");
         bytes32[] memory both = new bytes32[](2);
         both[0] = keccak256("doc-LOCC-1");
         both[1] = keccak256("doc-FL-2");
         _send(keccak256("set3"), both, _none());
         assertTrue(token.restricted());
-        assertEq(token.citedDocIds(0), keccak256("doc-FL-2"));
+        assertEq(token.citedHash(), keccak256(abi.encode(_one(keccak256("doc-FL-2")))));
     }
 
     function test_supportsReceiverInterface() public {
         assertTrue(token.supportsInterface(0x805f2132)); // IReceiver.onReport(bytes,bytes)
         assertTrue(token.supportsInterface(0x01ffc9a7)); // ERC165
+    }
+
+    function test_reportFromWrongWorkflowOwnerReverts() public {
+        vm.prank(receiver);
+        vm.expectRevert(LiensightToken.WrongWorkflowOwner.selector);
+        token.onReport(_meta(alice), abi.encode(KEY, keccak256("s"), _one(keccak256("d")), _none()));
+    }
+
+    function test_shortMetadataReverts() public {
+        vm.prank(receiver);
+        vm.expectRevert(LiensightToken.BadMetadata.selector);
+        token.onReport("", abi.encode(KEY, keccak256("s"), _one(keccak256("d")), _none()));
+    }
+
+    function test_reportForWrongPropertyReverts() public {
+        vm.prank(receiver);
+        vm.expectRevert(LiensightToken.WrongProperty.selector);
+        token.onReport(_meta(owner), abi.encode(keccak256("other"), keccak256("s"), _one(keccak256("d")), _none()));
+    }
+
+    function test_clearWithStaleReviewedHashReverts() public {
+        _restrict();
+        bytes32 reviewed = token.citedHash();
+        // lien B lands before the multisig's clear executes
+        _send(keccak256("set2"), _one(keccak256("doc-FL-9")), _none());
+        vm.prank(issuer);
+        vm.expectRevert(LiensightToken.ReviewMismatch.selector);
+        token.clearRestriction(reviewed, "reviewed only lien A");
+        assertTrue(token.restricted());
+    }
+
+    function test_manyNewAdverseDocsFitInGasBudget() public {
+        bytes32[] memory many = new bytes32[](20);
+        for (uint256 i; i < 20; i++) many[i] = keccak256(abi.encode("doc", i));
+        uint256 g = gasleft();
+        _send(keccak256("big"), many, _none());
+        assertLt(g - gasleft(), 1_500_000);
+        assertTrue(token.restricted());
     }
 }

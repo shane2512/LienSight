@@ -1,6 +1,6 @@
 # Liensight
 
-Chain-enforced warning when a lien hits the property behind your token.
+Early-warning transfer restriction for a property-SPV token, driven by public ACRIS filings through Chainlink CRE.
 
 **Track:** RWA. **Bounty:** Chainlink, Best workflow with CRE. Built for BLI Legal Tech Hackathon 2.
 
@@ -10,11 +10,11 @@ Chain-enforced warning when a lien hits the property behind your token.
 **Adverse types** (verified against ACRIS Document Control Codes, dataset `7isb-wh4c`): `FL, FTL, NTXL, TLS, LOCC, JUDG`. ACRIS has no lis pendens or foreclosure type (those are court and county-clerk filings), so we do not claim them. The map is versioned in `workflow/src/codeMap.json`; its hash is stored on the token.
 
 ## Why a DON for one public API?
-No issuer or single server can hide or fabricate an adverse filing, and every restriction carries document IDs anyone can check on ACRIS.
+No single server or operator decides what the chain sees, and every restriction cites document IDs anyone can check on ACRIS. The issuer multisig can still clear a restriction, but only by naming the exact set of liens it reviewed (`clearRestriction(citedHash, reason)`).
 
 ## Layout
-- `contracts/`: Foundry. `forge test` runs 11 tests.
-- `workflow/`: CRE workflow (`main.ts`, `workflow.ts`) and tested logic in `src/`. `npm test` runs 13 tests.
+- `contracts/`: Foundry. `forge test` runs 16 tests.
+- `workflow/`: CRE workflow (`main.ts`, `workflow.ts`) and tested logic in `src/`. `npm test` runs 17 tests.
 - `demo/index.html`: live ACRIS check using the same adverse map. `demo/replay.sh` re-runs the CRE simulations.
 - `docs/simulation-log.md`: CRE CLI simulation evidence.
 
@@ -26,7 +26,12 @@ cre login   # once
 bash demo/replay.sh   # needs bun on PATH (npm i -D bun is in workflow/)
 ```
 
+## Security notes
+- The CRE forwarder is shared by all workflows, so the token only accepts reports from the expected workflow owner and the expected property key (constructor args `expectedWorkflowOwner`, `propertyKey`).
+- The workflow refuses to report on a truncated ACRIS response (5000-row limit) or on a property with zero documents.
+
 ## Honest limits
+- DON consensus was only exercised in the local simulator (single node), not on a live DON.
 - Report write is simulated (dry run); no live deployment yet. Deploy needs a funded Sepolia key and `cre account access`.
 - ACRIS records lag real events by days. This is an early-warning signal, not a title search.
 - One public source today. A second source (NYC DOF) is a stretch goal.

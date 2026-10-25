@@ -3,6 +3,7 @@ import type { AcrisDoc } from "./classify";
 
 export type Bbl = { borough: 1 | 2 | 3 | 4 | 5; block: number; lot: number };
 
+export const LIMIT = 5000;
 const BASE = "https://data.cityofnewyork.us/resource";
 
 // encodeURIComponent (not URLSearchParams) so spaces are %20, not +
@@ -13,7 +14,8 @@ export function legalsUrl(bbl: Bbl): string {
   const q = query({
     $select: "document_id",
     $where: `borough='${bbl.borough}' AND block='${bbl.block}' AND lot='${bbl.lot}'`,
-    $limit: "5000",
+    $order: "document_id",
+    $limit: String(LIMIT),
   });
   return `${BASE}/8h5j-fqxa.json?${q}`;
 }
@@ -22,7 +24,8 @@ export function masterUrl(ids: string[]): string {
   const q = query({
     $select: "document_id,doc_type",
     $where: `document_id in(${ids.map((i) => `'${i}'`).join(",")})`,
-    $limit: "5000",
+    $order: "document_id",
+    $limit: String(LIMIT),
   });
   return `${BASE}/bnx9-e6tj.json?${q}`;
 }
@@ -46,5 +49,17 @@ export function docSetHash(docs: AcrisDoc[]): `0x${string}` {
 
 /** ACRIS document ids are 16-digit numbers; pad to bytes32 so they stay reversible on-chain. */
 export function docIdToBytes32(documentId: string): `0x${string}` {
+  // legacy pre-2003 ids look like "FT_2300000813130"; hash those instead of throwing
+  if (!/^\d+$/.test(documentId)) return keccak256(toBytes(documentId));
   return `0x${BigInt(documentId).toString(16).padStart(64, "0")}`;
+}
+
+/** A response that hit the row limit may be incomplete: refuse to report (fail static). */
+export function assertComplete(rows: unknown[]): void {
+  if (rows.length >= LIMIT) throw new Error(`ACRIS response truncated at ${LIMIT} rows`);
+}
+
+/** A 200 with zero documents is more likely an outage or wrong BBL than a clean lot. */
+export function assertNonEmpty(docs: AcrisDoc[]): void {
+  if (docs.length === 0) throw new Error("no ACRIS documents for this BBL; refusing to report");
 }

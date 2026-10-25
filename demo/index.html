@@ -22,6 +22,7 @@ const ADVERSE=["FL","FTL","NTXL","TLS","LOCC","JUDG"],DISCHARGE=["RFL","RFTL","D
 const B="https://data.cityofnewyork.us/resource";
 const q=p=>Object.entries(p).map(([k,v])=>encodeURIComponent(k)+"="+encodeURIComponent(v)).join("&");
 const $=id=>document.getElementById(id);
+const esc=x=>String(x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 async function get(u){const r=await fetch(u);if(!r.ok)throw new Error("ACRIS "+r.status);return r.json()}
 $("go").onclick=async()=>{
   const b=+$("b").value,k=+$("k").value,l=+$("l").value;
@@ -34,7 +35,7 @@ $("go").onclick=async()=>{
     const adv=docs.filter(([,t])=>ADVERSE.includes(t)),dis=docs.filter(([,t])=>DISCHARGE.includes(t));
     $("status").innerHTML=adv.length?`<b class="bad">TRANSFERS RESTRICTED: ${adv.length} adverse filing(s)</b>`:`<b class="ok">No adverse filings: transfers open</b>`;
     if(dis.length)$("status").innerHTML+=` <span class="mut">(${dis.length} discharge filing(s): issuer may clear)</span>`;
-    $("out").innerHTML="<table><tr><th>Document</th><th>Type</th><th>Class</th></tr>"+docs.map(([id,t])=>`<tr><td><a href="https://a836-acris.nyc.gov/DS/DocumentSearch/DocumentDetail?doc_id=${id}" target="_blank" rel="noopener">${id}</a></td><td>${t}</td><td class="${ADVERSE.includes(t)?"bad":""}">${ADVERSE.includes(t)?"adverse":DISCHARGE.includes(t)?"discharge":""}</td></tr>`).join("")+"</table>";
+    $("out").innerHTML="<table><tr><th>Document</th><th>Type</th><th>Class</th></tr>"+docs.map(([id,t])=>`<tr><td><a href="https://a836-acris.nyc.gov/DS/DocumentSearch/DocumentDetail?doc_id=${encodeURIComponent(id)}" target="_blank" rel="noopener">${esc(id)}</a></td><td>${esc(t)}</td><td class="${ADVERSE.includes(t)?"bad":""}">${ADVERSE.includes(t)?"adverse":DISCHARGE.includes(t)?"discharge":""}</td></tr>`).join("")+"</table>";
   }catch(e){$("status").textContent="Error: "+e.message+" (state unchanged: fail static)"}
 };
 </script></main></body></html>
