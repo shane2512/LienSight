@@ -13,7 +13,7 @@ Early-warning transfer restriction for a property-SPV token, driven by public AC
 No single server or operator decides what the chain sees, and every restriction cites document IDs anyone can check on ACRIS. The issuer multisig can still clear a restriction, but only by naming the exact set of liens it reviewed (`clearRestriction(citedHash, reason)`).
 
 ## Layout
-- `contracts/`: Foundry. `forge test` runs 16 tests.
+- `contracts/`: Foundry. `forge test` runs 18 tests.
 - `workflow/`: CRE workflow (`main.ts`, `workflow.ts`) and tested logic in `src/`. `npm test` runs 17 tests.
 - `demo/index.html`: live ACRIS check using the same adverse map. `demo/replay.sh` re-runs the CRE simulations.
 - `docs/simulation-log.md`: CRE CLI simulation evidence.
@@ -26,13 +26,17 @@ cre login   # once
 bash demo/replay.sh   # needs bun on PATH (npm i -D bun is in workflow/)
 ```
 
+## Live on Sepolia (simulator broadcast)
+Token `0xf813c584Fe5e8c86A3F6c7265923CeE0850604aE`. Report tx `0xc0cc238205a36246731feddba275b3df50b4c781f3958b8d4cab8a862bda85ab`. After the report, `restricted()` is `true` and the cited-lien hash matches the ACRIS document `2026092900833001` (LOCC). See `docs/simulation-log.md`.
+
 ## Security notes
 - The CRE forwarder is shared by all workflows, so the token only accepts reports from the expected workflow owner and the expected property key (constructor args `expectedWorkflowOwner`, `propertyKey`).
 - The workflow refuses to report on a truncated ACRIS response (5000-row limit) or on a property with zero documents.
 
 ## Honest limits
 - DON consensus was only exercised in the local simulator (single node), not on a live DON.
-- Report write is simulated (dry run); no live deployment yet. Deploy needs a funded Sepolia key and `cre account access`.
+- The report was written via `cre workflow simulate --broadcast` with Chainlink's mock forwarder, not a deployed CRE workflow. The simulator uses a public placeholder workflow owner (`0xaaaa...aaaa`), so anyone using the mock forwarder could send reports to this demo token. A production setup would call `setExpectedWorkflowOwner` with the real deployed workflow's owner and use the production KeystoneForwarder (needs `cre account access`).
+- Sepolia charges far more gas for contract code than Foundry's local estimate; deploying needs `--gas-estimate-multiplier 800`.
 - ACRIS records lag real events by days. This is an early-warning signal, not a title search.
 - One public source today. A second source (NYC DOF) is a stretch goal.
 - Fixtures contain document IDs and types only, no party names.

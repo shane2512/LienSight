@@ -25,3 +25,11 @@
 ```
 
 Notes: the report write is a dry run (zero tx hash). Each run fetched live NYC ACRIS data through the DON HTTP capability with identical-consensus aggregation. Contract-side restrict/clear behavior is covered by 11 forge tests.
+
+
+## Run 3: live broadcast to Sepolia (cre simulate --broadcast, mock forwarder)
+- Token: `0xf813c584Fe5e8c86A3F6c7265923CeE0850604aE` (Sepolia), deploy tx `0xb27c9ed1891c763325412789f3d05e1d221584353186e80eb9ad31ea9769c4d9`
+- Report tx: `0xc0cc238205a36246731feddba275b3df50b4c781f3958b8d4cab8a862bda85ab` (status success, forwarder ReportProcessed = true)
+- Workflow log: `ACRIS docs=14 adverse=2026092900833001:LOCC`, report written.
+- Verified on-chain afterwards (cast): `restricted() = true`; `citedHash() = 0xb87dc80e...49f4`, equal to keccak256(abi.encode([2026092900833001])) computed independently; issuer `transfer` call reverts with `TransferRestricted()` (0xe827105e).
+- Note: the simulator stamps reports with a placeholder workflow owner (`0xaaaa...aaaa`), so the token was deployed expecting that owner. Earlier attempts: a first token expecting the deployer as owner correctly ignored the simulator report (forwarder logged success=false).
