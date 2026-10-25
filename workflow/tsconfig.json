@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "target": "esnext", "module": "ESNext", "moduleResolution": "bundler", "lib": ["ESNext"],
+    "strict": true, "esModuleInterop": true, "skipLibCheck": true, "resolveJsonModule": true, "types": []
+  },
+  "include": ["main.ts", "workflow.ts", "src/**/*.ts"],
+  "exclude": ["src/**/*.test.ts"]
+}

@@ -7,7 +7,11 @@
   },
   "devDependencies": {
     "typescript": "^7.0.2",
-    "viem": "^2.57.11",
+    "viem": "^2.34.0",
     "vitest": "^5.0.5"
+  },
+  "dependencies": {
+    "@chainlink/cre-sdk": "^1.23.0",
+    "zod": "^3.25.76"
   }
 }
