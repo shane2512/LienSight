@@ -360,7 +360,7 @@ section { position: relative; padding: 120px 0; }
 
 /* ---------- footer ---------- */
 .footer { margin: 80px 16px 16px; border-radius: 30px; background: var(--dark); color: #fff; padding: 46px 40px 0; overflow: hidden; position: relative; z-index: 2; }
-.footer .top { display: grid; grid-template-columns: 1.6fr repeat(3, .5fr); gap: 30px; }
+.footer .top { display: grid; grid-template-columns: 1.6fr repeat(4, .5fr); gap: 30px; }
 .footer .kick { font: 700 11px/1 var(--mono); letter-spacing: .14em; color: var(--red); text-transform: uppercase; }
 .footer .mail { font: 800 clamp(26px, 3.6vw, 48px)/1.1 var(--body); letter-spacing: -.03em; margin: 14px 0 22px; display: inline-block; text-decoration: none; word-break: break-all; }
 .footer .mail span { color: var(--red); }
@@ -424,3 +424,22 @@ button.pill { border: 0; cursor: pointer; }
   .stipple .line { white-space: normal; }
   .desk-only { display: none !important; }
 }
+
+/* ---------- extra pages ---------- */
+.bento.attacks .atk { grid-column: span 4; display: flex; flex-direction: column; gap: 4px; }
+.bento.attacks .atk h3 { font: 800 21px/1.2 var(--body); letter-spacing: -.01em; margin: 8px 0 6px; }
+.bento.attacks .atk p { color: var(--ink-2); margin: 0 0 14px; font-size: 15px; flex: 1; }
+.bento.attacks .atk .chip { align-self: flex-start; font: 600 11px/1.2 var(--mono); color: var(--ink-2); max-width: 100%; overflow-wrap: anywhere; }
+.side.plan { border: 1.5px dashed #b9c3cf; }
+.side.plan li::before { content: "→"; background: var(--paper-2); color: var(--ink-2); }
+.diff .grid.road { grid-template-columns: repeat(3, 1fr); align-items: start; }
+.no-big { font: 800 54px/1 var(--body); letter-spacing: -.04em; color: var(--line); margin: 6px 0 10px; }
+h3.step { font: 800 22px/1.15 var(--body); margin: 0 0 8px; }
+.card p { margin-top: 0; }
+@media (max-width: 900px) {
+  .bento.attacks .atk { grid-column: 1 / -1; }
+  .diff .grid.road { grid-template-columns: 1fr; }
+  .bento > .card[style*="grid-column"] { grid-column: 1 / -1 !important; }
+}
+.msgline, .window pre, .kv > div { overflow-wrap: anywhere; }
+@media (max-width: 560px) { .display { font-size: clamp(28px, 8.6vw, 80px); } }

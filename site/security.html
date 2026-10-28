@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Security · Liensight</title>
+<meta name="description" content="The Liensight threat model: each attack, the defense that stops it, the test that proves it, and the open risks.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Caveat:wght@600&family=Inter+Tight:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<div class="sky" aria-hidden="true"></div>
+<div class="cursor-you" aria-hidden="true">you</div>
+<div class="drag-pill" aria-hidden="true">DRAG</div>
+
+
+<header class="nav">
+  <a class="pill brand" href="index.html" aria-label="Liensight home"><span class="mark">L</span>Liensight</a>
+  <nav class="pill links" aria-label="Main">
+    <a href="index.html">Home</a>
+    <a href="index.html#how">How it works</a>
+    <a href="index.html#inside">Inside</a>
+    <a href="proof.html">Proof</a>
+    <a href="docs.html">Docs</a>
+    <a class="cta" href="check.html">Check a lot</a>
+  </nav>
+  <a class="pill mail" href="proof.html"><span class="dot"></span>live on Sepolia</a>
+</header>
+
+<main>
+  <section class="page-head">
+    <div class="wrap">
+      <span class="script">threat model</span>
+      <h1 class="display">Try to <span class="hot">break it.</span></h1>
+      <p>Every attack we know about, the line of defense that stops it, and the test that proves it. Plus the risks that are still open.</p>
+    </div>
+  </section>
+
+  <section style="padding-top:20px">
+    <div class="wrap">
+      <div class="bento attacks" data-stagger>
+        <div class="card atk"><span class="label">ATTACK 01</span><div class="kicker" style="color:var(--red)">Spoofed workflow</div><h3>Another CRE workflow reports to the token.</h3><p>The forwarder is shared by every workflow. The token reads the workflow owner from the report metadata and rejects anyone else.</p><span class="chip mono">test_reportFromWrongWorkflowOwnerReverts</span></div>
+        <div class="card atk"><span class="label">ATTACK 02</span><div class="kicker" style="color:var(--red)">Wrong caller</div><h3>Someone calls onReport directly.</h3><p>Only the configured forwarder address may deliver reports.</p><span class="chip mono">test_onReportFromNonReceiverReverts</span></div>
+        <div class="card atk"><span class="label">ATTACK 03</span><div class="kicker" style="color:var(--red)">Wrong building</div><h3>A report for a different property.</h3><p>The property key is fixed at deploy time. A report for any other lot reverts.</p><span class="chip mono">test_reportForWrongPropertyReverts</span></div>
+        <div class="card atk"><span class="label">ATTACK 04</span><div class="kicker" style="color:var(--red)">Garbled metadata</div><h3>Short or malformed metadata.</h3><p>Metadata shorter than the forwarder's 62-byte layout reverts before anything is decoded.</p><span class="chip mono">test_shortMetadataReverts</span></div>
+        <div class="card atk"><span class="label">ATTACK 05</span><div class="kicker" style="color:var(--red)">Blind clear</div><h3>The issuer clears a lien it never saw.</h3><p>Lien B lands while the multisig is signing a clear for lien A. The clear names the reviewed set, so it fails.</p><span class="chip mono">test_clearWithStaleReviewedHashReverts</span></div>
+        <div class="card atk"><span class="label">ATTACK 06</span><div class="kicker" style="color:var(--red)">Zombie lien</div><h3>A cleared lien re-restricts forever.</h3><p>Liens already reported are remembered. An unrelated new filing doesn't bring back a lien the issuer already cleared.</p><span class="chip mono">test_clearedLienDoesNotRestrictAgainOnUnrelatedFiling</span></div>
+        <div class="card atk"><span class="label">ATTACK 07</span><div class="kicker" style="color:var(--red)">Replay</div><h3>The same report sent twice.</h3><p>A report with an unchanged document-set hash does nothing.</p><span class="chip mono">test_unchangedDocSetHashIsNoOp</span></div>
+        <div class="card atk"><span class="label">ATTACK 08</span><div class="kicker" style="color:var(--red)">Gas bomb</div><h3>So many liens the report runs out of gas.</h3><p>The token stores one hash of the cited liens, not the list. Twenty new liens fit comfortably.</p><span class="chip mono">test_manyNewAdverseDocsFitInGasBudget</span></div>
+        <div class="card atk"><span class="label">ATTACK 09</span><div class="kicker" style="color:var(--red)">Outage</div><h3>ACRIS answers with nothing.</h3><p>Zero documents looks like a clean lot but is more likely an outage or a wrong BBL. The workflow refuses to report.</p><span class="chip mono">assertNonEmpty · vitest</span></div>
+        <div class="card atk"><span class="label">ATTACK 10</span><div class="kicker" style="color:var(--red)">Cut-off</div><h3>A busy lot hits the 5,000-row limit.</h3><p>A response at the limit may be missing a lien. The workflow fails static and writes nothing.</p><span class="chip mono">assertComplete · vitest</span></div>
+        <div class="card atk"><span class="label">ATTACK 11</span><div class="kicker" style="color:var(--red)">Old records</div><h3>Pre-2003 IDs like FT_2300000813130.</h3><p>They used to crash the conversion to on-chain IDs. They are now hashed instead.</p><span class="chip mono">legacy non-numeric ids · vitest</span></div>
+        <div class="card atk"><span class="label">ATTACK 12</span><div class="kicker" style="color:var(--red)">Split brain</div><h3>Nodes see rows in a different order.</h3><p>Queries are ordered by document ID and results are sorted and de-duplicated, so every node produces identical bytes.</p><span class="chip mono">same docs, same docSetHash · vitest</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:40px">
+    <div class="wrap center">
+      <span class="script">seen on-chain</span>
+      <h2 class="display">It said <span class="hot">no.</span></h2>
+      <p style="margin-top:18px"><span class="sticky">Our first test token rejected a real report. That was the point.</span></p>
+    </div>
+    <div class="wrap">
+      <div class="receipts" data-stagger>
+        <article class="receipt">
+          <div class="top"><span class="play"><i></i> REJECTED</span><span class="ver">ON SEPOLIA</span></div>
+          <div class="art">ReportProcessed<div class="big red">false</div>The simulator stamped the report with a placeholder owner (0xaaaa…aaaa). That token expected our wallet, so it refused.</div>
+          <div class="bottom"><div>First report<br><small>Token 0xfF57…c772</small></div><a href="https://sepolia.etherscan.io/tx/0x5fc390856336170b6bd580573f250b5a9b13ec37b004a1c1dbd2df8b063de052" target="_blank" rel="noopener">Etherscan ↗</a></div>
+        </article>
+        <article class="receipt">
+          <div class="top"><span class="play"><i></i> ACCEPTED</span><span class="ver">ON SEPOLIA</span></div>
+          <div class="art">ReportProcessed<div class="big ok">true</div>Redeployed to expect the simulator's owner. The same report then restricted the token.</div>
+          <div class="bottom"><div>Second report<br><small>Token 0xf813…04aE</small></div><a href="https://sepolia.etherscan.io/tx/0xc0cc238205a36246731feddba275b3df50b4c781f3958b8d4cab8a862bda85ab" target="_blank" rel="noopener">Etherscan ↗</a></div>
+        </article>
+        <article class="receipt">
+          <div class="top"><span class="play"><i></i> REVIEW</span><span class="ver">FIXED</span></div>
+          <div class="art">fresh-eyes review<div class="big">1 + 5</div>One critical and five important findings. Each fix landed with a test that reproduced it first.</div>
+          <div class="bottom"><div>Code review<br><small>Before deployment</small></div><a href="docs.html#limits" style="color:#fff">Limits →</a></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:40px">
+    <div class="wrap center">
+      <span class="script">still open</span>
+      <h2 class="display">What could <span class="hot">still go wrong.</span></h2>
+    </div>
+    <div class="wrap">
+      <div class="diff" data-reveal>
+        <div class="tb"><span>open-risks.fig</span><span style="color:var(--mute)">honest</span></div>
+        <div class="grid" style="grid-template-columns:1fr 1fr">
+          <div class="side them"><h4>Open risks <span class="tag">Known</span></h4><ul>
+            <li>The demo token trusts the simulator's placeholder owner, which is public. Anyone using the mock forwarder could report to it.</li>
+            <li>Every node reads the same API. If ACRIS itself is wrong, the token is wrong.</li>
+            <li>The issuer can clear a restriction. It is public and scoped, but it is a power.</li>
+            <li>Not audited. A hackathon build.</li></ul></div>
+          <div class="side us"><h4>Production fix <span class="tag red">Planned</span></h4><ul>
+            <li>Point the token at a deployed workflow's owner with setExpectedWorkflowOwner.</li>
+            <li>Use Chainlink's production forwarder instead of the mock one.</li>
+            <li>Add a second data source so nodes compare two records.</li>
+            <li>Have the issuer be a real multisig, not a single wallet.</li></ul></div>
+        </div>
+        <div class="foot"><b>18 contract tests · 17 workflow tests. <span>All passing.</span></b><a class="btn btn-ghost" href="roadmap.html">See the roadmap →</a></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="top">
+    <div>
+      <div class="kick">Have a building worth checking?</div>
+      <a class="mail" href="check.html">Run the checker<span> ↗</span></a>
+      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><a class="btn btn-red" href="docs.html">Read the docs →</a><span class="mono" style="font-size:12px"><span class="dot"></span> live on Sepolia</span></div>
+    </div>
+    <div><h5>Product</h5><ul><li><a href="check.html">Check a lot</a></li><li><a href="proof.html">Proof</a></li><li><a href="docs.html">Docs</a></li><li><a href="index.html#faq">FAQ</a></li></ul></div>
+    <div><h5>Project</h5><ul><li><a href="use-cases.html">Use cases</a></li><li><a href="security.html" aria-current="page">Security</a></li><li><a href="roadmap.html">Roadmap</a></li><li><a href="about.html">About</a></li></ul></div>
+    <div><h5>On-chain</h5><ul><li><a href="https://sepolia.etherscan.io/address/0xf813c584Fe5e8c86A3F6c7265923CeE0850604aE" target="_blank" rel="noopener">Token</a></li><li><a href="https://sepolia.etherscan.io/tx/0xc0cc238205a36246731feddba275b3df50b4c781f3958b8d4cab8a862bda85ab" target="_blank" rel="noopener">Report tx</a></li><li><a href="https://data.cityofnewyork.us/resource/7isb-wh4c.json" target="_blank" rel="noopener">ACRIS codes</a></li></ul></div>
+    <div><h5>Built for</h5><ul><li><a href="https://dorahacks.io/hackathon/legal-hack-2026/detail" target="_blank" rel="noopener">BLI Legal Hack 2</a></li><li><a href="https://docs.chain.link/cre" target="_blank" rel="noopener">Chainlink CRE</a></li></ul></div>
+  </div>
+  <div class="wordmark" aria-hidden="true"><span>L</span>iensight</div>
+  <div class="base"><span>liensight.fig</span><span><span class="dot"></span> Testnet only · not legal advice</span><span>2026 · BLI Legal Tech Hackathon 2</span></div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Draggable.min.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

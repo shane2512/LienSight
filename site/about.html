@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About · Liensight</title>
+<meta name="description" content="Why Liensight was built for the BLI Legal Tech Hackathon 2, and how the idea was chosen.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Caveat:wght@600&family=Inter+Tight:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<div class="sky" aria-hidden="true"></div>
+<div class="cursor-you" aria-hidden="true">you</div>
+<div class="drag-pill" aria-hidden="true">DRAG</div>
+
+
+<header class="nav">
+  <a class="pill brand" href="index.html" aria-label="Liensight home"><span class="mark">L</span>Liensight</a>
+  <nav class="pill links" aria-label="Main">
+    <a href="index.html">Home</a>
+    <a href="index.html#how">How it works</a>
+    <a href="index.html#inside">Inside</a>
+    <a href="proof.html">Proof</a>
+    <a href="docs.html">Docs</a>
+    <a class="cta" href="check.html">Check a lot</a>
+  </nav>
+  <a class="pill mail" href="proof.html"><span class="dot"></span>live on Sepolia</a>
+</header>
+
+<main>
+  <section class="page-head">
+    <div class="wrap">
+      <span class="script">the story</span>
+      <h1 class="display">Why <span class="hot">Liensight.</span></h1>
+      <p>Built for the Blockchain Legal Institute's second Legal Tech Hackathon on DoraHacks. Here is the brief, and how we chose this idea.</p>
+    </div>
+  </section>
+
+  <section style="padding-top:20px">
+    <div class="wrap">
+      <div class="card sel" data-tag="brief.txt" data-reveal style="padding:34px">
+        <span class="label">THE BRIEF</span>
+        <div class="kv">
+          <div>Hackathon</div><div>BLI Legal Tech Hackathon 2 · DoraHacks · virtual</div>
+          <div>Organizer</div><div>Blockchain Legal Institute</div>
+          <div>Deadline</div><div>October 31, 2026</div>
+          <div>Our track</div><div>Real World Assets (RWA)</div>
+          <div>Bounty</div><div>Chainlink: Best workflow with CRE</div>
+          <div>Requirement</div><div>A CRE workflow joining a blockchain to an outside API, shown by simulation or live deployment</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap center">
+      <span class="script">the gap</span>
+      <h2 class="display">Sixteen builds. <span class="hot">Zero RWA.</span></h2>
+      <p style="margin-top:18px"><span class="sticky">What we saw when we read every submission.</span></p>
+    </div>
+    <div class="wrap">
+      <div class="bento" data-stagger>
+        <div class="card dark b-stats" style="grid-column:span 5">
+          <span class="label">AT THE TIME</span>
+          <div class="s"><span class="n">16</span><span class="t">Builds already<br>submitted</span></div>
+          <div class="s"><span class="n">~70<sup>%</sup></span><span class="t">AI decision, hashed<br>and anchored on-chain</span></div>
+          <div class="s"><span class="n">0</span><span class="t">Real-estate or<br>RWA entries</span></div>
+        </div>
+        <div class="card b-quote" style="grid-column:span 7">
+          <span class="label">TAKEAWAY</span>
+          <div class="q">“</div>
+          <h3>Most builds anchored an AI's output. <em>We wanted the chain to act on a government record.</em></h3>
+          <p>An ACRIS filing is public, dated and checkable by anyone. That made it a better trigger than another model's opinion.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap center">
+      <span class="script">how we chose</span>
+      <h2 class="display">Three ideas. <span class="hot">Three rounds.</span></h2>
+    </div>
+    <div class="wrap">
+      <div class="chat sel" data-tag="idea-review">
+        <div class="head"><span>idea review · a contradictor critiques each round</span><span class="mono" style="font-size:12px;color:var(--mute)">3 rounds</span></div>
+        <div class="body">
+          <div class="stage-sep">Round 1</div>
+          <div class="msg"><div class="av don">A</div><div><div class="who">Consent Clock</div><p>Minors' data consent that lapses with age. Critique: auto-deleting data on a missed re-consent is legally wrong.</p></div></div>
+          <div class="msg"><div class="av tok">B</div><div><div class="who">Lien Tripwire</div><p>Pause a property token when a lien is recorded. Critique: "the token isn't the title".</p></div></div>
+          <div class="msg"><div class="av acris">C</div><div><div class="who">Deemed-Denial Clock</div><p>Track public-records deadlines. Critique: deadlines vary and get extended; little real need.</p></div></div>
+          <div class="stage-sep">Rounds 2 and 3</div>
+          <div class="msg"><div class="av tok">B</div><div><div class="who">Lien Tripwire, revised</div><p>Reframed as SPV equity with an issuer-governed restriction. Nodes must agree on the document set, not on a summary.</p></div></div>
+          <div class="msg"><div class="av iss">✓</div><div><div class="who">Verdict</div><p>Ranked first: a concrete live demo, an empty RWA track, and a clear use for CRE. Renamed Liensight.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="wrap">
+      <div class="diff" data-reveal>
+        <div class="tb"><span>next.fig</span><span style="color:var(--mute)">100%</span></div>
+        <div class="foot" style="border-top:0"><b>Seen enough? <span>Check a building, or read the proof.</span></b><div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn btn-red" href="check.html">Check a lot →</a><a class="btn btn-ghost" href="proof.html">See the proof</a></div></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="top">
+    <div>
+      <div class="kick">Have a building worth checking?</div>
+      <a class="mail" href="check.html">Run the checker<span> ↗</span></a>
+      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><a class="btn btn-red" href="docs.html">Read the docs →</a><span class="mono" style="font-size:12px"><span class="dot"></span> live on Sepolia</span></div>
+    </div>
+    <div><h5>Product</h5><ul><li><a href="check.html">Check a lot</a></li><li><a href="proof.html">Proof</a></li><li><a href="docs.html">Docs</a></li><li><a href="index.html#faq">FAQ</a></li></ul></div>
+    <div><h5>Project</h5><ul><li><a href="use-cases.html">Use cases</a></li><li><a href="security.html">Security</a></li><li><a href="roadmap.html">Roadmap</a></li><li><a href="about.html" aria-current="page">About</a></li></ul></div>
+    <div><h5>On-chain</h5><ul><li><a href="https://sepolia.etherscan.io/address/0xf813c584Fe5e8c86A3F6c7265923CeE0850604aE" target="_blank" rel="noopener">Token</a></li><li><a href="https://sepolia.etherscan.io/tx/0xc0cc238205a36246731feddba275b3df50b4c781f3958b8d4cab8a862bda85ab" target="_blank" rel="noopener">Report tx</a></li><li><a href="https://data.cityofnewyork.us/resource/7isb-wh4c.json" target="_blank" rel="noopener">ACRIS codes</a></li></ul></div>
+    <div><h5>Built for</h5><ul><li><a href="https://dorahacks.io/hackathon/legal-hack-2026/detail" target="_blank" rel="noopener">BLI Legal Hack 2</a></li><li><a href="https://docs.chain.link/cre" target="_blank" rel="noopener">Chainlink CRE</a></li></ul></div>
+  </div>
+  <div class="wordmark" aria-hidden="true"><span>L</span>iensight</div>
+  <div class="base"><span>liensight.fig</span><span><span class="dot"></span> Testnet only · not legal advice</span><span>2026 · BLI Legal Tech Hackathon 2</span></div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Draggable.min.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

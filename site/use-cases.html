@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Use Cases · Liensight</title>
+<meta name="description" content="Who Liensight is for: SPV issuers, token holders and compliance reviewers, and where it is not a fit.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Caveat:wght@600&family=Inter+Tight:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<div class="sky" aria-hidden="true"></div>
+<div class="cursor-you" aria-hidden="true">you</div>
+<div class="drag-pill" aria-hidden="true">DRAG</div>
+
+
+<header class="nav">
+  <a class="pill brand" href="index.html" aria-label="Liensight home"><span class="mark">L</span>Liensight</a>
+  <nav class="pill links" aria-label="Main">
+    <a href="index.html">Home</a>
+    <a href="index.html#how">How it works</a>
+    <a href="index.html#inside">Inside</a>
+    <a href="proof.html">Proof</a>
+    <a href="docs.html">Docs</a>
+    <a class="cta" href="check.html">Check a lot</a>
+  </nav>
+  <a class="pill mail" href="proof.html"><span class="dot"></span>live on Sepolia</a>
+</header>
+
+<main>
+  <section class="page-head">
+    <div class="wrap">
+      <span class="script">who it's for</span>
+      <h1 class="display">Three people <span class="hot">who care.</span></h1>
+      <p>A lien on the building behind a token matters to whoever issues the token, whoever holds it, and whoever checks the trades.</p>
+    </div>
+  </section>
+
+  <section style="padding-top:20px">
+    <div class="wrap">
+      <div class="bento" data-stagger>
+        <div class="card b-mini" style="grid-column:span 4"><div class="inner" style="color:#fff;min-height:320px">
+          <div class="kicker" style="color:#9aa3ad">01 · The issuer</div>
+          <h4>Runs the <span>SPV.</span></h4>
+          <p style="color:#c9d1d9">Wants shares to stop changing hands while a fresh lien sits on the building, without staff checking county records every morning.</p>
+          <div class="foot">Gets: automatic restriction · scoped clear</div>
+        </div></div>
+        <div class="card" style="grid-column:span 4;min-height:350px">
+          <span class="label">02</span>
+          <div class="kicker" style="color:var(--red)">The holder</div>
+          <h3 style="font:800 30px/1.1 var(--body);margin:10px 0">Owns or is buying a share.</h3>
+          <p style="color:var(--ink-2)">Can read one public value, restricted(), before trading, and follow the cited document straight to ACRIS.</p>
+          <div class="chips"><span class="chip">restricted()</span><span class="chip">citedHash()</span></div>
+        </div>
+        <div class="card" style="grid-column:span 4;min-height:350px">
+          <span class="label">03</span>
+          <div class="kicker" style="color:var(--red)">The reviewer</div>
+          <h3 style="font:800 30px/1.1 var(--body);margin:10px 0">Checks compliance.</h3>
+          <p style="color:var(--ink-2)">Gets an on-chain record of when a lien was reported, which documents were cited, and who cleared it and why.</p>
+          <div class="chips"><span class="chip">Restricted event</span><span class="chip">Cleared(reason)</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap center">
+      <span class="script">a lien's journey</span>
+      <h2 class="display">From the clerk to <span class="hot">the chain.</span></h2>
+    </div>
+    <div class="wrap">
+      <div class="chat sel" data-tag="lien-journey">
+        <div class="head"><span>one lien, start to finish</span><span class="mono" style="font-size:12px;color:var(--mute)">illustrative timing</span></div>
+        <div class="body">
+          <div class="stage-sep">Day 0 · Filed</div>
+          <div class="msg"><div class="av iss">CLK</div><div><div class="who">The creditor <time>day 0</time></div><p>A lien is filed against the building. Nothing on-chain knows yet.</p></div></div>
+          <div class="stage-sep">Days later · Recorded</div>
+          <div class="msg"><div class="av acris">NYC</div><div><div class="who">NYC ACRIS <time>days later</time></div><p>The document appears in the public record with a document ID and type code.</p></div></div>
+          <div class="stage-sep">Next run · Reported</div>
+          <div class="msg"><div class="av don">DON</div><div><div class="who">CRE nodes <time>within the schedule</time></div><p>On the next scheduled run, the nodes see a new adverse document, agree on it and report it.</p></div></div>
+          <div class="msg"><div class="av tok">LS</div><div><div class="who">LiensightToken <time>same block</time></div><p>Transfers are restricted. The document ID is cited on-chain.</p></div></div>
+          <div class="stage-sep">After review · Cleared</div>
+          <div class="msg"><div class="av iss">ISS</div><div><div class="who">Issuer multisig <time>when ready</time></div><p>The lien is resolved or accepted. The issuer clears, naming the liens it reviewed and a reason, in public.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap center">
+      <span class="script">fit check</span>
+      <h2 class="display">Good fit. <span class="hot">Bad fit.</span></h2>
+    </div>
+    <div class="wrap">
+      <div class="diff" data-reveal>
+        <div class="tb"><span>fit-check.fig</span><span style="color:var(--mute)">100%</span></div>
+        <div class="grid">
+          <div class="side us"><h4>Good fit <span class="tag red">Yes</span></h4><ul>
+            <li>A token for shares in an SPV that owns one NYC lot.</li>
+            <li>An issuer whose rules already allow pausing transfers.</li>
+            <li>Teams that want a public, cited early warning.</li></ul></div>
+          <div class="vs">VS</div>
+          <div class="side them"><h4>Bad fit <span class="tag">Not yet</span></h4><ul>
+            <li>Replacing a title search or title insurance.</li>
+            <li>Catching lis pendens or foreclosure filings.</li>
+            <li>Property outside New York City.</li></ul></div>
+        </div>
+        <div class="foot"><b>Want to see a building? <span>Check its lot.</span></b><a class="btn btn-red" href="check.html">Check a lot →</a></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="top">
+    <div>
+      <div class="kick">Have a building worth checking?</div>
+      <a class="mail" href="check.html">Run the checker<span> ↗</span></a>
+      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><a class="btn btn-red" href="docs.html">Read the docs →</a><span class="mono" style="font-size:12px"><span class="dot"></span> live on Sepolia</span></div>
+    </div>
+    <div><h5>Product</h5><ul><li><a href="check.html">Check a lot</a></li><li><a href="proof.html">Proof</a></li><li><a href="docs.html">Docs</a></li><li><a href="index.html#faq">FAQ</a></li></ul></div>
+    <div><h5>Project</h5><ul><li><a href="use-cases.html" aria-current="page">Use cases</a></li><li><a href="security.html">Security</a></li><li><a href="roadmap.html">Roadmap</a></li><li><a href="about.html">About</a></li></ul></div>
+    <div><h5>On-chain</h5><ul><li><a href="https://sepolia.etherscan.io/address/0xf813c584Fe5e8c86A3F6c7265923CeE0850604aE" target="_blank" rel="noopener">Token</a></li><li><a href="https://sepolia.etherscan.io/tx/0xc0cc238205a36246731feddba275b3df50b4c781f3958b8d4cab8a862bda85ab" target="_blank" rel="noopener">Report tx</a></li><li><a href="https://data.cityofnewyork.us/resource/7isb-wh4c.json" target="_blank" rel="noopener">ACRIS codes</a></li></ul></div>
+    <div><h5>Built for</h5><ul><li><a href="https://dorahacks.io/hackathon/legal-hack-2026/detail" target="_blank" rel="noopener">BLI Legal Hack 2</a></li><li><a href="https://docs.chain.link/cre" target="_blank" rel="noopener">Chainlink CRE</a></li></ul></div>
+  </div>
+  <div class="wordmark" aria-hidden="true"><span>L</span>iensight</div>
+  <div class="base"><span>liensight.fig</span><span><span class="dot"></span> Testnet only · not legal advice</span><span>2026 · BLI Legal Tech Hackathon 2</span></div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Draggable.min.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>
