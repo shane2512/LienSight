@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Check a Lot · Liensight</title>
+<meta name="description" content="Check any New York City lot against live ACRIS data with the same adverse map the Liensight workflow uses.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Caveat:wght@600&family=Inter+Tight:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<div class="sky" aria-hidden="true"></div>
+<div class="cursor-you" aria-hidden="true">you</div>
+<div class="drag-pill" aria-hidden="true">DRAG</div>
+
+<div class="ruler" aria-hidden="true">
+  <span class="brand">LIENSIGHT <b>CRE</b></span>
+  <span class="ticks"><span class="playhead">0</span></span>
+  <span class="live"><span class="dot"></span>LIVE · <span class="clock"></span></span>
+</div>
+
+<header class="nav">
+  <a class="pill avail" href="proof.html"><span class="dot"></span>live on Sepolia</a>
+  <nav class="pill links" aria-label="Main">
+    <a href="index.html">Home</a>
+    <a href="index.html#how">How it works</a>
+    <a href="index.html#inside">Inside</a>
+    <a href="proof.html">Proof</a>
+    <a href="docs.html">Docs</a>
+    <a class="cta" href="check.html" aria-current="page">Check a lot</a>
+  </nav>
+  <a class="pill mail" href="https://sepolia.etherscan.io/address/0xf813c584Fe5e8c86A3F6c7265923CeE0850604aE" target="_blank" rel="noopener">0xf813…04aE ↗</a>
+</header>
+
+<main>
+  <section class="page-head">
+    <div class="wrap">
+      <span class="script">try it live</span>
+      <h1 class="display">Check a <span class="hot">lot.</span></h1>
+      <p>Enter any New York City borough, block and lot. We read ACRIS live and apply the same adverse map the CRE workflow uses.</p>
+    </div>
+  </section>
+
+  <section style="padding-top:20px">
+    <div class="wrap">
+      <div class="plan sel" data-tag="checker" data-checker data-autorun>
+        <div class="hero-box">
+          <div><div class="price"><span data-bbl-big>2-5789-1022</span><small data-boro>/ Bronx</small></div><div class="kicker" style="margin-top:8px">Borough · block · lot</div></div>
+          <div class="perks"><span>Live ACRIS read</span><span>Same adverse map as the workflow</span><span>No wallet needed</span></div>
+        </div>
+        <form class="bbl">
+          <label>Borough<select name="borough"><option value="1">1 · Manhattan</option><option value="2" selected>2 · Bronx</option><option value="3">3 · Brooklyn</option><option value="4">4 · Queens</option><option value="5">5 · Staten Island</option></select></label>
+          <label>Block<input name="block" inputmode="numeric" value="5789"></label>
+          <label>Lot<input name="lot" inputmode="numeric" value="1022"></label>
+          <button class="btn btn-red" type="submit">Check →</button>
+        </form>
+        <div class="toc" style="justify-content:flex-start;padding:4px 12px 0">
+          <button class="pill" type="button" data-preset="2-5789-1022">Bronx 2-5789-1022 · has a lien</button>
+          <button class="pill" type="button" data-preset="1-905-1347">Manhattan 1-905-1347 · clean</button>
+        </div>
+        <div class="track-bar"><div class="fill"></div></div>
+        <div class="result"><div class="msgline">Reading ACRIS…</div></div>
+        <p class="msgline mono center" style="font-size:11px;color:var(--mute);margin:14px 0 4px">This runs the classification in your browser. It does not write on-chain.</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:40px">
+    <div class="wrap center">
+      <span class="script">reading the result</span>
+      <h2 class="display">Four possible <span class="hot">answers.</span></h2>
+    </div>
+    <div class="wrap">
+      <div class="bento" data-stagger>
+        <div class="card b-mini" style="grid-column:span 6"><div class="inner" style="color:#fff">
+          <div class="kicker" style="color:#9aa3ad">Answer 01</div>
+          <h4>Restricted. <span>Adverse.</span></h4>
+          <p style="color:#c9d1d9;margin:0">At least one federal lien, tax lien, tax-lien sale, common-charge lien or judgment is on record. On-chain, the token would restrict transfers and cite these document IDs.</p>
+        </div></div>
+        <div class="card" style="grid-column:span 6">
+          <span class="label">ANSWER 02</span>
+          <div class="kicker" style="color:var(--ok)">● Open</div>
+          <h3 style="font:800 30px/1.1 var(--body);margin:10px 0">No adverse filings.</h3>
+          <p style="color:var(--ink-2);margin:0">Documents exist, but none are on the adverse map. Transfers would stay open.</p>
+        </div>
+        <div class="card" style="grid-column:span 6">
+          <span class="label">ANSWER 03</span>
+          <div class="kicker" style="color:var(--red)">No documents</div>
+          <h3 style="font:800 30px/1.1 var(--body);margin:10px 0">Nothing found.</h3>
+          <p style="color:var(--ink-2);margin:0">Zero documents is more likely a wrong BBL than a spotless building. The workflow refuses to report in this case.</p>
+        </div>
+        <div class="card" style="grid-column:span 6">
+          <span class="label">ANSWER 04</span>
+          <div class="kicker" style="color:var(--red)">ACRIS error</div>
+          <h3 style="font:800 30px/1.1 var(--body);margin:10px 0">Fail static.</h3>
+          <p style="color:var(--ink-2);margin:0">If ACRIS errors or a response is cut off at 5,000 rows, the workflow writes nothing. A failed fetch can never set or clear a restriction.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:40px">
+    <div class="wrap center">
+      <span class="script">where's my BBL?</span>
+      <h2 class="display">Find the <span class="hot">numbers.</span></h2>
+    </div>
+    <div class="wrap">
+      <div class="diff" data-reveal>
+        <div class="tb"><span>bbl-explained.fig</span><span style="color:var(--mute)">100%</span></div>
+        <div class="grid" style="grid-template-columns:repeat(3,1fr)">
+          <div class="side us"><h4>Borough <span class="tag red">1 – 5</span></h4><ul><li>1 Manhattan</li><li>2 Bronx</li><li>3 Brooklyn</li><li>4 Queens</li><li>5 Staten Island</li></ul></div>
+          <div class="side us"><h4>Block <span class="tag red">number</span></h4><ul><li>The tax block, shown on any NYC property record or tax bill.</li><li>Type it without leading zeros.</li></ul></div>
+          <div class="side us"><h4>Lot <span class="tag red">number</span></h4><ul><li>The tax lot inside that block.</li><li>Condo units have their own lot numbers.</li></ul></div>
+        </div>
+        <div class="foot"><b>Every ACRIS document is indexed by these three numbers. <span>That's what the workflow queries.</span></b></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="top">
+    <div>
+      <div class="kick">Have a building worth checking?</div>
+      <a class="mail" href="check.html">Run the checker<span> ↗</span></a>
+      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><a class="btn btn-red" href="docs.html">Read the docs →</a><span class="mono" style="font-size:12px"><span class="dot"></span> live on Sepolia</span></div>
+    </div>
+    <div><h5>Product</h5><ul><li><a href="check.html">Check a lot</a></li><li><a href="proof.html">Proof</a></li><li><a href="docs.html">Docs</a></li><li><a href="index.html#faq">FAQ</a></li></ul></div>
+    <div><h5>On-chain</h5><ul><li><a href="https://sepolia.etherscan.io/address/0xf813c584Fe5e8c86A3F6c7265923CeE0850604aE" target="_blank" rel="noopener">Token</a></li><li><a href="https://sepolia.etherscan.io/tx/0xc0cc238205a36246731feddba275b3df50b4c781f3958b8d4cab8a862bda85ab" target="_blank" rel="noopener">Report tx</a></li><li><a href="https://data.cityofnewyork.us/resource/7isb-wh4c.json" target="_blank" rel="noopener">ACRIS codes</a></li></ul></div>
+    <div><h5>Built for</h5><ul><li><a href="https://dorahacks.io/hackathon/legal-hack-2026/detail" target="_blank" rel="noopener">BLI Legal Hack 2</a></li><li><a href="https://docs.chain.link/cre" target="_blank" rel="noopener">Chainlink CRE</a></li></ul></div>
+  </div>
+  <div class="wordmark" aria-hidden="true"><span>L</span>iensight</div>
+  <div class="base"><span>liensight.fig</span><span><span class="dot"></span> Testnet only · not legal advice</span><span>2026 · BLI Legal Tech Hackathon 2</span></div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Draggable.min.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

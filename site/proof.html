@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proof · Liensight</title>
+<meta name="description" content="Live on-chain reads and transactions for the Liensight token on Sepolia.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Caveat:wght@600&family=Inter+Tight:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<div class="sky" aria-hidden="true"></div>
+<div class="cursor-you" aria-hidden="true">you</div>
+<div class="drag-pill" aria-hidden="true">DRAG</div>
+
+<div class="ruler" aria-hidden="true">
+  <span class="brand">LIENSIGHT <b>CRE</b></span>
+  <span class="ticks"><span class="playhead">0</span></span>
+  <span class="live"><span class="dot"></span>LIVE · <span class="clock"></span></span>
+</div>
+
+<header class="nav">
+  <a class="pill avail" href="proof.html"><span class="dot"></span>live on Sepolia</a>
+  <nav class="pill links" aria-label="Main">
+    <a href="index.html">Home</a>
+    <a href="index.html#how">How it works</a>
+    <a href="index.html#inside">Inside</a>
+    <a href="proof.html" aria-current="page">Proof</a>
+    <a href="docs.html">Docs</a>
+    <a class="cta" href="check.html">Check a lot</a>
+  </nav>
+  <a class="pill mail" href="https://sepolia.etherscan.io/address/0xf813c584Fe5e8c86A3F6c7265923CeE0850604aE" target="_blank" rel="noopener">0xf813…04aE ↗</a>
+</header>
+
+<main>
+  <section class="page-head">
+    <div class="wrap">
+      <span class="script">verify it</span>
+      <h1 class="display">Every claim, <span class="hot">checkable.</span></h1>
+      <p>The values below are read live from the token on Sepolia each time this page loads. The transactions link to Etherscan, and the lien links to its ACRIS record.</p>
+    </div>
+  </section>
+
+  <section style="padding-top:20px">
+    <div class="wrap">
+      <div class="card sel" data-tag="LiensightToken · live" data-reveal style="padding:34px">
+        <span class="label">SEPOLIA · LIVE READ</span>
+        <div class="kicker">Contract</div>
+        <h2 style="font:800 clamp(22px,3vw,34px)/1.15 var(--body);margin:8px 0 22px;word-break:break-all">0xf813c584Fe5e8c86A3F6c7265923CeE0850604aE</h2>
+        <div class="kv">
+          <div>restricted()</div><div class="live-val" data-read="restricted">…</div>
+          <div>citedHash()</div><div class="live-val" data-read="citedHash">…</div>
+          <div>lastDocSetHash()</div><div class="live-val" data-read="lastDocSetHash">…</div>
+          <div>propertyKey()</div><div class="live-val" data-read="propertyKey">…</div>
+          <div>issuerMultisig()</div><div class="live-val" data-read="issuerMultisig">…</div>
+          <div>expectedWorkflowOwner()</div><div class="live-val" data-read="expectedWorkflowOwner">…</div>
+          <div>totalSupply()</div><div class="live-val" data-read="totalSupply">…</div>
+        </div>
+        <p class="msgline mono" style="font-size:12px;color:var(--mute);margin-top:18px">citedHash should equal keccak256(abi.encode([2026092900833001])) = 0xb87dc80ef6af1d3f62a75f819a8065410a69b6bd888cd54d725b6d0cab6d49f4. propertyKey is keccak256("BBL:2-5789-1022").</p>
+        <div class="toc" style="justify-content:flex-start"><a class="btn btn-dark" href="https://sepolia.etherscan.io/address/0xf813c584Fe5e8c86A3F6c7265923CeE0850604aE" target="_blank" rel="noopener">Open on Etherscan ↗</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:20px">
+    <div class="wrap center">
+      <span class="script">the receipts</span>
+      <h2 class="display">Three <span class="hot">transactions.</span></h2>
+    </div>
+    <div class="wrap">
+      <div class="receipts" data-stagger>
+        <article class="receipt">
+          <div class="top"><span class="play"><i></i> DEPLOY</span><span class="ver">SUCCESS</span></div>
+          <div class="art">LiensightToken created<div class="big ok">12.9M gas</div>0xb27c9ed1891c763325412789f3d05e1d221584353186e80eb9ad31ea9769c4d9</div>
+          <div class="bottom"><div>Deploy tx<br><small>Issuer = deployer wallet</small></div><a href="https://sepolia.etherscan.io/tx/0xb27c9ed1891c763325412789f3d05e1d221584353186e80eb9ad31ea9769c4d9" target="_blank" rel="noopener">Etherscan ↗</a></div>
+        </article>
+        <article class="receipt">
+          <div class="top"><span class="play"><i></i> REPORT</span><span class="ver">SUCCESS</span></div>
+          <div class="art">forwarder → onReport<div class="big red">restricted</div>0xc0cc238205a36246731feddba275b3df50b4c781f3958b8d4cab8a862bda85ab</div>
+          <div class="bottom"><div>CRE report tx<br><small>ReportProcessed = true</small></div><a href="https://sepolia.etherscan.io/tx/0xc0cc238205a36246731feddba275b3df50b4c781f3958b8d4cab8a862bda85ab" target="_blank" rel="noopener">Etherscan ↗</a></div>
+        </article>
+        <article class="receipt">
+          <div class="top"><span class="play"><i></i> SOURCE</span><span class="ver">PUBLIC RECORD</span></div>
+          <div class="art">doc_type<div class="big red">LOCC</div>2026092900833001<br>Lien of common charges, recorded 2026-09-30, Bronx block 5789 lot 1022.</div>
+          <div class="bottom"><div>ACRIS document<br><small>NYC Dept. of Finance</small></div><a href="https://a836-acris.nyc.gov/DS/DocumentSearch/DocumentDetail?doc_id=2026092900833001" target="_blank" rel="noopener">ACRIS ↗</a></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:40px">
+    <div class="wrap center">
+      <span class="script">the run</span>
+      <h2 class="display">The workflow <span class="hot">log.</span></h2>
+    </div>
+    <div class="wrap" style="max-width:900px">
+      <div class="window" data-reveal style="margin-top:40px"><div class="tb"><i></i><i></i><i></i></div><pre><span class="c">$ cre workflow simulate ./workflow -T staging-settings --non-interactive --trigger-index 0 --broadcast</span>
+<span class="s">✓ Workflow compiled</span>
+2026-10-25T15:28:33Z [SIMULATION] Running trigger trigger=cron-trigger@1.0.0
+2026-10-25T15:28:33Z <span class="k">[USER LOG]</span> ACRIS docs=14 adverse=2026092900833001:LOCC
+2026-10-25T15:28:49Z <span class="k">[USER LOG]</span> report written tx=0xc0cc238205a36246731feddba275b3df50b4c781f3958b8d4cab8a862bda85ab
+<span class="s">✓ Workflow Simulation Result</span>
+
+<span class="c">$ cast call 0xf813…04aE "restricted()(bool)"</span>
+<span class="f">true</span>
+<span class="c">$ cast call 0xf813…04aE "transfer(address,uint256)(bool)" 0x…dEaD 1 --from issuer</span>
+<span class="k">execution reverted: 0xe827105e  TransferRestricted()</span></pre></div>
+    </div>
+  </section>
+
+  <section style="padding-top:40px">
+    <div class="wrap center">
+      <span class="script">not proven yet</span>
+      <h2 class="display">What we <span class="hot">haven't shown.</span></h2>
+    </div>
+    <div class="wrap">
+      <div class="diff" data-reveal>
+        <div class="tb"><span>open-items.fig</span><span style="color:var(--mute)">honest</span></div>
+        <div class="grid" style="grid-template-columns:1fr 1fr">
+          <div class="side them"><h4>Not yet <span class="tag">Open</span></h4><ul>
+            <li>Consensus across a real multi-node DON. The run used the CRE simulator, which is one node.</li>
+            <li>A deployed CRE workflow with Chainlink's production forwarder.</li>
+            <li>An on-chain clear by the issuer.</li></ul></div>
+          <div class="side us"><h4>Shown <span class="tag red">Done</span></h4><ul>
+            <li>Live ACRIS fetch, classification and report from a CRE workflow.</li>
+            <li>A real report landing on Sepolia and restricting the token.</li>
+            <li>The token rejecting a report from the wrong workflow owner.</li></ul></div>
+        </div>
+        <div class="foot"><b>Testnet only. <span>The simulator's placeholder workflow owner is public.</span></b><a class="btn btn-ghost" href="docs.html#limits">Read the limits →</a></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="top">
+    <div>
+      <div class="kick">Have a building worth checking?</div>
+      <a class="mail" href="check.html">Run the checker<span> ↗</span></a>
+      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><a class="btn btn-red" href="docs.html">Read the docs →</a><span class="mono" style="font-size:12px"><span class="dot"></span> live on Sepolia</span></div>
+    </div>
+    <div><h5>Product</h5><ul><li><a href="check.html">Check a lot</a></li><li><a href="proof.html">Proof</a></li><li><a href="docs.html">Docs</a></li><li><a href="index.html#faq">FAQ</a></li></ul></div>
+    <div><h5>On-chain</h5><ul><li><a href="https://sepolia.etherscan.io/address/0xf813c584Fe5e8c86A3F6c7265923CeE0850604aE" target="_blank" rel="noopener">Token</a></li><li><a href="https://sepolia.etherscan.io/tx/0xc0cc238205a36246731feddba275b3df50b4c781f3958b8d4cab8a862bda85ab" target="_blank" rel="noopener">Report tx</a></li><li><a href="https://data.cityofnewyork.us/resource/7isb-wh4c.json" target="_blank" rel="noopener">ACRIS codes</a></li></ul></div>
+    <div><h5>Built for</h5><ul><li><a href="https://dorahacks.io/hackathon/legal-hack-2026/detail" target="_blank" rel="noopener">BLI Legal Hack 2</a></li><li><a href="https://docs.chain.link/cre" target="_blank" rel="noopener">Chainlink CRE</a></li></ul></div>
+  </div>
+  <div class="wordmark" aria-hidden="true"><span>L</span>iensight</div>
+  <div class="base"><span>liensight.fig</span><span><span class="dot"></span> Testnet only · not legal advice</span><span>2026 · BLI Legal Tech Hackathon 2</span></div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Draggable.min.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

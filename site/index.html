@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Liensight</title>
+<meta name="description" content="Liensight restricts transfers of a property-SPV token when a new lien is recorded in NYC ACRIS, using a Chainlink CRE workflow.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Caveat:wght@600&family=Inter+Tight:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<div class="sky" aria-hidden="true"></div>
+<div class="cursor-you" aria-hidden="true">you</div>
+<div class="drag-pill" aria-hidden="true">DRAG</div>
+
+<div class="ruler" aria-hidden="true">
+  <span class="brand">LIENSIGHT <b>CRE</b></span>
+  <span class="ticks"><span class="playhead">0</span></span>
+  <span class="live"><span class="dot"></span>LIVE · <span class="clock"></span></span>
+</div>
+
+<header class="nav">
+  <a class="pill avail" href="proof.html"><span class="dot"></span>live on Sepolia</a>
+  <nav class="pill links" aria-label="Main">
+    <a href="index.html" aria-current="page">Home</a>
+    <a href="#how">How it works</a>
+    <a href="#inside">Inside</a>
+    <a href="proof.html">Proof</a>
+    <a href="docs.html">Docs</a>
+    <a class="cta" href="check.html">Check a lot</a>
+  </nav>
+  <a class="pill mail" href="https://sepolia.etherscan.io/address/0xf813c584Fe5e8c86A3F6c7265923CeE0850604aE" target="_blank" rel="noopener">0xf813…04aE ↗</a>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap center">
+      <div class="badge sel" data-tag="Badge"><span class="lk">⬡ CRE</span> Built on Chainlink CRE · live on Sepolia testnet</div>
+      <h1 class="stipple sel" data-tag="Hero"><span class="line">A lien lands.</span><span class="line">Transfers stop.</span></h1>
+      <p class="sub sel" data-tag="we read the record"><span class="k">WE READ THE PUBLIC RECORD ↓</span>Liensight watches New York City's property records for the building behind your token. When a tax lien, federal lien or judgment is recorded, transfers pause on-chain and cite the document.</p>
+      <div class="ctas">
+        <a class="btn btn-red" href="check.html">Check a property →</a>
+        <a class="btn btn-ghost" href="proof.html">See the proof</a>
+      </div>
+      <div class="corners">
+        <div>New York City<span>ACRIS, all 5 boroughs</span></div>
+        <div class="r">Sepolia testnet<span>Chainlink CRE workflow</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EVIDENCE CAROUSEL -->
+  <section class="carousel" aria-label="What Liensight has done" data-drag-zone>
+    <div class="track">
+      <article class="ecard sel" data-tag="2-5789-1022">
+        <div class="stage">
+          <div class="laptop"><div class="screen"><div class="glass"><div class="mini-ui">
+            <div class="bar"><span>LIENSIGHT · CHECK</span><span>BRONX 2-5789-1022</span></div>
+            <div class="big" style="color:var(--red)">Transfers restricted</div>
+            <div class="bar"><span>14 DOCUMENTS ON RECORD</span><span>1 ADVERSE</span></div>
+            <div class="row hot"><span>2026092900833001</span><span>LOCC</span><span>2026-09-30</span></div>
+            <div class="row"><span>2023090800041001</span><span>CTOR</span><span>2023-09-21</span></div>
+            <div class="row"><span>2021071201567001</span><span>ADEC</span><span>2021-07-19</span></div>
+            <div class="row"><span>2006063000818001</span><span>SAT</span><span>2006-07-18</span></div>
+            <div class="row"><span>2006062001785001</span><span>DEED</span><span>2006-07-01</span></div>
+          </div></div></div><div class="base"></div></div>
+          <div class="plinth"></div>
+        </div>
+        <div class="meta"><h3>Bronx lot, lien found</h3><div class="tags"><span class="tag red">Restricted</span><span class="tag">LOCC</span><span class="tag">Live ACRIS</span></div></div>
+      </article>
+
+      <article class="ecard sel" data-tag="cre-simulate">
+        <div class="stage">
+          <div class="laptop"><div class="screen"><div class="glass term">
+            <div class="d">$ cre workflow simulate ./workflow --broadcast</div>
+            <div class="g">✓ Workflow compiled</div>
+            <div>[SIMULATION] Running trigger cron-trigger@1.0.0</div>
+            <div><span class="y">[USER LOG]</span> ACRIS docs=14</div>
+            <div><span class="y">[USER LOG]</span> adverse=<span class="r">2026092900833001:LOCC</span></div>
+            <div><span class="y">[USER LOG]</span> report written</div>
+            <div class="d">tx=0xc0cc2382…b4c781f3958b8d4cab8a862bda85ab</div>
+            <div class="g">✓ Workflow Simulation Result</div>
+          </div></div><div class="base"></div></div>
+          <div class="plinth"></div>
+        </div>
+        <div class="meta"><h3>The CRE workflow run</h3><div class="tags"><span class="tag">CRE CLI</span><span class="tag ok">Tx success</span><span class="tag">Sepolia</span></div></div>
+      </article>
+
+      <article class="ecard sel" data-tag="LiensightToken">
+        <div class="stage">
+          <div class="laptop"><div class="screen"><div class="glass"><div class="mini-ui">
+            <div class="bar"><span>SEPOLIA · CONTRACT</span><span>0xf813…04aE</span></div>
+            <div class="big">LiensightToken</div>
+            <div class="row hot"><span>restricted()</span><span>bool</span><span>true</span></div>
+            <div class="row"><span>citedHash()</span><span>bytes32</span><span>0xb87d…49f4</span></div>
+            <div class="row"><span>issuerMultisig()</span><span>address</span><span>0xd51E…15b4</span></div>
+            <div class="row"><span>reportReceiver()</span><span>address</span><span>0x15fC…9F88</span></div>
+            <div class="row"><span>totalSupply()</span><span>uint256</span><span>1,000,000</span></div>
+          </div></div></div><div class="base"></div></div>
+          <div class="plinth"></div>
+        </div>
+        <div class="meta"><h3>The token, after the report</h3><div class="tags"><span class="tag">Solidity</span><span class="tag">18 tests</span><span class="tag red">Restricted</span></div></div>
+      </article>
+
+      <article class="ecard sel" data-tag="1-905-1347">
+        <div class="stage" style="background:radial-gradient(120% 90% at 50% 0%, #22403a 0%, #0b1210 60%)">
+          <div class="laptop"><div class="screen"><div class="glass"><div class="mini-ui">
+            <div class="bar"><span>LIENSIGHT · CHECK</span><span>MANHATTAN 1-905-1347</span></div>
+            <div class="big" style="color:var(--ok)">Transfers open</div>
+            <div class="bar"><span>12 DOCUMENTS ON RECORD</span><span>0 ADVERSE</span></div>
+            <div class="row"><span>No tax lien</span><span>—</span><span>clear</span></div>
+            <div class="row"><span>No federal lien</span><span>—</span><span>clear</span></div>
+            <div class="row"><span>No judgment</span><span>—</span><span>clear</span></div>
+            <div class="row"><span>No common-charge lien</span><span>—</span><span>clear</span></div>
+          </div></div></div><div class="base"></div></div>
+        </div>
+        <div class="meta"><h3>Manhattan lot, clean</h3><div class="tags"><span class="tag ok">Open</span><span class="tag">12 docs</span></div></div>
+      </article>
+
+      <article class="ecard sel" data-tag="codeMap.json">
+        <div class="stage">
+          <div class="laptop"><div class="screen"><div class="glass"><div class="mini-ui">
+            <div class="bar"><span>ADVERSE MAP · V1</span><span>ACRIS 7isb-wh4c</span></div>
+            <div class="big">6 adverse codes</div>
+            <div class="row hot"><span>Federal lien, IRS</span><span>FL</span><span>adverse</span></div>
+            <div class="row hot"><span>Federal lien, other</span><span>FTL</span><span>adverse</span></div>
+            <div class="row hot"><span>Estate tax lien</span><span>NTXL</span><span>adverse</span></div>
+            <div class="row hot"><span>Tax lien sale certificate</span><span>TLS</span><span>adverse</span></div>
+            <div class="row hot"><span>Lien of common charges</span><span>LOCC</span><span>adverse</span></div>
+            <div class="row hot"><span>Judgment</span><span>JUDG</span><span>adverse</span></div>
+          </div></div></div><div class="base"></div></div>
+          <div class="plinth"></div>
+        </div>
+        <div class="meta"><h3>The adverse map</h3><div class="tags"><span class="tag">Versioned</span><span class="tag">Hash on-chain</span></div></div>
+      </article>
+    </div>
+    <div class="center" style="margin-top:26px;display:flex;gap:10px;justify-content:center">
+      <button class="pill" data-carousel="prev" aria-label="Previous card">←</button>
+      <button class="pill" data-carousel="next" aria-label="Next card">→</button>
+    </div>
+  </section>
+
+  <!-- WHAT IT IS (bento) -->
+  <section id="what">
+    <div class="wrap">
+      <span class="script">what it is</span>
+      <h2 class="display center">What it does</h2>
+      <div class="bento" data-stagger>
+        <div class="card b-quote sel" data-tag="statement.txt">
+          <span class="label">STATEMENT.TXT</span>
+          <div class="q">“</div>
+          <h3>A lien hits the building. <em>The token finds out.</em></h3>
+          <p>Liensight is an early-warning transfer restriction for property-SPV tokens. A Chainlink CRE workflow reads NYC ACRIS, and the token restricts itself when a new adverse filing appears.</p>
+          <div class="foot"><span>Liensight · BLI Legal Hack 2026</span><span style="color:var(--ok)">● Live on Sepolia</span></div>
+        </div>
+        <div class="card dark b-stats">
+          <span class="label">METRICS</span>
+          <div class="s"><span class="n"><span data-count="14">14</span><sup>+</sup></span><span class="t">ACRIS documents read<br>for one Bronx lot</span></div>
+          <div class="s"><span class="n"><span data-count="1">1</span></span><span class="t">New lien cited<br>on-chain</span></div>
+          <div class="s"><span class="n"><span data-count="35">35</span></span><span class="t">Tests passing<br>18 contract · 17 workflow</span></div>
+        </div>
+        <div class="card b-codes">
+          <span class="label">ADVERSE MAP</span>
+          <div class="kicker">Filings that restrict</div>
+          <div class="chips">
+            <span class="chip"><b>FL</b> Federal lien</span><span class="chip"><b>FTL</b> Federal lien</span><span class="chip"><b>NTXL</b> Estate tax</span>
+            <span class="chip"><b>TLS</b> Tax lien sale</span><span class="chip"><b>LOCC</b> Common charges</span><span class="chip"><b>JUDG</b> Judgment</span>
+          </div>
+        </div>
+        <div class="card b-mini"><div class="inner" style="color:#fff">
+          <div class="kicker" style="color:#9aa3ad">On-chain state</div>
+          <h4>Restricted. <span>Cited.</span></h4>
+          <a class="btn btn-red" style="height:38px;font-size:13px" href="proof.html">Read it live →</a>
+          <div class="foot">restricted() · citedHash()</div>
+        </div></div>
+        <div class="card b-stack">
+          <span class="label">STACK</span>
+          <div class="kicker">● Currently running on</div>
+          <h4>Chainlink CRE &amp; Sepolia</h4>
+          <div class="chips"><span class="chip">TypeScript</span><span class="chip">Solidity</span><span class="chip">Foundry</span><span class="chip">NYC Open Data</span></div>
+        </div>
+        <div class="card b-limit">
+          <span class="label">HONEST LIMIT</span>
+          <div class="kicker" style="color:var(--red)">Read this first</div>
+          <p>ACRIS lags real events by days. This is an early warning, not a title search.</p>
+          <small>From our own README</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS (chat) -->
+  <section id="how">
+    <div class="wrap center">
+      <span class="script">how it works</span>
+      <h2 class="display">No faxes. No hunches. Just this.</h2>
+      <p style="margin-top:18px"><span class="sticky">One property, one workflow run. This is the real one.</span></p>
+    </div>
+    <div class="wrap">
+      <div class="chat sel" data-tag="acris × liensight">
+        <div class="head"><span>acris × liensight-staging</span><span class="mono" style="font-size:12px;color:var(--mute)"><span class="dot"></span> 4 parties</span></div>
+        <div class="body">
+          <div class="stage-sep">01 · Fetch</div>
+          <div class="msg"><div class="av acris">NYC</div><div><div class="who">NYC ACRIS <time>Oct 25 · 15:28 UTC</time></div><p>Lot 2-5789-1022 in the Bronx has 14 recorded documents.</p><span class="file">▤ legals + master · 2 queries</span></div></div>
+          <div class="msg"><div class="av don">DON</div><div><div class="who">CRE nodes <time>15:28</time></div><p>Every node fetched the record on its own. All of us agree on the same 14 documents, byte for byte.</p></div></div>
+          <div class="stage-sep">02 · Classify</div>
+          <div class="msg"><div class="av don">DON</div><div><div class="who">CRE nodes <time>15:28</time></div><p>One of them is adverse: <b>2026092900833001</b>, a lien of common charges (LOCC), recorded Sept 30.</p></div></div>
+          <div class="stage-sep">03 · Report</div>
+          <div class="msg"><div class="av don">DON</div><div><div class="who">CRE nodes <time>15:28</time></div><p>Signed report sent to the token through the forwarder.</p><span class="file">⛓ tx 0xc0cc…85ab · success</span></div></div>
+          <div class="stage-sep">04 · Restrict</div>
+          <div class="msg"><div class="av tok">LS</div><div><div class="who">LiensightToken <time>15:28</time></div><p>Report is from the expected workflow and the right property. This lien is new to me, so transfers are now restricted.</p><span class="file">citedHash 0xb87d…49f4</span></div></div>
+          <div class="stage-sep">05 · Clear (the issuer's call)</div>
+          <div class="msg"><div class="av iss">ISS</div><div><div class="who">Issuer multisig <time>after review</time></div><p>Counsel reviewed it. I can clear, but only by naming the exact set of liens I reviewed. If a new one landed meanwhile, my clear fails.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT'S INSIDE (pinned sideways) -->
+  <section class="hpin" id="inside">
+    <div class="wrap center">
+      <span class="script">what's inside</span>
+      <h2 class="display">Four parts. One repo.</h2>
+      <p class="desk-only" style="margin-top:18px"><span class="sticky">Scroll down to move sideways.</span></p>
+    </div>
+    <div class="hrow">
+      <article class="panel">
+        <div><div class="no">01</div><h3>The token <span>Solidity.</span></h3><p>An ERC-20 for SPV shares. Transfers stop while a cited lien is open.</p><a class="btn btn-chip" href="docs.html#token">See contract + tests ●</a></div>
+        <div class="window"><div class="tb"><i></i><i></i><i></i></div><pre><span class="k">function</span> <span class="f">onReport</span>(bytes metadata, bytes report) external {
+  <span class="k">if</span> (msg.sender != reportReceiver) <span class="k">revert</span> NotReceiver();
+  <span class="c">// workflowId(32) | name(10) | owner(20)</span>
+  <span class="k">if</span> (owner(metadata) != expectedWorkflowOwner)
+      <span class="k">revert</span> WrongWorkflowOwner();
+  ...
+  <span class="k">if</span> (!seenAdverse[id]) { restricted = <span class="k">true</span>; }
+}</pre></div>
+        <div class="cols"><div><div class="kicker">The part</div><p>The token accepts reports only from the CRE forwarder, the expected workflow owner and the right property. A lien it has already seen never restricts twice.</p></div><div><div class="kicker">Deliverables</div><div class="chips"><span class="chip">onReport</span><span class="chip">clearRestriction</span><span class="chip">setExpectedWorkflowOwner</span><span class="chip">18 forge tests</span></div></div></div>
+      </article>
+      <article class="panel">
+        <div><div class="no">02</div><h3>The workflow <span>Chainlink CRE.</span></h3><p>A cron workflow where every node reads ACRIS and the network agrees on the exact document set.</p><a class="btn btn-chip" href="docs.html#workflow">See workflow ●</a></div>
+        <div class="window"><div class="tb"><i></i><i></i><i></i></div><pre><span class="k">const</span> docsJson = <span class="k">new</span> cre.capabilities.<span class="f">HTTPClient</span>()
+  .<span class="f">sendRequest</span>(runtime, fetchDocs,
+    <span class="f">consensusIdenticalAggregation</span>&lt;string&gt;())
+  (runtime.config).<span class="f">result</span>();
+
+<span class="f">assertNonEmpty</span>(docs);   <span class="c">// zero docs: refuse</span>
+<span class="k">const</span> report = runtime.<span class="f">report</span>(<span class="f">prepareReportRequest</span>(payload));
+evm.<span class="f">writeReport</span>(runtime, { receiver: token, report });</pre></div>
+        <div class="cols"><div><div class="kicker">The part</div><p>If ACRIS errors, truncates or returns nothing, the workflow writes nothing. A failed fetch can never set or clear a restriction.</p></div><div><div class="kicker">Deliverables</div><div class="chips"><span class="chip">Cron trigger</span><span class="chip">Identical consensus</span><span class="chip">EVM report</span><span class="chip">17 vitest tests</span></div></div></div>
+      </article>
+      <article class="panel">
+        <div><div class="no">03</div><h3>The adverse map <span>ACRIS codes.</span></h3><p>Which filings count as adverse, checked against NYC's own code list. Versioned, with its hash stored on the token.</p><a class="btn btn-chip" href="docs.html#codes">See the codes ●</a></div>
+        <div class="window"><div class="tb"><i></i><i></i><i></i></div><pre>{
+  <span class="s">"version"</span>: 1,
+  <span class="s">"adverse"</span>: [<span class="s">"FL"</span>, <span class="s">"FTL"</span>, <span class="s">"NTXL"</span>, <span class="s">"TLS"</span>, <span class="s">"LOCC"</span>, <span class="s">"JUDG"</span>],
+  <span class="s">"discharge"</span>: [<span class="s">"RFL"</span>, <span class="s">"RFTL"</span>, <span class="s">"DTL"</span>, <span class="s">"DPFTL"</span>,
+                <span class="s">"WFL"</span>, <span class="s">"RTXL"</span>, <span class="s">"TOLCC"</span>, <span class="s">"PWFL"</span>, <span class="s">"PRFL"</span>]
+}
+<span class="c">// hash 0xf85b5521…4326faf3, stored on the token</span></pre></div>
+        <div class="cols"><div><div class="kicker">The part</div><p>ACRIS has no lis pendens or foreclosure type. Those are court filings, so we don't claim to catch them.</p></div><div><div class="kicker">Deliverables</div><div class="chips"><span class="chip">6 adverse codes</span><span class="chip">9 discharge codes</span><span class="chip">Dataset 7isb-wh4c</span></div></div></div>
+      </article>
+      <article class="panel">
+        <div><div class="no">04</div><h3>The checker <span>Live in your browser.</span></h3><p>The same classification the workflow runs, against live ACRIS data, for any lot in the five boroughs.</p><a class="btn btn-chip" href="check.html">Open the checker ●</a></div>
+        <div class="window"><div class="tb"><i></i><i></i><i></i></div><pre><span class="c">// borough · block · lot</span>
+2-5789-1022  <span class="k">→ restricted</span>   1 adverse (LOCC)
+1-905-1347   <span class="s">→ open</span>         0 adverse
+
+<span class="c">// reads ACRIS directly, writes nothing on-chain</span></pre></div>
+        <div class="cols"><div><div class="kicker">The part</div><p>Useful before anyone deploys anything: see what the workflow would say about a building today.</p></div><div><div class="kicker">Deliverables</div><div class="chips"><span class="chip">Live ACRIS</span><span class="chip">Document links</span><span class="chip">No wallet</span></div></div></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- DIFFERENCE -->
+  <section id="why">
+    <div class="wrap center">
+      <span class="script">why it matters</span>
+      <h2 class="display">Same lien.<br>Different outcome.</h2>
+    </div>
+    <div class="wrap">
+      <div class="diff" data-reveal>
+        <div class="tb"><span>the-difference.fig</span><span style="color:var(--mute)">100%</span></div>
+        <div class="grid">
+          <div class="side them"><h4>Without Liensight <span class="tag">Today</span></h4><ul>
+            <li>Someone has to remember to check the county record.</li>
+            <li>Shares keep trading while the lien sits there.</li>
+            <li>Nobody can show when the lien was seen.</li>
+            <li>The token has no idea.</li></ul></div>
+          <div class="vs">VS</div>
+          <div class="side us sel on" data-tag="Liensight · selected"><h4>Liensight <span class="tag red">Watching</span></h4><ul>
+            <li>A workflow reads ACRIS on a schedule.</li>
+            <li>Every node checks the record, and they must agree.</li>
+            <li>Transfers restrict, with the document ID cited.</li>
+            <li>Only the issuer can clear, and only for liens it reviewed.</li></ul></div>
+        </div>
+        <div class="foot"><b>Same lien, same building. <span>The token finally knows.</span></b><a class="btn btn-ghost" href="proof.html">See the proof →</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RECEIPTS -->
+  <section id="receipts">
+    <div class="wrap center">
+      <span class="script">verify it</span>
+      <h2 class="display">Don't take our <span class="hot">word for it</span></h2>
+      <p style="margin-top:18px"><span class="sticky">Real transactions. Check them yourself.</span></p>
+    </div>
+    <div class="wrap">
+      <div class="receipts" data-stagger>
+        <article class="receipt">
+          <div class="top"><span class="play"><i></i> LIVE READ</span><span class="ver">VERIFIED</span></div>
+          <div class="art">restricted()<div class="big red" data-read="restricted">…</div>Read from Sepolia when this page loaded, straight from the token contract.</div>
+          <div class="bottom"><div>Token state<br><small>LiensightToken</small></div><a href="https://sepolia.etherscan.io/address/0xf813c584Fe5e8c86A3F6c7265923CeE0850604aE" target="_blank" rel="noopener">Etherscan ↗</a></div>
+        </article>
+        <article class="receipt">
+          <div class="top"><span class="play"><i></i> REPORT</span><span class="ver">VERIFIED</span></div>
+          <div class="art">status<div class="big ok">success</div>0xc0cc238205a36246731feddba275b3df50b4c781f3958b8d4cab8a862bda85ab</div>
+          <div class="bottom"><div>CRE report tx<br><small>Oct 25 · forwarder</small></div><a href="https://sepolia.etherscan.io/tx/0xc0cc238205a36246731feddba275b3df50b4c781f3958b8d4cab8a862bda85ab" target="_blank" rel="noopener">Etherscan ↗</a></div>
+        </article>
+        <article class="receipt">
+          <div class="top"><span class="play"><i></i> SOURCE</span><span class="ver">PUBLIC RECORD</span></div>
+          <div class="art">doc_type<div class="big red">LOCC</div>2026092900833001<br>Lien of common charges, recorded 2026-09-30, Bronx block 5789 lot 1022.</div>
+          <div class="bottom"><div>ACRIS document<br><small>NYC Dept. of Finance</small></div><a href="https://a836-acris.nyc.gov/DS/DocumentSearch/DocumentDetail?doc_id=2026092900833001" target="_blank" rel="noopener">ACRIS ↗</a></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHECKER -->
+  <section id="check">
+    <div class="wrap center">
+      <span class="script">try it live</span>
+      <h2 class="display">Pick your <span class="hot">property.</span></h2>
+      <p style="margin-top:18px"><span class="sticky">Any NYC lot. Real ACRIS data, read in your browser.</span></p>
+    </div>
+    <div class="wrap">
+      <div class="plan sel" data-tag="checker" data-checker data-reveal>
+        <div class="hero-box">
+          <div><div class="price"><span data-bbl-big>2-5789-1022</span><small data-boro>/ Bronx</small></div><div class="kicker" style="margin-top:8px">Borough · block · lot</div></div>
+          <div class="perks"><span>Live ACRIS read</span><span>Same adverse map as the workflow</span><span>No wallet needed</span></div>
+        </div>
+        <form class="bbl">
+          <label>Borough<select name="borough"><option value="1">1 · Manhattan</option><option value="2" selected>2 · Bronx</option><option value="3">3 · Brooklyn</option><option value="4">4 · Queens</option><option value="5">5 · Staten Island</option></select></label>
+          <label>Block<input name="block" inputmode="numeric" value="5789"></label>
+          <label>Lot<input name="lot" inputmode="numeric" value="1022"></label>
+          <button class="btn btn-red" type="submit">Check →</button>
+        </form>
+        <div class="track-bar"><div class="fill"></div></div>
+        <div class="result"><div class="msgline">Press Check, or try a <button class="pill" type="button" data-preset="1-905-1347" style="height:28px">clean lot</button></div></div>
+        <p class="msgline mono center" style="font-size:11px;color:var(--mute);margin:14px 0 4px">This runs the classification in your browser. It does not write on-chain.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="wrap center">
+      <span class="script">fair questions</span>
+      <h2 class="display">Ask us <span class="hot">anything.</span></h2>
+    </div>
+    <div class="wrap">
+      <div class="faq" data-stagger>
+        <div><span class="frame-tag">is-it-title.frame</span><details><summary><span class="n">01</span>Is the token the title to the building?</summary><div class="ans">No. The token is equity in a company (SPV) that owns the building. The restriction comes from the issuer's own rules, not from property law.</div></details></div>
+        <div><span class="frame-tag">why-a-don.frame</span><details><summary><span class="n">02</span>Why use a decentralized network for one public API?</summary><div class="ans">So no single server decides what the chain sees. Every node reads ACRIS independently and they must agree on the exact document set. Anyone can check the cited document IDs on ACRIS.</div></details></div>
+        <div><span class="frame-tag">can-it-hide.frame</span><details><summary><span class="n">03</span>Can the issuer just hide a lien?</summary><div class="ans">The issuer can clear a restriction, publicly, on-chain. It has to name the exact set of liens it reviewed. If a new lien landed in the meantime, the clear fails.</div></details></div>
+        <div><span class="frame-tag">lis-pendens.frame</span><details><summary><span class="n">04</span>Does it catch lis pendens or foreclosures?</summary><div class="ans">No. Those are court and county-clerk filings, and ACRIS has no document type for them. Liensight covers federal liens, tax liens, tax-lien sales, common-charge liens and judgments.</div></details></div>
+        <div><span class="frame-tag">how-fast.frame</span><details><summary><span class="n">05</span>How fast does it notice?</summary><div class="ans">The workflow runs on a schedule (every 10 minutes in our config). But ACRIS itself records filings days after the real event, so this is an early warning, not instant.</div></details></div>
+        <div><span class="frame-tag">is-it-live.frame</span><details><summary><span class="n">06</span>Is this running in production?</summary><div class="ans">No. It runs on the Sepolia testnet, with reports sent by the CRE simulator through Chainlink's mock forwarder. Production needs a deployed CRE workflow and the production forwarder.</div></details></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="top">
+    <div>
+      <div class="kick">Have a building worth checking?</div>
+      <a class="mail" href="check.html">Run the checker<span> ↗</span></a>
+      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><a class="btn btn-red" href="docs.html">Read the docs →</a><span class="mono" style="font-size:12px"><span class="dot"></span> live on Sepolia</span></div>
+    </div>
+    <div><h5>Product</h5><ul><li><a href="check.html">Check a lot</a></li><li><a href="proof.html">Proof</a></li><li><a href="docs.html">Docs</a></li><li><a href="index.html#faq">FAQ</a></li></ul></div>
+    <div><h5>On-chain</h5><ul><li><a href="https://sepolia.etherscan.io/address/0xf813c584Fe5e8c86A3F6c7265923CeE0850604aE" target="_blank" rel="noopener">Token</a></li><li><a href="https://sepolia.etherscan.io/tx/0xc0cc238205a36246731feddba275b3df50b4c781f3958b8d4cab8a862bda85ab" target="_blank" rel="noopener">Report tx</a></li><li><a href="https://data.cityofnewyork.us/resource/7isb-wh4c.json" target="_blank" rel="noopener">ACRIS codes</a></li></ul></div>
+    <div><h5>Built for</h5><ul><li><a href="https://dorahacks.io/hackathon/legal-hack-2026/detail" target="_blank" rel="noopener">BLI Legal Hack 2</a></li><li><a href="https://docs.chain.link/cre" target="_blank" rel="noopener">Chainlink CRE</a></li></ul></div>
+  </div>
+  <div class="wordmark" aria-hidden="true"><span>L</span>iensight</div>
+  <div class="base"><span>liensight.fig</span><span><span class="dot"></span> Testnet only · not legal advice</span><span>2026 · BLI Legal Tech Hackathon 2</span></div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Draggable.min.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

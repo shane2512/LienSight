@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Docs · Liensight</title>
+<meta name="description" content="How the Liensight token, CRE workflow and adverse map are built, run and limited.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Caveat:wght@600&family=Inter+Tight:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<div class="sky" aria-hidden="true"></div>
+<div class="cursor-you" aria-hidden="true">you</div>
+<div class="drag-pill" aria-hidden="true">DRAG</div>
+
+<div class="ruler" aria-hidden="true">
+  <span class="brand">LIENSIGHT <b>CRE</b></span>
+  <span class="ticks"><span class="playhead">0</span></span>
+  <span class="live"><span class="dot"></span>LIVE · <span class="clock"></span></span>
+</div>
+
+<header class="nav">
+  <a class="pill avail" href="proof.html"><span class="dot"></span>live on Sepolia</a>
+  <nav class="pill links" aria-label="Main">
+    <a href="index.html">Home</a>
+    <a href="index.html#how">How it works</a>
+    <a href="index.html#inside">Inside</a>
+    <a href="proof.html">Proof</a>
+    <a href="docs.html" aria-current="page">Docs</a>
+    <a class="cta" href="check.html">Check a lot</a>
+  </nav>
+  <a class="pill mail" href="https://sepolia.etherscan.io/address/0xf813c584Fe5e8c86A3F6c7265923CeE0850604aE" target="_blank" rel="noopener">0xf813…04aE ↗</a>
+</header>
+
+<main>
+  <section class="page-head">
+    <div class="wrap">
+      <span class="script">the docs</span>
+      <h1 class="display">How it's <span class="hot">built.</span></h1>
+      <p>A token, a workflow and an adverse map. Here is what each part does, how to run it, and where it stops.</p>
+      <div class="toc">
+        <a class="pill" href="#token">01 · Token</a><a class="pill" href="#workflow">02 · Workflow</a><a class="pill" href="#codes">03 · Adverse map</a><a class="pill" href="#run">04 · Run it</a><a class="pill" href="#limits">05 · Limits</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="token" style="padding-top:30px">
+    <div class="wrap">
+      <article class="panel" data-reveal style="width:auto">
+        <div><div class="no">01</div><h3>The token <span>LiensightToken.sol</span></h3><p>An ERC-20 for shares in the company (SPV) that owns the building. It is not the title. The restriction comes from the issuer's own operating rules.</p></div>
+        <div class="kv">
+          <div>onReport(metadata, report)</div><div>Called by the CRE forwarder. Checks the workflow owner and the property key, then restricts if a cited lien is new.</div>
+          <div>clearRestriction(hash, reason)</div><div>Issuer only. The hash must match the liens it reviewed, so a lien that arrived mid-review can't be cleared unseen.</div>
+          <div>setExpectedWorkflowOwner(addr)</div><div>Issuer only. Moves the token from the simulator to a deployed workflow.</div>
+          <div>restricted · citedHash</div><div>Public state. Transfers revert with TransferRestricted() while restricted is true.</div>
+        </div>
+        <div class="cols"><div><div class="kicker">Tested</div><p>18 Foundry tests: access control, replays, cleared liens never re-restricting, stale clears reverting, gas for 20 liens at once.</p></div><div><div class="kicker">Source</div><div class="chips"><span class="chip">contracts/src/LiensightToken.sol</span><span class="chip">contracts/test/</span></div></div></div>
+      </article>
+    </div>
+  </section>
+
+  <section id="workflow" style="padding-top:30px">
+    <div class="wrap">
+      <article class="panel" data-reveal style="width:auto">
+        <div><div class="no">02</div><h3>The workflow <span>Chainlink CRE.</span></h3><p>A cron-triggered TypeScript workflow. Each run follows four steps.</p>
+          <div class="chat" style="margin:0;box-shadow:none;border:1px solid var(--line)"><div class="body" style="padding:4px 18px 14px">
+            <div class="stage-sep">01 · Fetch</div><p style="margin:0;color:var(--ink-2)">Each node queries the ACRIS Legals dataset for the BBL, then Master for document types, 80 IDs at a time.</p>
+            <div class="stage-sep">02 · Agree</div><p style="margin:0;color:var(--ink-2)">Nodes reach identical consensus on the sorted document list.</p>
+            <div class="stage-sep">03 · Classify</div><p style="margin:0;color:var(--ink-2)">The adverse map splits documents into adverse, discharge and other.</p>
+            <div class="stage-sep">04 · Report</div><p style="margin:0;color:var(--ink-2)">A signed report goes to the token through the forwarder.</p>
+          </div></div>
+        </div>
+        <div class="window"><div class="tb"><i></i><i></i><i></i></div><pre><span class="c">// workflow/workflow.ts (excerpt)</span>
+<span class="k">const</span> fetchDocs = (req, config) =&gt; {
+  <span class="k">const</span> legals = get(<span class="f">legalsUrl</span>(config.bbl));
+  <span class="k">for</span> (chunk <span class="k">of</span> ids, 80 at a time)
+    master.push(...get(<span class="f">masterUrl</span>(chunk)));
+  <span class="k">return</span> JSON.stringify(<span class="f">canonicalDocs</span>(legals, master));
+};
+
+<span class="f">assertComplete</span>(rows);  <span class="c">// 5,000-row cut-off: refuse</span>
+<span class="f">assertNonEmpty</span>(docs);  <span class="c">// zero docs: refuse</span></pre></div>
+        <div class="cols"><div><div class="kicker">Tested</div><p>17 Vitest tests: canonical ordering, legacy FT_ document IDs, truncation, empty results, report encoding.</p></div><div><div class="kicker">Source</div><div class="chips"><span class="chip">workflow/workflow.ts</span><span class="chip">workflow/src/</span></div></div></div>
+      </article>
+    </div>
+  </section>
+
+  <section id="codes" style="padding-top:30px">
+    <div class="wrap center">
+      <span class="script">03 · adverse map</span>
+      <h2 class="display">What <span class="hot">counts.</span></h2>
+    </div>
+    <div class="wrap">
+      <div class="diff" data-reveal>
+        <div class="tb"><span>codeMap.json · v1</span><span style="color:var(--mute)">ACRIS dataset 7isb-wh4c</span></div>
+        <div class="grid" style="grid-template-columns:1fr 1fr">
+          <div class="side us"><h4>Adverse <span class="tag red">restricts</span></h4><ul>
+            <li><b class="mono">FL</b>&nbsp;Federal lien, IRS</li><li><b class="mono">FTL</b>&nbsp;Federal lien, other</li><li><b class="mono">NTXL</b>&nbsp;Notice of estate tax lien</li>
+            <li><b class="mono">TLS</b>&nbsp;Tax lien sale certificate</li><li><b class="mono">LOCC</b>&nbsp;Lien of common charges</li><li><b class="mono">JUDG</b>&nbsp;Judgment</li></ul></div>
+          <div class="side them"><h4>Discharge <span class="tag">suggests a clear</span></h4><ul>
+            <li><b class="mono">RFL</b>&nbsp;Release of federal lien</li><li><b class="mono">RFTL</b>&nbsp;Release of federal tax lien</li><li><b class="mono">DTL</b>&nbsp;Discharge of tax lien</li>
+            <li><b class="mono">DPFTL</b>&nbsp;Discharge of property from FTL</li><li><b class="mono">WFL</b>&nbsp;Withdrawal of a federal lien</li><li><b class="mono">RTXL</b>&nbsp;Release of estate tax lien</li>
+            <li><b class="mono">TOLCC</b>&nbsp;Termination of lien of common charges</li><li><b class="mono">PWFL</b>&nbsp;Partial withdrawal of federal lien</li><li><b class="mono">PRFL</b>&nbsp;Partial release of federal lien</li></ul></div>
+        </div>
+        <div class="foot"><b>No lis pendens, no foreclosure. <span>ACRIS has no type for them.</span></b><span class="mono" style="font-size:12px;color:var(--mute)">hash 0xf85b5521…4326faf3</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="run" style="padding-top:30px">
+    <div class="wrap center">
+      <span class="script">04 · run it</span>
+      <h2 class="display">Run it <span class="hot">yourself.</span></h2>
+    </div>
+    <div class="wrap" style="max-width:900px">
+      <div class="window" data-reveal style="margin-top:40px"><div class="tb"><i></i><i></i><i></i></div><pre><span class="c"># contract tests</span>
+cd contracts &amp;&amp; forge test
+
+<span class="c"># workflow tests</span>
+cd workflow &amp;&amp; npm i &amp;&amp; npm test
+
+<span class="c"># CRE simulation (needs: cre login, bun on PATH)</span>
+cre workflow simulate ./workflow -T staging-settings --non-interactive --trigger-index 0
+
+<span class="c"># Sepolia deploy: this network charges far more gas for contract code</span>
+forge script script/Deploy.s.sol --rpc-url $SEPOLIA --account &lt;keystore&gt; --broadcast --gas-estimate-multiplier 800</pre></div>
+    </div>
+  </section>
+
+  <section id="limits" style="padding-top:30px">
+    <div class="wrap center">
+      <span class="script">05 · limits</span>
+      <h2 class="display">Where it <span class="hot">stops.</span></h2>
+    </div>
+    <div class="wrap">
+      <div class="bento" data-stagger>
+        <div class="card" style="grid-column:span 4"><span class="label">LIMIT 01</span><div class="kicker" style="color:var(--red)">Lag</div><p style="font:600 17px/1.4 var(--body)">ACRIS records filings days after the real event. Early warning, not a title search.</p></div>
+        <div class="card" style="grid-column:span 4"><span class="label">LIMIT 02</span><div class="kicker" style="color:var(--red)">One source</div><p style="font:600 17px/1.4 var(--body)">Every node reads the same public API. A second source is a stretch goal.</p></div>
+        <div class="card" style="grid-column:span 4"><span class="label">LIMIT 03</span><div class="kicker" style="color:var(--red)">Testnet</div><p style="font:600 17px/1.4 var(--body)">The demo token accepts the simulator's public placeholder owner. Production needs a deployed workflow.</p></div>
+        <div class="card" style="grid-column:span 6"><span class="label">LIMIT 04</span><div class="kicker" style="color:var(--red)">Issuer power</div><p style="font:600 17px/1.4 var(--body)">The issuer can clear a restriction. It has to do it publicly and name the liens it reviewed.</p></div>
+        <div class="card" style="grid-column:span 6"><span class="label">LIMIT 05</span><div class="kicker" style="color:var(--red)">Not legal advice</div><p style="font:600 17px/1.4 var(--body)">A hackathon build. It flags public filings; it does not judge their legal effect.</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="top">
+    <div>
+      <div class="kick">Have a building worth checking?</div>
+      <a class="mail" href="check.html">Run the checker<span> ↗</span></a>
+      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><a class="btn btn-red" href="docs.html">Read the docs →</a><span class="mono" style="font-size:12px"><span class="dot"></span> live on Sepolia</span></div>
+    </div>
+    <div><h5>Product</h5><ul><li><a href="check.html">Check a lot</a></li><li><a href="proof.html">Proof</a></li><li><a href="docs.html">Docs</a></li><li><a href="index.html#faq">FAQ</a></li></ul></div>
+    <div><h5>On-chain</h5><ul><li><a href="https://sepolia.etherscan.io/address/0xf813c584Fe5e8c86A3F6c7265923CeE0850604aE" target="_blank" rel="noopener">Token</a></li><li><a href="https://sepolia.etherscan.io/tx/0xc0cc238205a36246731feddba275b3df50b4c781f3958b8d4cab8a862bda85ab" target="_blank" rel="noopener">Report tx</a></li><li><a href="https://data.cityofnewyork.us/resource/7isb-wh4c.json" target="_blank" rel="noopener">ACRIS codes</a></li></ul></div>
+    <div><h5>Built for</h5><ul><li><a href="https://dorahacks.io/hackathon/legal-hack-2026/detail" target="_blank" rel="noopener">BLI Legal Hack 2</a></li><li><a href="https://docs.chain.link/cre" target="_blank" rel="noopener">Chainlink CRE</a></li></ul></div>
+  </div>
+  <div class="wordmark" aria-hidden="true"><span>L</span>iensight</div>
+  <div class="base"><span>liensight.fig</span><span><span class="dot"></span> Testnet only · not legal advice</span><span>2026 · BLI Legal Tech Hackathon 2</span></div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Draggable.min.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

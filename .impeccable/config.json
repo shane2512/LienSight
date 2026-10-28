@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "gradient-text",
+        "value": "*",
+        "files": [
+          "site/assets/site.css"
+        ],
+        "createdAt": "2026-10-28T10:04:32.554Z",
+        "reason": "agent decision: .stipple is a dot-halftone texture clipped to text, reproducing the stippled hero headline in the user's reference recording they asked to recreate exactly"
+      }
+    ]
+  }
+}
