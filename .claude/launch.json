@@ -1,6 +1,12 @@
 {
   "version": "0.0.1",
   "configurations": [
+    {
+      "name": "liensight-site",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "5173", "--directory", "demo"],
+      "port": 5173
+    },
     { "name": "site", "runtimeExecutable": "python", "runtimeArgs": ["-m", "http.server", "5181", "--directory", "site"], "port": 5181, "autoPort": false }
   ]
 }
