@@ -15,7 +15,7 @@ No single server or operator decides what the chain sees, and every restriction 
 ## Layout
 - `contracts/`: Foundry. `forge test` runs 18 tests.
 - `workflow/`: CRE workflow (`main.ts`, `workflow.ts`) and tested logic in `src/`. `npm test` runs 17 tests.
-- `demo/index.html`: live ACRIS check using the same adverse map. `demo/replay.sh` re-runs the CRE simulations.
+- `demo/`: the website. `index.html` (landing), `check.html` (live ACRIS check with the same adverse map), `how-it-works.html`, `evidence.html` (reads the token's live state from Sepolia). Serve it with `python -m http.server 5173 --directory demo`. Add `?motion=1` to force animations when the browser reports reduced motion. `demo/replay.sh` re-runs the CRE simulations.
 - `docs/simulation-log.md`: CRE CLI simulation evidence.
 
 ## Run

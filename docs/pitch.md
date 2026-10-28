@@ -12,4 +12,4 @@
 
 **Honest framing:** token = SPV equity, not title; restriction = issuer-governed per operating agreement, not a statutory duty; ACRIS lags; no lis pendens in ACRIS.
 
-**Demo (90s):** 1) open demo page, check 2-5789-1022: restricted, 1 LOCC, link to ACRIS. 2) check 1-905-1347: open. 3) show `docs/simulation-log.md` and `forge test` 16/16.
+**Demo (90s):** 1) open the landing page and scroll the card flip; 2) on Check a property, check 2-5789-1022: restricted, 1 LOCC, link to ACRIS. then 1-905-1347: open. 3) open Evidence: live `restricted() = true` from Sepolia. 4) show `docs/simulation-log.md` and `forge test` 16/16.

@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Evidence · Liensight</title>
+<meta name="description" content="Live on-chain state of the Liensight token on Sepolia, plus the transactions and simulation log behind it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="evidence">
+<header id="nav"></header>
+
+<main>
+  <section class="page-hero">
+    <div class="wrap">
+      <h1>On the record.</h1>
+      <p>Read straight from the Sepolia testnet when you open this page. Nothing here is a screenshot.</p>
+    </div>
+  </section>
+
+  <section class="wrap overlap">
+    <div class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap">
+        <div><span class="pill">Live token state</span><h2 style="font-size:26px;font-weight:800;margin-top:10px">LiensightToken · LSPV</h2></div>
+        <button class="btn ghost" id="refresh" type="button">Refresh</button>
+      </div>
+      <div id="status" class="banner mut" role="status">Reading Sepolia…</div>
+      <dl class="kv">
+        <dt>Contract</dt><dd><a class="mono" style="color:var(--blue);text-decoration:none" target="_blank" rel="noopener" href="https://sepolia.etherscan.io/address/0xf813c584Fe5e8c86A3F6c7265923CeE0850604aE">0xf813c584Fe5e8c86A3F6c7265923CeE0850604aE</a></dd>
+        <dt>restricted()</dt><dd class="mono" id="v-restricted">…</dd>
+        <dt>citedHash()</dt><dd class="mono" id="v-cited">…</dd>
+        <dt>lastDocSetHash()</dt><dd class="mono" id="v-set">…</dd>
+        <dt>issuerMultisig()</dt><dd class="mono" id="v-issuer">…</dd>
+        <dt>expectedWorkflowOwner()</dt><dd class="mono" id="v-owner">…</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap grid-2" style="gap:24px;align-items:start">
+      <div class="panel reveal">
+        <span class="pill">Transactions</span>
+        <h3 style="font-size:22px;font-weight:800;margin:12px 0 16px">What happened on-chain</h3>
+        <table class="table">
+          <tbody>
+            <tr><td>Token deployed</td><td><a class="mono" target="_blank" rel="noopener" href="https://sepolia.etherscan.io/tx/0xb27c9ed1891c763325412789f3d05e1d221584353186e80eb9ad31ea9769c4d9">0xb27c9ed1…c4d9</a></td></tr>
+            <tr><td>CRE report written (LOCC lien cited)</td><td><a class="mono" target="_blank" rel="noopener" href="https://sepolia.etherscan.io/tx/0xc0cc238205a36246731feddba275b3df50b4c781f3958b8d4cab8a862bda85ab">0xc0cc2382…85ab</a></td></tr>
+          </tbody>
+        </table>
+        <p class="lead" style="margin-top:16px">The cited hash equals <span class="mono">keccak256(abi.encode([2026092900833001]))</span>, the ACRIS document ID of the lien, computed independently.</p>
+      </div>
+      <div class="reveal">
+        <span class="pill">CRE simulation</span>
+        <h3 style="font-size:22px;font-weight:800;margin:12px 0 16px">Workflow log</h3>
+        <pre class="log">✓ Workflow compiled
+[SIMULATION] Running trigger trigger=cron-trigger@1.0.0
+[USER LOG] ACRIS docs=14 adverse=2026092900833001:LOCC
+[USER LOG] report written tx=0xc0cc2382…85ab
+✓ Workflow Simulation Result
+
+# clean property 1-905-1347
+[USER LOG] ACRIS docs=12 adverse=none</pre>
+        <p class="lead" style="margin-top:16px">Sent with <span class="mono">cre workflow simulate --broadcast</span> through Chainlink's mock forwarder. See <a href="how-it-works.html#limits" style="color:var(--blue)">honest limits</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta wrap reveal">
+    <h2 class="h2">Run the check yourself.</h2>
+    <a class="btn" href="check.html">Check a property</a>
+  </section>
+</main>
+
+<footer id="footer"></footer>
+<script src="site.js"></script>
+<script>
+const RPC = "https://ethereum-sepolia-rpc.publicnode.com";
+const TOKEN = "0xf813c584Fe5e8c86A3F6c7265923CeE0850604aE";
+const CALLS = { restricted: "0x7072c6b1", cited: "0xd78d4599", set: "0x5d9d65a5", issuer: "0xc655cb3a", owner: "0xc8e9c186" };
+const $ = (id) => document.getElementById(id);
+async function call(data) {
+  const r = await fetch(RPC, { method: "POST", headers: { "content-type": "application/json" },
+    body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "eth_call", params: [{ to: TOKEN, data }, "latest"] }) });
+  const j = await r.json();
+  if (j.error) throw new Error(j.error.message);
+  return j.result;
+}
+const addr = (w) => "0x" + w.slice(-40);
+async function load() {
+  $("status").className = "banner mut"; $("status").textContent = "Reading Sepolia…";
+  try {
+    const [r, c, s, i, o] = await Promise.all(Object.values(CALLS).map(call));
+    const restricted = BigInt(r) === 1n;
+    $("v-restricted").textContent = String(restricted);
+    $("v-cited").textContent = c; $("v-set").textContent = s;
+    $("v-issuer").textContent = addr(i); $("v-owner").textContent = addr(o);
+    $("status").className = "banner " + (restricted ? "bad" : "ok");
+    $("status").textContent = restricted
+      ? "Transfers are restricted. The token cites a lien recorded on the demo property and is waiting for issuer review."
+      : "Transfers are open. No unreviewed adverse filing is cited.";
+  } catch (e) {
+    $("status").className = "banner mut";
+    $("status").textContent = "Couldn't reach Sepolia right now (" + e.message + "). Use the Etherscan link instead.";
+  }
+}
+$("refresh").addEventListener("click", load);
+load();
+</script>
+</body>
+</html>
