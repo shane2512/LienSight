@@ -23,24 +23,6 @@
     });
   }
 
-  /* ---------- ruler: playhead + live clock ---------- */
-  const head = $(".ruler .playhead");
-  const clock = $(".ruler .clock");
-  const tick = () => {
-    if (clock) clock.textContent = new Date().toISOString().slice(11, 19) + " UTC";
-  };
-  tick();
-  setInterval(tick, 1000);
-  const moveHead = () => {
-    if (!head) return;
-    const max = document.documentElement.scrollHeight - innerHeight;
-    const p = max > 0 ? scrollY / max : 0;
-    head.style.left = (p * 100).toFixed(2) + "%";
-    head.textContent = Math.round(p * 1440);
-  };
-  addEventListener("scroll", moveHead, { passive: true });
-  moveHead();
-
   /* ---------- multiplayer "you" cursor + drag pill ---------- */
   const you = $(".cursor-you");
   const drag = $(".drag-pill");

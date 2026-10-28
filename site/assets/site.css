@@ -53,31 +53,11 @@ img, svg { display: block; max-width: 100%; }
 .cloud.soft { opacity: .55; filter: blur(6px); transform: scale(1.4); }
 .cloud.tiny { width: 220px; height: 80px; opacity: .7; }
 
-/* ---------- figma ruler bar ---------- */
-.ruler {
-  position: fixed; top: 0; left: 0; right: 0; height: 30px; z-index: 60;
-  display: flex; align-items: center; gap: 12px; padding: 0 12px;
-  background: #fff; border-bottom: 1px solid var(--line);
-  font: 500 10px/1 var(--mono); color: var(--mute); letter-spacing: .04em;
-}
-.ruler .brand { display: flex; align-items: center; gap: 6px; color: var(--ink); font-weight: 700; }
-.ruler .brand b { background: var(--red); color: #fff; padding: 2px 5px; border-radius: 4px; }
-.ruler .ticks {
-  flex: 1; height: 100%; position: relative;
-  background:
-    repeating-linear-gradient(90deg, #c9d0d8 0 1px, transparent 1px 10px) bottom/100% 6px no-repeat,
-    repeating-linear-gradient(90deg, #aeb7c2 0 1px, transparent 1px 100px) bottom/100% 12px no-repeat;
-}
-.ruler .playhead {
-  position: absolute; top: 6px; left: 0; padding: 2px 6px; border-radius: 4px;
-  background: var(--red); color: #fff; font-weight: 700; transform: translateX(-50%);
-}
-.ruler .live { display: flex; align-items: center; gap: 6px; color: var(--ink); }
 .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 3px rgba(25,164,99,.2); display: inline-block; }
 
 /* ---------- nav ---------- */
 .nav {
-  position: fixed; top: 42px; left: 0; right: 0; z-index: 55;
+  position: fixed; top: 16px; left: 0; right: 0; z-index: 55;
   display: flex; justify-content: space-between; align-items: center; padding: 0 20px;
   pointer-events: none;
 }
@@ -87,6 +67,8 @@ img, svg { display: block; max-width: 100%; }
   background: #fff; border-radius: 999px; box-shadow: var(--shadow);
   font: 500 12px/1 var(--mono); text-decoration: none; color: var(--ink); white-space: nowrap;
 }
+.nav .brand { font: 800 16px/1 var(--body); letter-spacing: -.02em; padding: 0 16px 0 6px; height: 46px; }
+.nav .brand .mark { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--red); color: #fff; font: 900 15px/1 var(--display); }
 .nav .links { display: flex; gap: 2px; padding: 4px; height: auto; }
 .nav .links a {
   font: 500 13px/1 var(--body); text-decoration: none; padding: 10px 14px; border-radius: 999px; color: var(--ink);
@@ -166,7 +148,7 @@ section { position: relative; padding: 120px 0; }
 .btn:focus-visible, a:focus-visible, button:focus-visible, input:focus-visible { outline: 3px solid var(--sel); outline-offset: 3px; }
 
 /* ---------- hero ---------- */
-.hero { min-height: 100vh; padding: 150px 0 60px; display: flex; flex-direction: column; justify-content: center; }
+.hero { min-height: 100vh; padding: 120px 0 60px; display: flex; flex-direction: column; justify-content: center; }
 .hero .badge {
   display: inline-flex; align-items: center; gap: 8px; margin: 0 auto 26px; padding: 8px 14px; border-radius: 8px;
   background: rgba(255,255,255,.75); font: 500 13px/1 var(--body); color: var(--ink-2);
@@ -391,7 +373,7 @@ section { position: relative; padding: 120px 0; }
 .footer .base { display: flex; justify-content: space-between; padding: 18px 0; border-top: 1px solid #262a31; font: 500 11px/1.4 var(--mono); color: #8a929c; gap: 12px; flex-wrap: wrap; position: relative; background: var(--dark); }
 
 /* ---------- sub-page header ---------- */
-.page-head { padding: 170px 0 40px; text-align: center; }
+.page-head { padding: 140px 0 40px; text-align: center; }
 .page-head p { max-width: 620px; margin: 22px auto 0; color: var(--ink-2); font-size: 18px; }
 .kv { display: grid; grid-template-columns: 220px 1fr; border-top: 1px solid var(--line); }
 .kv > div { padding: 14px 4px; border-bottom: 1px solid var(--line); font-size: 15px; word-break: break-all; }
@@ -422,9 +404,8 @@ section { position: relative; padding: 120px 0; }
   .hero .corners { font-size: 9px; }
 }
 @media (max-width: 560px) {
-  .ruler .ticks { display: none; }
-  .nav .pill.avail { display: none; }
-  .nav { justify-content: center; }
+  .nav { padding: 0 12px; }
+  .nav .links a:not(.cta) { display: none; }
   .ecard .stage { aspect-ratio: 4/3.4; }
   .laptop { width: 92%; }
 }
