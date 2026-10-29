@@ -6,7 +6,8 @@ SRC = pathlib.Path(__file__).resolve().parent
 OUT = SRC.parent
 CHROME = "C:/Program Files/Google/Chrome/Application/chrome.exe"
 JOBS = [  # (page, output, width, height, transparent)
-    ("logo.html", "liensight-logo.png", 1600, 420, True),
+    ("logo.html", "liensight-logo.png", 2060, 420, True),
+    ("logo-square.html", "liensight-logo-square.png", 1024, 1024, True),
     ("thumbnail.html", "youtube-thumbnail.png", 1280, 720, False),
     ("poster.html", "poster-hero.png", 1920, 1080, False),
     ("workflow.html", "poster-workflow-stack.png", 1920, 1080, False),

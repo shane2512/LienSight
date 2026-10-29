@@ -3,22 +3,22 @@
 <style>
   :root { --w: 1920px; --h: 1080px; }
   .top { position: absolute; left: 90px; right: 90px; top: 56px; display: flex; justify-content: space-between; align-items: flex-end; }
-  .h { font-size: 82px; }
+  .h { font-size: 64px; white-space: nowrap; }
   .h .cl { color: var(--cl); }
   .brand { display: flex; align-items: center; gap: 16px; }
   .brand .mark { width: 64px; height: 64px; }
   .brand b { font: 900 44px/1 "Archivo", sans-serif; font-stretch: 125%; text-transform: uppercase; letter-spacing: -.03em; }
   /* the workflow: two rows of steps */
   .lane { position: absolute; left: 90px; right: 90px; display: grid; gap: 26px; }
-  .lane.a { top: 210px; grid-template-columns: repeat(4, 1fr); }
-  .lane.b { top: 500px; grid-template-columns: repeat(3, 1fr); }
+  .lane.a { top: 196px; grid-template-columns: repeat(4, 1fr); }
+  .lane.b { top: 512px; grid-template-columns: repeat(3, 1fr); }
   .lab { position: absolute; left: 92px; font: 800 19px/1 "JetBrains Mono", monospace; letter-spacing: .14em; text-transform: uppercase; }
-  .st { position: relative; padding: 24px 24px 22px; min-height: 236px; display: flex; flex-direction: column; }
+  .st { position: relative; padding: 20px 22px 18px; min-height: 0; display: flex; flex-direction: column; }
   .st .k { display: flex; align-items: center; gap: 12px; font: 700 17px/1 "JetBrains Mono", monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--mute); }
   .st .k b { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: var(--ink); color: #fff; font-size: 18px; letter-spacing: 0; }
   .st.cre .k b { background: var(--cl); } .st.chain .k b { background: var(--red); }
-  .st h4 { margin-top: 16px; font: 900 32px/1.02 "Archivo", sans-serif; font-stretch: 118%; text-transform: uppercase; letter-spacing: -.02em; }
-  .st p { margin-top: 10px; font: 600 21px/1.3 "Inter Tight", sans-serif; color: var(--ink2); }
+  .st h4 { margin-top: 12px; font: 900 29px/1.02 "Archivo", sans-serif; font-stretch: 118%; text-transform: uppercase; letter-spacing: -.02em; }
+  .st p { margin-top: 8px; font: 600 19px/1.3 "Inter Tight", sans-serif; color: var(--ink2); }
   .st code { margin-top: auto; padding-top: 12px; font: 700 17px/1.35 "JetBrains Mono", monospace; color: var(--deep); }
   .st.cre code { color: var(--cl); }
   .ar { position: absolute; top: 50%; right: -24px; width: 22px; height: 22px; margin-top: -11px; z-index: 2; }
@@ -42,10 +42,10 @@
   </div>
   <div class="top">
     <div class="h disp">How it works · <span class="cl">built on CRE</span></div>
-    <div class="brand"><div class="mark"><svg viewBox="0 0 512 512"><path d="M168 120 H262 V308 H352 V392 H168 Z" fill="#fff"/><circle cx="330" cy="164" r="26" fill="#fff"/></svg></div><b>Liensight</b></div>
+    <div class="brand"><div class="mark"><svg viewBox="0 0 512 512"><path d="M138 92 H262 V292 H382 V412 H138 Z" fill="#fff"/><circle cx="342" cy="150" r="38" fill="#fff"/></svg></div><b>Liensight</b></div>
   </div>
 
-  <div class="lab" style="top:180px; color:#2f55d4">Chainlink CRE workflow · every 10 minutes</div>
+  <div class="lab" style="top:166px; color:#2f55d4">Chainlink CRE workflow · every 10 minutes</div>
   <div class="lane a">
     <div class="st card cre"><div class="k"><b>1</b>Trigger</div><h4>Cron fires</h4><p>The workflow wakes on schedule for one building (BBL).</p><code>CronCapability "0 */10 * * * *"</code><svg class="ar" viewBox="0 0 22 22"><path d="M4 11 H18 M12 5 L18 11 L12 17"/></svg></div>
     <div class="st card cre"><div class="k"><b>2</b>HTTP capability</div><h4>Nodes read ACRIS</h4><p>Each node queries NYC Open Data on its own: legals, then master.</p><code>HTTPClient · 8h5j-fqxa + bnx9-e6tj</code><svg class="ar" viewBox="0 0 22 22"><path d="M4 11 H18 M12 5 L18 11 L12 17"/></svg></div>
@@ -53,7 +53,7 @@
     <div class="st card cre"><div class="k"><b>4</b>EVM write</div><h4>Signed report</h4><p>Property key, doc-set hash, adverse and discharge IDs, ABI-encoded.</p><code>runtime.report → writeReport</code></div>
   </div>
 
-  <div class="lab" style="top:470px; color:#b8310f">On-chain · LiensightToken (Sepolia)</div>
+  <div class="lab" style="top:484px; color:#b8310f">On-chain · LiensightToken (Sepolia)</div>
   <div class="lane b">
     <div class="st card chain"><div class="k"><b>5</b>Forwarder → onReport</div><h4>Checks the sender</h4><p>Only the CRE forwarder, the expected workflow owner and this property’s key are accepted.</p><code>onReport(metadata, report)</code><svg class="ar" viewBox="0 0 22 22"><path d="M4 11 H18 M12 5 L18 11 L12 17"/></svg></div>
     <div class="st card chain"><div class="k"><b>6</b>Restrict</div><h4>Transfers stop</h4><p>A new adverse filing sets <b>restricted</b> and cites the lien. A cleared lien never re-restricts.</p><code>event Restricted(docSetHash, docIds)</code><svg class="ar" viewBox="0 0 22 22"><path d="M4 11 H18 M12 5 L18 11 L12 17"/></svg></div>
