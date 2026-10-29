@@ -15,7 +15,7 @@
 
 <p align="center">
   <a href="https://liensight.vercel.app"><b>Live site</b></a> ·
-  <a href="#pitch-video"><b>3-minute pitch &amp; live demo</b></a> ·
+  <a href="https://youtu.be/HZOAwJRiEF8"><b>3-minute pitch &amp; live demo</b></a> ·
   <a href="https://sepolia.etherscan.io/address/0xf813c584Fe5e8c86A3F6c7265923CeE0850604aE#events"><b>Token on Etherscan</b></a> ·
   <a href="#user-guide"><b>User guide</b></a>
 </p>
@@ -49,7 +49,7 @@
 ## Pitch video
 
 <p align="center">
-  <a href="#pitch-video"><img src="assets/youtube-thumbnail.png" alt="Watch the Liensight pitch and live demo" width="720" /></a>
+  <a href="https://youtu.be/HZOAwJRiEF8"><img src="assets/youtube-thumbnail.png" alt="Watch the Liensight pitch and live demo" width="720" /></a>
 </p>
 
 Three minutes: the problem, the CRE workflow, and a live demo built from **real screen recordings** (the checker reading ACRIS, the `cre workflow simulate --broadcast` run, the transaction and events on Etherscan, and `cast` reading the token). The video source is in [`pitch/`](pitch/), built with HyperFrames.
