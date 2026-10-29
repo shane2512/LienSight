@@ -100,11 +100,12 @@ a.mini:hover { transform: translateY(-2px); }
   .docs .shell { grid-template-columns: 1fr; }
   .dside { display: none; }
   .dmenu { display: block; position: sticky; top: 84px; z-index: 40; margin-bottom: 14px; }
-  .dmenu details { background: #fff; border-radius: 16px; box-shadow: var(--shadow); }
+  .dmenu details { position: relative; background: #fff; border-radius: 16px; box-shadow: var(--shadow); }
+  .dmenu details[open] { border-radius: 16px 16px 0 0; }
   .dmenu summary { list-style: none; cursor: pointer; padding: 14px 16px; font: 700 14px/1 var(--body); display: flex; justify-content: space-between; }
   .dmenu summary::-webkit-details-marker { display: none; }
   .dmenu summary::after { content: "▾"; color: var(--mute); }
-  .dmenu .list { max-height: 60vh; overflow: auto; padding: 0 8px 10px; }
+  .dmenu .list { position: absolute; left: 0; right: 0; top: 100%; max-height: 60vh; overflow: auto; padding: 0 8px 10px; background: #fff; border-radius: 0 0 16px 16px; box-shadow: 0 24px 40px -18px rgba(16,40,80,.45); }
   .dmenu .list a { display: block; padding: 9px 10px; border-radius: 10px; font: 500 14px/1.3 var(--body); text-decoration: none; color: var(--ink-2); }
   .dmenu .list span { display: block; padding: 10px 10px 4px; font: 600 10px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--mute); }
   .dhead, .dsec { padding: 24px 20px; }

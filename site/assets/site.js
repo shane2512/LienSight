@@ -6,6 +6,19 @@
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
+  /* ---------- smooth, slightly slower wheel scrolling (touch stays native) ---------- */
+  if (typeof Lenis !== "undefined" && !reduce) {
+    const lenis = new Lenis({ lerp: 0.09, wheelMultiplier: 0.8, anchors: { offset: -92 } });
+    if (hasGsap) {
+      lenis.on("scroll", ScrollTrigger.update);
+      gsap.ticker.add((t) => lenis.raf(t * 1000));
+      gsap.ticker.lagSmoothing(0);
+    } else {
+      const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
+      requestAnimationFrame(raf);
+    }
+  }
+
   /* ---------- sky ---------- */
   const sky = $(".sky");
   if (sky) {
