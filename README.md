@@ -14,8 +14,8 @@
 </p>
 
 <p align="center">
-  <a href="LIVE_SITE_URL"><b>Live site</b></a> ·
-  <a href="VIDEO_URL"><b>3-minute pitch &amp; live demo</b></a> ·
+  <a href="https://liensight.vercel.app"><b>Live site</b></a> ·
+  <a href="#pitch-video"><b>3-minute pitch &amp; live demo</b></a> ·
   <a href="https://sepolia.etherscan.io/address/0xf813c584Fe5e8c86A3F6c7265923CeE0850604aE#events"><b>Token on Etherscan</b></a> ·
   <a href="#user-guide"><b>User guide</b></a>
 </p>
@@ -49,7 +49,7 @@
 ## Pitch video
 
 <p align="center">
-  <a href="VIDEO_URL"><img src="assets/youtube-thumbnail.png" alt="Watch the Liensight pitch and live demo" width="720" /></a>
+  <a href="#pitch-video"><img src="assets/youtube-thumbnail.png" alt="Watch the Liensight pitch and live demo" width="720" /></a>
 </p>
 
 Three minutes: the problem, the CRE workflow, and a live demo built from **real screen recordings** (the checker reading ACRIS, the `cre workflow simulate --broadcast` run, the transaction and events on Etherscan, and `cast` reading the token). The video source is in [`pitch/`](pitch/), built with HyperFrames.
@@ -179,9 +179,9 @@ Full CLI output is in [`docs/simulation-log.md`](docs/simulation-log.md).
 
 No wallet, keys or installs needed for steps 1–3.
 
-1. **See the lien in the public record.** Open the live site’s **Check a lot** page (or [`site/check.html`](site/check.html) locally, see below). Click **Bronx 2-5789-1022 · has a lien**. The page queries ACRIS live and shows *Transfers would be restricted: 1 adverse filing* (`LOCC 2026092900833001`). Click **Manhattan 1-905-1347 · clean** to see a lot with nothing adverse.
+1. **See the lien in the public record.** Open [**Check a lot**](https://liensight.vercel.app/check.html) on the live site. Click **Bronx 2-5789-1022 · has a lien**. The page queries ACRIS live and shows *Transfers would be restricted: 1 adverse filing* (`LOCC 2026092900833001`). Click **Manhattan 1-905-1347 · clean** to see a lot with nothing adverse.
 2. **See the report on-chain.** Open the [token’s events on Etherscan](https://sepolia.etherscan.io/address/0xf813c584Fe5e8c86A3F6c7265923CeE0850604aE#events). The `report(...)` call carries the document-set hash the nodes agreed on.
-3. **See the restriction.** Open the site’s **Proof** page, which reads `restricted()` live from Sepolia.
+3. **See the restriction.** Open the [**Proof**](https://liensight.vercel.app/proof.html) page, which reads `restricted()` live from Sepolia.
 4. **Optional, with Foundry installed**, ask the chain directly:
    ```bash
    RPC=https://ethereum-sepolia-rpc.publicnode.com
@@ -196,7 +196,7 @@ No wallet, keys or installs needed for steps 1–3.
 
 ### Using the website
 
-The site in [`site/`](site/) is static HTML, CSS and JavaScript. Run it locally with:
+Live at **https://liensight.vercel.app**. The site in [`site/`](site/) is static HTML, CSS and JavaScript, so you can also run it locally:
 
 ```bash
 python -m http.server 5181 --directory site
