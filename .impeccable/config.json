@@ -11,6 +11,21 @@
         ],
         "createdAt": "2026-10-28T10:04:32.554Z",
         "reason": "agent decision: .stipple is a dot-halftone texture clipped to text, reproducing the stippled hero headline in the user's reference recording they asked to recreate exactly"
+      },
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-10-29T16:47:32.005Z",
+        "reason": "agent decision: caption overlay for the demo video uses Inter Tight to match the site's body face for visual consistency; recording-only file, not shipped UI"
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "video/scenes/overlay.js"
+        ],
+        "createdAt": "2026-10-29T16:47:32.261Z",
+        "reason": "agent decision: red accent bar on a video caption pill is the project's brand device (matches site accent), recording-only overlay, and the finished video already uses it"
       }
     ]
   }

@@ -1,0 +1,252 @@
+{
+ "s1_hook": {
+  "dur": 9.22,
+  "beats": [
+   [
+    0.0,
+    "A lien gets recorded against a New York building."
+   ],
+   [
+    3.17,
+    "And the token that represents shares in that building?"
+   ],
+   [
+    6.63,
+    "It has no idea."
+   ],
+   [
+    7.84,
+    "This is Liensight."
+   ]
+  ]
+ },
+ "s2_problem": {
+  "dur": 19.15,
+  "beats": [
+   [
+    0.0,
+    "Real estate is being tokenized."
+   ],
+   [
+    2.0,
+    "Shares in a single building can trade on-chain, around the clock."
+   ],
+   [
+    5.84,
+    "But the law doesn't pause."
+   ],
+   [
+    7.57,
+    "A tax lien, a federal lien, a judgment:"
+   ],
+   [
+    10.01,
+    "any of them can land on that property."
+   ],
+   [
+    12.39,
+    "Today, someone has to remember to check the county record."
+   ],
+   [
+    15.85,
+    "The chain never looks."
+   ],
+   [
+    17.36,
+    "And the shares keep moving."
+   ]
+  ]
+ },
+ "s3_why": {
+  "dur": 19.04,
+  "beats": [
+   [
+    0.0,
+    "I'm building this because of what I saw in this hackathon."
+   ],
+   [
+    3.53,
+    "Sixteen submissions."
+   ],
+   [
+    4.97,
+    "Most of them took an A.I."
+   ],
+   [
+    6.68,
+    "decision and hashed it on-chain:"
+   ],
+   [
+    8.77,
+    "evidence of what a model said."
+   ],
+   [
+    10.76,
+    "None of them were about real estate."
+   ],
+   [
+    13.08,
+    "I wanted the opposite."
+   ],
+   [
+    14.62,
+    "A chain that acts on a public government record, not on a model's opinion."
+   ]
+  ]
+ },
+ "s4_how": {
+  "dur": 21.45,
+  "beats": [
+   [
+    0.0,
+    "Here's how it works."
+   ],
+   [
+    1.44,
+    "Every Chainlink node independently reads New York's property records for the building."
+   ],
+   [
+    6.54,
+    "They must agree on the exact set of documents."
+   ],
+   [
+    9.42,
+    "Then they send one signed report to the token."
+   ],
+   [
+    12.3,
+    "If there's a new lien, transfers stop, and the document is cited on-chain."
+   ],
+   [
+    16.74,
+    "Only the issuer can clear it, and only by naming the exact liens they reviewed."
+   ]
+  ]
+ },
+ "s5a_check": {
+  "dur": 16.17,
+  "beats": [
+   [
+    0.0,
+    "Now, the live demo."
+   ],
+   [
+    1.42,
+    "This is a real lot in the Bronx, read live from A.C.R.I.S."
+   ],
+   [
+    5.07,
+    "Fourteen documents on record, and one of them is a lien of common charges, recorded on September thirtieth."
+   ],
+   [
+    11.5,
+    "A building in Manhattan:"
+   ],
+   [
+    13.21,
+    "nothing adverse, so transfers would stay open."
+   ]
+  ]
+ },
+ "s5b_cre": {
+  "dur": 9.06,
+  "beats": [
+   [
+    0.0,
+    "Now the Chainlink workflow, running for real."
+   ],
+   [
+    3.21,
+    "It reads the record, flags the lien, and sends a signed report to the token on Sepolia."
+   ]
+  ]
+ },
+ "s5c_chain": {
+  "dur": 12.17,
+  "beats": [
+   [
+    0.0,
+    "There's the transaction on the block explorer:"
+   ],
+   [
+    3.2,
+    "success, delivered by the Chainlink forwarder."
+   ],
+   [
+    6.39,
+    "And on the token itself, restricted is true."
+   ],
+   [
+    9.47,
+    "Even the issuer can't move shares now."
+   ]
+  ]
+ },
+ "s6_fit": {
+  "dur": 20.24,
+  "beats": [
+   [
+    0.0,
+    "Why this fits this hackathon."
+   ],
+   [
+    2.0,
+    "It's real-world assets, a track with no other entry."
+   ],
+   [
+    5.3,
+    "It's a working Chainlink C.R.E."
+   ],
+   [
+    7.41,
+    "workflow that connects a blockchain to an external A.P.I., simulated and broadcast on Sepolia."
+   ],
+   [
+    13.11,
+    "Thirty-five tests pass, and a security review found and fixed one critical and five important issues before deployment."
+   ]
+  ]
+ },
+ "s7_honest": {
+  "dur": 15.31,
+  "beats": [
+   [
+    0.0,
+    "And it's honest about its limits."
+   ],
+   [
+    2.32,
+    "Testnet only."
+   ],
+   [
+    3.46,
+    "The records lag real events by days."
+   ],
+   [
+    5.96,
+    "And lis pendens aren't in A.C.R.I.S., so they're out of scope."
+   ],
+   [
+    10.01,
+    "Next:"
+   ],
+   [
+    10.66,
+    "a deployed workflow, the production forwarder, and a second data source."
+   ]
+  ]
+ },
+ "s8_close": {
+  "dur": 3.68,
+  "beats": [
+   [
+    0.0,
+    "Liensight."
+   ],
+   [
+    0.91,
+    "The token finds out when the building does."
+   ]
+  ]
+ }
+}

@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "clipped-overflow-container",
+        "value": "*",
+        "files": [
+          "pitch/compositions/s4-how.html"
+        ],
+        "createdAt": "2026-10-29T17:44:50.914Z",
+        "reason": "agent decision: #s4-root is the camera viewport for the pipeline pan (overflow hidden is the point); nothing inside is a popover that needs to escape"
+      }
+    ]
+  }
+}

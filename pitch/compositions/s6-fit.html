@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <template>
+      <style>
+        #s6-root { position: absolute; inset: 0; color: #fff; }
+        #s6-world { position: absolute; inset: 0; transform-origin: 40% 50%; }
+        #s6-title { position: absolute; left: 112px; top: 120px; font-size: 150px; color: #fff; white-space: nowrap; }
+        #s6-sub { position: absolute; left: 118px; top: 700px; font: 700 26px/1.55 "JetBrains Mono", monospace; letter-spacing: .1em; text-transform: uppercase; color: #fff; }
+        #s6-sub b { display: inline-block; margin-top: 18px; padding: 12px 20px; border-radius: 12px; background: #fff; color: #a92b0d; }
+        .s6-row { position: absolute; left: 800px; width: 1010px; height: 232px; border-radius: 32px; background: #fff; color: #15181c; box-shadow: 0 34px 60px -30px rgba(0,0,0,.45); padding: 30px 40px; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+        .s6-k { display: flex; align-items: center; gap: 14px; font: 700 20px/1 "JetBrains Mono", monospace; letter-spacing: .14em; text-transform: uppercase; color: #565e69; }
+        .s6-k i { width: 34px; height: 34px; border-radius: 50%; background: #19a463; color: #fff; display: grid; place-items: center; font-style: normal; font-size: 20px; }
+        .s6-h { margin-top: 12px; font: 900 62px/1 "Archivo", sans-serif; font-stretch: 122%; text-transform: uppercase; letter-spacing: -.03em; }
+        .s6-h em { font-style: normal; color: #d23a16; }
+        .s6-p { margin-top: 12px; font: 700 28px/1.25 "Inter Tight", sans-serif; color: #3c434c; }
+        #s6-r1 { top: 150px; } #s6-r2 { top: 410px; } #s6-r3 { top: 670px; height: 280px; }
+        #s6-link { position: absolute; right: 30px; top: 70px; width: 230px; height: 90px; }
+        #s6-link * { fill: none; stroke: #15181c; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+        #s6-link .pulse { fill: #ef4f26; stroke: none; }
+        #s6-sq { position: absolute; left: 40px; bottom: 22px; display: grid; grid-template-columns: repeat(35, 14px); gap: 6px; }
+        #s6-sq i { width: 14px; height: 22px; border-radius: 4px; background: #e3e7ec; display: block; }
+        #s6-vid { position: absolute; right: 36px; top: 30px; width: 280px; height: 126px; border-radius: 16px; overflow: hidden; background: #0c0e12; }
+        #s6-vid video { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; transform: scale(0.146); }
+        #s6-num { position: absolute; right: 440px; top: 36px; font: 900 112px/1 "Archivo", sans-serif; font-stretch: 125%; letter-spacing: -.05em; color: #d23a16; }
+      </style>
+
+      <div id="s6-root" data-composition-id="s6-fit" data-width="1920" data-height="1080">
+        <div id="s6-world">
+          <div id="s6-title" class="disp"><span class="ln"><span>Why</span></span><span class="ln"><span>this</span></span><span class="ln"><span>fits.</span></span></div>
+          <div id="s6-sub">BLI Legal Tech Hackathon 2<br />DoraHacks · Real-world assets<br /><b>Chainlink CRE bounty</b></div>
+
+          <div id="s6-r1" class="s6-row"><div class="s6-k"><i>✓</i>Track</div><div class="s6-h">Real-world <em>assets</em></div><div class="s6-p">A track with no other entry</div></div>
+
+          <div id="s6-r2" class="s6-row">
+            <div class="s6-k"><i>✓</i>Bounty requirement</div><div class="s6-h">Chainlink <em>CRE</em> workflow</div><div class="s6-p">Chain ⇄ external API · simulated and broadcast on Sepolia</div>
+            <svg id="s6-link" viewBox="0 0 330 130"><rect x="14" y="36" width="76" height="58" rx="12" /><rect x="240" y="36" width="76" height="58" rx="12" /><path id="s6-lk" d="M96 65 H234" stroke-dasharray="10 12" /><path d="M222 53 L236 65 L222 77" /><circle id="s6-pulse" class="pulse" cx="96" cy="65" r="9" /></svg>
+          </div>
+
+          <div id="s6-r3" class="s6-row">
+            <div class="s6-k"><i>✓</i>Proof</div><div class="s6-h"><em>35</em> tests pass</div><div class="s6-p" id="s6-p3">Security review: 1 critical + 5 important findings fixed</div>
+            <div id="s6-sq"></div>
+            <div id="s6-vid"><video id="s6-video" class="clip" src="assets/footage/term_tests.mp4" data-start="14.6" data-duration="8" data-media-start="0" data-track-index="30" muted playsinline></video></div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        (() => {
+          const sq = document.getElementById("s6-sq"); for (let i = 0; i < 35; i++) { const d = document.createElement("i"); d.id = "s6q" + i; sq.appendChild(d); }
+          const tl = gsap.timeline({ paused: true });
+          tl.fromTo("#s6-world", { scale: 1.05 }, { scale: 1.0, duration: 22.6, ease: "none" }, 0);
+          tl.fromTo("#s6-title .ln > span", { yPercent: 135, rotate: 3 }, { yPercent: 0, rotate: 0, duration: 0.95, stagger: 0.14, ease: "expo.out" }, 0.3)
+            .fromTo("#s6-sub", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 1.2);
+          // row 1: the track
+          tl.fromTo("#s6-r1", { x: 260, opacity: 0, rotate: 2 }, { x: 0, opacity: 1, rotate: 0, duration: 0.9, ease: "expo.out" }, 3.0)
+            .fromTo("#s6-r1 .s6-k i", { scale: 0 }, { scale: 1, duration: 0.5, ease: "back.out(3)" }, 3.55);
+          // row 2: the CRE workflow
+          tl.fromTo("#s6-r2", { x: 260, opacity: 0, rotate: 2 }, { x: 0, opacity: 1, rotate: 0, duration: 0.9, ease: "expo.out" }, 6.3)
+            .fromTo("#s6-r2 .s6-k i", { scale: 0 }, { scale: 1, duration: 0.5, ease: "back.out(3)" }, 9.5)
+            .fromTo("#s6-lk", { strokeDashoffset: 44 }, { strokeDashoffset: 0, duration: 1.4, repeat: 4, ease: "none" }, 7.0)
+            .fromTo("#s6-pulse", { attr: { cx: 96 } }, { attr: { cx: 234 }, duration: 1.1, repeat: 4, ease: "power2.inOut" }, 7.0);
+          // row 3: tests + review
+          tl.fromTo("#s6-r3", { x: 260, opacity: 0, rotate: 2 }, { x: 0, opacity: 1, rotate: 0, duration: 0.9, ease: "expo.out" }, 14.0)
+            .fromTo("#s6-vid", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.6, ease: "power3.out" }, 14.5)
+            .fromTo("#s6-sq i", { background: "#e3e7ec" }, { background: "#19a463", duration: 0.12, stagger: 0.075 }, 14.8)
+            .fromTo("#s6-r3 .s6-k i", { scale: 0 }, { scale: 1, duration: 0.5, ease: "back.out(3)" }, 17.6)
+            .fromTo("#s6-p3", { opacity: 0.3 }, { opacity: 1, duration: 0.5 }, 18.2);
+          // exit
+          tl.to(["#s6-r1", "#s6-r2", "#s6-r3"], { x: -160, opacity: 0, duration: 0.7, stagger: 0.06, ease: "power3.in" }, 21.3)
+            .to(["#s6-title", "#s6-sub"], { opacity: 0, y: -30, duration: 0.6, ease: "power2.in" }, 21.4);
+          window.__timelines["s6-fit"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

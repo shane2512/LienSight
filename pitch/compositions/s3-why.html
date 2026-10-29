@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <template>
+      <style>
+        #s3-root { position: absolute; inset: 0; color: #15181c; }
+        #s3-world { position: absolute; inset: 0; transform-origin: 60% 50%; }
+        .s3-t { position: absolute; left: 112px; font-size: 78px; color: #15181c; white-space: nowrap; }
+        .s3-t .hot { color: #d23a16; }
+        .s3-note { position: absolute; left: 118px; font: 700 24px/1.5 "JetBrains Mono", monospace; letter-spacing: .1em; text-transform: uppercase; color: #3c434c; }
+        #s3-grid { position: absolute; left: 1010px; top: 166px; width: 790px; height: 790px; perspective: 1400px; }
+        .s3-tile { position: absolute; width: 176px; height: 176px; border-radius: 22px; background: #fff; box-shadow: 0 24px 40px -22px rgba(0,0,0,.3); display: grid; place-items: center; transform-origin: 50% 50%; }
+        .s3-tile .n { position: absolute; left: 16px; top: 14px; font: 700 17px/1 "JetBrains Mono", monospace; color: #565e69; letter-spacing: .08em; }
+        .s3-tile .g { font: 800 30px/1 "JetBrains Mono", monospace; color: #15181c; opacity: 0; }
+        .s3-tile.ai { background: #ef4f26; box-shadow: 0 24px 40px -18px rgba(210,58,22,.7); }
+        .s3-tile.ai .n { color: rgba(255,255,255,.8); } .s3-tile.ai .g { color: #fff; opacity: 1; }
+        #s3-cnt { position: absolute; left: 1010px; top: 62px; display: flex; align-items: baseline; gap: 18px; }
+        #s3-cnt b { font: 900 84px/1 "Archivo", sans-serif; font-stretch: 125%; letter-spacing: -.04em; }
+        #s3-cnt span { font: 700 22px/1 "JetBrains Mono", monospace; letter-spacing: .12em; text-transform: uppercase; color: #3c434c; }
+        #s3-pct { position: absolute; left: 118px; top: 690px; display: flex; align-items: center; gap: 28px; }
+        #s3-pct b { font: 900 120px/1 "Archivo", sans-serif; font-stretch: 125%; color: #d23a16; letter-spacing: -.04em; }
+        #s3-pct span { font: 700 22px/1.4 "JetBrains Mono", monospace; letter-spacing: .08em; text-transform: uppercase; color: #3c434c; max-width: 480px; }
+        #s3-rwa { outline: 0 solid rgba(210,58,22,.5); position: absolute; left: 118px; top: 700px; padding: 26px 34px; border-radius: 24px; border: 4px dashed #d23a16; background: rgba(255,255,255,.55); display: flex; align-items: center; gap: 28px; }
+        #s3-rwa b { font: 900 100px/1 "Archivo", sans-serif; font-stretch: 125%; color: #d23a16; }
+        #s3-rwa span { font: 800 30px/1.2 "Inter Tight", sans-serif; text-transform: uppercase; letter-spacing: .02em; }
+        .s3-card { position: absolute; width: 400px; height: 470px; top: 300px; border-radius: 30px; padding: 38px 36px; display: flex; flex-direction: column; justify-content: space-between; }
+        #s3-cl { left: 1020px; background: rgba(255,255,255,.55); border: 4px dashed rgba(21,24,28,.45); }
+        #s3-cr { left: 1450px; background: #fff; box-shadow: 0 40px 80px -30px rgba(0,0,0,.34); outline: 0 solid #ef4f26; }
+        .s3-card h4 { font: 900 44px/1.05 "Archivo", sans-serif; font-stretch: 118%; text-transform: uppercase; letter-spacing: -.02em; }
+        .s3-card p { font: 600 26px/1.3 "Inter Tight", sans-serif; color: #3c434c; }
+        .s3-card .ic { height: 120px; }
+        .s3-card svg * { fill: none; stroke: #15181c; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+        #s3-cr svg * { stroke: #d23a16; }
+        #s3-strike { position: absolute; left: 1000px; top: 468px; width: 440px; height: 8px; background: #d23a16; border-radius: 4px; transform-origin: 0 50%; }
+        #s3-badge { align-self: flex-start; padding: 10px 18px; border-radius: 10px; background: #15181c; color: #fff; font: 700 20px/1 "JetBrains Mono", monospace; letter-spacing: .12em; }
+        #s3-chk { display: flex; align-items: center; gap: 14px; font: 700 24px/1.2 "JetBrains Mono", monospace; color: #19a463; letter-spacing: .06em; text-transform: uppercase; }
+        #s3-chk i { width: 36px; height: 36px; border-radius: 50%; background: #19a463; display: grid; place-items: center; color: #fff; font-style: normal; font-size: 22px; }
+      </style>
+
+      <div id="s3-root" data-composition-id="s3-why" data-width="1920" data-height="1080">
+        <div id="s3-world">
+          <div id="s3-grid"></div>
+          <div id="s3-cnt"><b id="s3-num">0</b><span>submissions read</span></div>
+          <div id="s3-cl" class="s3-card"><h4>A model’s<br />opinion</h4><div class="ic"><svg width="120" height="120" viewBox="0 0 120 120"><path d="M30 78 a22 22 0 0 1 4 -43 a28 28 0 0 1 54 6 a18 18 0 0 1 -2 37 Z" /><circle cx="40" cy="98" r="4" /><circle cx="26" cy="110" r="3" /></svg></div><p>Hashed on-chain. Still just what a model said.</p></div>
+          <div id="s3-strike"></div>
+          <div id="s3-cr" class="s3-card"><h4>A public<br />record</h4><div class="ic"><svg width="120" height="120" viewBox="0 0 120 120"><path d="M30 12 H74 L96 34 V108 H30 Z" /><path d="M74 12 V34 H96" /><path d="M44 58 H82 M44 74 H82 M44 90 H68" /></svg></div><div id="s3-badge">NYC ACRIS</div><div id="s3-chk"><i>✓</i>Checkable by anyone</div></div>
+        </div>
+        <div id="s3-ta" class="s3-t disp" data-layout-ignore style="top: 230px"><span class="ln"><span>I’m building</span></span><span class="ln"><span>this because</span></span><span class="ln"><span class="hot">of what I saw.</span></span></div>
+        <div id="s3-na" class="s3-note" style="top: 560px">This hackathon · BLI Legal Tech 2</div>
+        <div id="s3-tb" class="s3-t disp" data-layout-ignore style="top: 200px"><span class="ln"><span>Most took</span></span><span class="ln"><span>an A.I. decision</span></span><span class="ln"><span class="hot">and hashed it.</span></span></div>
+        <div id="s3-nb" class="s3-note" style="top: 560px">Evidence of what a model said</div>
+        <div id="s3-pct"><b id="s3-pnum">~70%</b><span>anchor an AI decision on-chain<br /><em style="font-style:normal;opacity:.7">our read of the 16 submissions at the time</em></span></div>
+        <div id="s3-tc" class="s3-t disp" data-layout-ignore style="top: 200px; font-size: 92px"><span class="ln"><span>None</span></span><span class="ln"><span>about real</span></span><span class="ln"><span class="hot">estate.</span></span></div>
+        <div id="s3-rwa"><b>0</b><span>Real-world assets<br />entries</span></div>
+        <div id="s3-td" class="s3-t disp" data-layout-ignore style="top: 240px; font-size: 80px"><span class="ln"><span>I wanted</span></span><span class="ln"><span class="hot">the opposite.</span></span></div>
+        <div id="s3-nd" class="s3-note" style="top: 560px; max-width: 760px">A chain that acts on a public government record,<br />not on a model’s opinion.</div>
+      </div>
+
+      <script>
+        (() => {
+          const grid = document.getElementById("s3-grid"); const AI = [0, 1, 2, 4, 5, 7, 8, 9, 11, 12, 14];
+          for (let i = 0; i < 16; i++) {
+            const c = i % 4, r = Math.floor(i / 4), t = document.createElement("div"); t.className = "s3-tile"; t.id = "s3t" + i;
+            t.style.left = c * 204 + "px"; t.style.top = r * 204 + "px";
+            t.innerHTML = '<span class="n">#' + String(i + 1).padStart(2, "0") + '</span><span class="g">AI → #</span>'; grid.appendChild(t);
+          }
+          const tl = gsap.timeline({ paused: true });
+          const out = (sel, at) => tl.to(sel + " .ln > span", { yPercent: -135, duration: 0.5, stagger: 0.07, ease: "power3.in" }, at);
+          const inn = (sel, at) => tl.fromTo(sel + " .ln > span", { yPercent: 135, rotate: 3 }, { yPercent: 0, rotate: 0, duration: 0.85, stagger: 0.12, ease: "expo.out" }, at);
+          tl.fromTo("#s3-world", { scale: 1.04 }, { scale: 1.0, duration: 19.9, ease: "none" }, 0);
+
+          // I'm building this because of what I saw / sixteen submissions
+          inn("#s3-ta", 0.25);
+          tl.fromTo("#s3-na", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 1.4)
+            .fromTo(".s3-tile", { y: 90, opacity: 0, scale: 0.6, rotate: -8 }, { y: 0, opacity: 1, scale: 1, rotate: 0, duration: 0.7, stagger: { each: 0.06, grid: [4, 4], from: "start" }, ease: "back.out(1.6)" }, 3.2)
+            .fromTo("#s3-cnt", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.6, ease: "power3.out" }, 3.5);
+          const cnt = { v: 0 };
+          tl.to(cnt, { v: 16, duration: 1.3, ease: "power2.out", onUpdate: () => { document.getElementById("s3-num").textContent = String(Math.round(cnt.v)); } }, 3.6);
+          tl.set("#s3-ta", { opacity: 0 }, 5.3);
+          out("#s3-ta", 4.6); tl.to("#s3-na", { opacity: 0, duration: 0.4 }, 4.6);
+
+          // most of them: AI decision -> hash. flip eleven tiles red
+          inn("#s3-tb", 5.0);
+          tl.fromTo("#s3-nb", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 8.8);
+          AI.forEach((i, k) => {
+            const at = 6.0 + k * 0.28; const id = "#s3t" + i;
+            tl.to(id, { scaleX: 0, duration: 0.14, ease: "power2.in" }, at).call(() => document.getElementById("s3t" + i).classList.add("ai"), [], at + 0.14)
+              .to(id, { scaleX: 1, duration: 0.18, ease: "power2.out" }, at + 0.14);
+          });
+          tl.fromTo("#s3-pct", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 8.9);
+          tl.set("#s3-tb", { opacity: 0 }, 11.0);
+          out("#s3-tb", 10.35); tl.to(["#s3-nb", "#s3-pct"], { opacity: 0, y: -16, duration: 0.45 }, 10.35);
+
+          // none of them were about real estate
+          inn("#s3-tc", 10.85);
+          tl.to(".s3-tile:not(.ai)", { opacity: 0.35, duration: 0.5 }, 10.9)
+            .fromTo("#s3-rwa", { opacity: 0, scale: 0.7, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: "back.out(1.6)" }, 11.6)
+            .fromTo("#s3-rwa", { outlineWidth: 0, outlineColor: "rgba(210,58,22,.5)" }, { outlineWidth: 26, outlineColor: "rgba(210,58,22,0)", duration: 1.1, repeat: 1, ease: "power2.out" }, 12.4);
+          tl.set("#s3-tc", { opacity: 0 }, 13.6);
+          out("#s3-tc", 12.95); tl.to("#s3-rwa", { opacity: 0, y: 20, duration: 0.45 }, 12.95);
+
+          // the opposite: a public record, not a model's opinion
+          inn("#s3-td", 13.2);
+          tl.to("#s3-grid", { x: 260, y: 0, opacity: 0, scale: 0.7, duration: 0.8, ease: "power3.in" }, 13.1)
+            .to("#s3-cnt", { opacity: 0, duration: 0.4 }, 13.1)
+            .fromTo("#s3-nd", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 14.7)
+            .fromTo("#s3-cl", { opacity: 0, y: 70, rotate: -3 }, { opacity: 1, y: 0, rotate: 0, duration: 0.8, ease: "expo.out" }, 14.2)
+            .fromTo("#s3-cr", { opacity: 0, y: 70, rotate: 3 }, { opacity: 1, y: 0, rotate: 0, duration: 0.8, ease: "expo.out" }, 14.5)
+            .fromTo("#s3-strike", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power3.inOut" }, 16.2)
+            .to("#s3-cl", { opacity: 0.35, scale: 0.94, duration: 0.6 }, 16.6)
+            .to("#s3-cr", { scale: 1.07, y: -10, outlineWidth: 8, duration: 0.7, ease: "back.out(1.5)" }, 16.9);
+          // exit
+          tl.to("#s3-td .ln > span", { yPercent: -135, duration: 0.5, stagger: 0.06, ease: "power3.in" }, 19.0)
+            .to(["#s3-nd", "#s3-cl", "#s3-cr", "#s3-strike"], { opacity: 0, y: -30, duration: 0.6, stagger: 0.05, ease: "power2.in" }, 19.0);
+          window.__timelines["s3-why"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

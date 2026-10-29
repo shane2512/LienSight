@@ -1,0 +1,183 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <template>
+      <style>
+        #s4-root { position: absolute; inset: 0; color: #15181c; overflow: hidden; }
+        #s4-cam { position: absolute; left: 0; top: 0; width: 6800px; height: 1080px; will-change: transform; }
+        .s4-st { position: absolute; top: 0; height: 1080px; }
+        .s4-lab { position: absolute; left: 0; top: 96px; display: flex; align-items: center; gap: 18px; }
+        .s4-lab b { width: 56px; height: 56px; border-radius: 50%; background: #ef4f26; color: #fff; display: grid; place-items: center; font: 800 30px/1 "JetBrains Mono", monospace; }
+        .s4-lab span { font: 900 50px/1 "Archivo", sans-serif; font-stretch: 122%; text-transform: uppercase; letter-spacing: -.02em; }
+        /* station 1: the record */
+        #s4-rec { position: absolute; left: 0; top: 190px; width: 760px; padding: 30px 34px 26px; }
+        #s4-rec .h { display: flex; justify-content: space-between; font: 700 20px/1 "JetBrains Mono", monospace; letter-spacing: .12em; color: #565e69; text-transform: uppercase; }
+        #s4-rec .p { margin: 14px 0 18px; font: 800 34px/1.1 "Inter Tight", sans-serif; }
+        .s4-row { display: grid; grid-template-columns: 132px 1fr 170px; align-items: center; height: 76px; padding: 0 16px; border-radius: 14px; font: 600 24px/1 "JetBrains Mono", monospace; color: #3c434c; }
+        .s4-row b { display: inline-block; padding: 9px 14px; border-radius: 10px; background: #eef2f6; color: #15181c; font-weight: 800; width: max-content; }
+        .s4-row.hot { background: #fff1ec; color: #15181c; }
+        .s4-row.hot b { background: #ef4f26; color: #fff; }
+        .s4-row em { font-style: normal; color: #565e69; font-size: 20px; text-align: right; }
+        #s4-more { margin-top: 12px; font: 700 20px/1 "JetBrains Mono", monospace; color: #565e69; letter-spacing: .1em; padding-left: 16px; }
+        /* station 2: nodes */
+        .s4-hex { position: absolute; width: 190px; height: 168px; background: #fff; clip-path: polygon(25% 3%, 75% 3%, 100% 50%, 75% 97%, 25% 97%, 0 50%); display: grid; place-items: center; text-align: center; }
+        .s4-hex-bg { position: absolute; width: 190px; height: 168px; background: #ef4f26; clip-path: polygon(25% 3%, 75% 3%, 100% 50%, 75% 97%, 25% 97%, 0 50%); filter: drop-shadow(0 16px 20px rgba(0,0,0,.32)); }
+        .s4-hex b { display: block; font: 800 22px/1 "JetBrains Mono", monospace; letter-spacing: .06em; }
+        .s4-hex i { display: block; margin-top: 8px; font: 700 18px/1 "JetBrains Mono", monospace; font-style: normal; color: #565e69; letter-spacing: .08em; }
+        .s4-hex .ok { color: #19a463; }
+        #s4-nodesnote { position: absolute; left: 0; top: 770px; width: 920px; font: 700 26px/1.45 "JetBrains Mono", monospace; letter-spacing: .08em; text-transform: uppercase; color: #15181c; }
+        /* station 3: agreement */
+        #s4-cap { position: absolute; left: 160px; top: 410px; width: 860px; padding: 40px 44px; text-align: left; }
+        #s4-cap .k { font: 700 20px/1 "JetBrains Mono", monospace; letter-spacing: .12em; color: #565e69; text-transform: uppercase; }
+        #s4-cap .hash { margin: 16px 0 14px; font: 800 62px/1 "JetBrains Mono", monospace; letter-spacing: -.03em; }
+        #s4-cap .same { display: flex; align-items: center; gap: 14px; font: 800 30px/1.15 "Inter Tight", sans-serif; color: #19a463; }
+        #s4-cap .same i { width: 40px; height: 40px; border-radius: 50%; background: #19a463; color: #fff; display: grid; place-items: center; font-style: normal; font-size: 24px; }
+        .s4-mini { position: absolute; width: 96px; height: 84px; background: #fff; clip-path: polygon(25% 3%, 75% 3%, 100% 50%, 75% 97%, 25% 97%, 0 50%); display: grid; place-items: center; font: 800 18px/1 "JetBrains Mono", monospace; }
+        /* station 4: the token */
+        #s4-tok { position: absolute; left: 0; top: 230px; width: 700px; padding: 38px 42px 36px; }
+        #s4-tok .h { display: flex; justify-content: space-between; align-items: center; font: 700 20px/1 "JetBrains Mono", monospace; letter-spacing: .12em; color: #565e69; text-transform: uppercase; }
+        #s4-tok .nm { margin: 16px 0 6px; font: 900 56px/1 "Archivo", sans-serif; font-stretch: 122%; text-transform: uppercase; letter-spacing: -.03em; }
+        #s4-pill { position: relative; margin-top: 22px; height: 96px; border-radius: 20px; display: grid; place-items: center; overflow: hidden; font: 900 46px/1 "Archivo", sans-serif; font-stretch: 125%; letter-spacing: .02em; color: #fff; }
+        #s4-pill > div { position: absolute; inset: 0; display: grid; place-items: center; }
+        #s4-open { background: #19a463; } #s4-res { background: #ef4f26; }
+        #s4-cited { margin-top: 24px; font: 700 24px/1.5 "JetBrains Mono", monospace; color: #3c434c; letter-spacing: .04em; }
+        #s4-cited b { color: #15181c; }
+        #s4-pkt { position: absolute; left: -380px; top: 450px; width: 170px; height: 112px; border-radius: 14px; background: #15181c; color: #fff; display: grid; place-items: center; font: 800 20px/1.2 "JetBrains Mono", monospace; text-align: center; letter-spacing: .08em; box-shadow: 0 24px 40px -18px rgba(0,0,0,.34); }
+        #s4-issuer { position: absolute; left: 790px; top: 400px; width: 520px; padding: 30px 32px; }
+        #s4-issuer .k { font: 700 20px/1 "JetBrains Mono", monospace; letter-spacing: .12em; color: #565e69; text-transform: uppercase; }
+        #s4-issuer p { margin-top: 12px; font: 800 36px/1.15 "Inter Tight", sans-serif; letter-spacing: -.01em; }
+        #s4-issuer svg { margin-top: 10px; } #s4-issuer svg * { fill: none; stroke: #15181c; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+        /* path + rail */
+        #s4-path { position: absolute; left: 0; top: 0; width: 6800px; height: 1080px; }
+        #s4-rail { position: absolute; left: 0; right: 0; top: 30px; display: flex; justify-content: center; gap: 34px; }
+        .s4-r { display: flex; align-items: center; gap: 12px; padding: 10px 20px 10px 12px; border-radius: 999px; background: rgba(255,255,255,.7); font: 700 20px/1 "JetBrains Mono", monospace; letter-spacing: .1em; color: #3c434c; }
+        .s4-r b { width: 30px; height: 30px; border-radius: 50%; background: #cfd6de; color: #fff; display: grid; place-items: center; font-size: 16px; }
+        .s4-r.on { background: #fff; color: #15181c; } .s4-r.on b { background: #ef4f26; }
+      </style>
+
+      <div id="s4-root" data-composition-id="s4-how" data-width="1920" data-height="1080">
+        <div id="s4-cam">
+          <svg id="s4-path" viewBox="0 0 6800 1080"><path id="s4-line" d="M 420 540 C 1500 540 1600 540 2660 540 S 3800 540 4260 540 S 5300 540 5760 540" fill="none" stroke="rgba(21,24,28,.55)" stroke-width="5" stroke-dasharray="2 18" stroke-linecap="round" pathLength="1" /></svg>
+
+          <div class="s4-st" id="s4-st1" style="left:580px; width:760px">
+            <div class="s4-lab"><b>1</b><span>The record</span></div>
+            <div id="s4-rec" class="card">
+              <div class="h"><span>NYC ACRIS</span><span>Bronx 2-5789-1022</span></div>
+              <div class="p">14 documents on record</div>
+              <div class="s4-row hot"><b>LOCC</b><span>2026092900833001</span><em>2026-09-30</em></div>
+              <div class="s4-row"><b>CTOR</b><span>2023090800041001</span><em>2023-09-21</em></div>
+              <div class="s4-row"><b>ADEC</b><span>2021071201567001</span><em>2021-07-19</em></div>
+              <div class="s4-row"><b>SAT</b><span>2006063000818001</span><em>2006-07-18</em></div>
+              <div class="s4-row"><b>MTGE</b><span>2006062001785002</span><em>2006-07-01</em></div>
+              <div class="s4-row"><b>DEED</b><span>2006062001785001</span><em>2006-07-01</em></div>
+              <div id="s4-more">+ 8 MORE</div>
+            </div>
+          </div>
+
+          <div class="s4-st" id="s4-st2" style="left:2200px; width:920px">
+            <div class="s4-lab"><b>2</b><span>Every node reads it</span></div>
+            <div id="s4-nodes"></div>
+            <div id="s4-nodesnote">Five Chainlink nodes · each one fetches ACRIS on its own</div>
+          </div>
+
+          <div class="s4-st" id="s4-st3" style="left:3820px; width:880px">
+            <div class="s4-lab"><b>3</b><span>They must agree</span></div>
+            <div id="s4-minis"></div>
+            <div id="s4-cap" class="card">
+              <div class="k">Document set · consensus</div>
+              <div class="hash">0xde6f…3948</div>
+              <div class="same"><i>✓</i>Identical on every node</div>
+            </div>
+          </div>
+
+          <div class="s4-st" id="s4-st4" style="left:5410px; width:1300px">
+            <div class="s4-lab" style="left:0"><b>4</b><span>The token acts</span></div>
+            <div id="s4-pkt">SIGNED<br />REPORT</div>
+            <div id="s4-tok" class="card">
+              <div class="h"><span>LiensightToken</span><span>Sepolia</span></div>
+              <div class="nm">LSPV</div>
+              <div id="s4-pill"><div id="s4-open">TRANSFERS OPEN</div><div id="s4-res">RESTRICTED</div></div>
+              <div id="s4-cited">Cites <b>2026092900833001</b><br />citedHash <b>0xb87d…49f4</b></div>
+            </div>
+            <div id="s4-issuer" class="card">
+              <div class="k">Only the issuer clears</div>
+              <p>…by naming the exact liens it reviewed.</p>
+              <svg width="120" height="64" viewBox="0 0 120 64"><circle cx="26" cy="32" r="16" /><path d="M42 32 H112 M92 32 V50 M76 32 V44" /></svg>
+            </div>
+          </div>
+        </div>
+        <div id="s4-rail"><div class="s4-r on" id="s4-r1"><b>1</b>RECORD</div><div class="s4-r" id="s4-r2"><b>2</b>READ</div><div class="s4-r" id="s4-r3"><b>3</b>AGREE</div><div class="s4-r" id="s4-r4"><b>4</b>ACT</div></div>
+      </div>
+
+      <script>
+        (() => {
+          // station 2: five nodes (fixed layout)
+          const nodes = document.getElementById("s4-nodes"); const P = [[40, 210], [250, 430], [470, 190], [690, 430], [880, 230]];
+          P.forEach(([x, y], i) => {
+            const bg = document.createElement("div"); bg.className = "s4-hex-bg"; bg.id = "s4nb" + i; bg.style.left = x - 6 + "px"; bg.style.top = y - 4 + "px"; bg.style.width = "202px"; bg.style.height = "180px";
+            const h = document.createElement("div"); h.className = "s4-hex"; h.id = "s4n" + i; h.style.left = x + "px"; h.style.top = y + "px";
+            h.innerHTML = "<div><b>NODE " + (i + 1) + "</b><i class='ok'>14 DOCS ✓</i></div>"; nodes.appendChild(bg); nodes.appendChild(h);
+          });
+          // station 3: the five minis converge on the capsule
+          const minis = document.getElementById("s4-minis"); const M = [[10, 190], [10, 300], [10, 410], [10, 520], [10, 630]];
+          M.forEach(([x, y], i) => { const m = document.createElement("div"); m.className = "s4-mini"; m.id = "s4m" + i; m.style.left = x + "px"; m.style.top = y + 40 + "px"; m.textContent = "N" + (i + 1); minis.appendChild(m); });
+
+          const tl = gsap.timeline({ paused: true });
+          const cam = "#s4-cam"; const rail = (n) => { for (let i = 1; i <= 4; i++) tl.set("#s4-r" + i, { className: "s4-r" + (i === n ? " on" : "") }, 0); };
+          const pan = (x, at, d = 1.35) => tl.to(cam, { x: x, duration: d, ease: "power3.inOut" }, at);
+          const setRail = (n, at) => { for (let i = 1; i <= 4; i++) tl.call(() => document.getElementById("s4-r" + i).classList.toggle("on", i === n), [], at); };
+
+          // dotted flow path draws as the camera travels
+          tl.fromTo("#s4-line", { strokeDasharray: "2 18", strokeDashoffset: 0, opacity: 0 }, { opacity: 1, duration: 0.8 }, 0.4)
+            .to("#s4-line", { strokeDashoffset: -240, duration: 22, ease: "none" }, 0);
+          tl.fromTo(cam, { x: -20, scale: 1.0 }, { x: 0, duration: 1.2, ease: "power3.out" }, 0);
+
+          // 1: the record
+          tl.fromTo("#s4-st1 .s4-lab", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.7, ease: "power3.out" }, 0.2)
+            .fromTo("#s4-rec", { opacity: 0, y: 90, rotate: 2 }, { opacity: 1, y: 0, rotate: 0, duration: 0.9, ease: "expo.out" }, 0.5)
+            .fromTo("#s4-rec .s4-row", { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.5, stagger: 0.16, ease: "power3.out" }, 1.0)
+            .fromTo("#s4-more", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 2.2)
+            .to("#s4-rec .s4-row.hot", { scale: 1.035, duration: 0.35, yoyo: true, repeat: 1, ease: "power2.inOut" }, 2.3);
+
+          // 2: every node reads it
+          pan(-1620, 2.7); setRail(2, 2.9);
+          tl.to("#s4-st1", { opacity: 0, duration: 0.6, ease: "power2.in" }, 3.0);
+          tl.fromTo("#s4-st2 .s4-lab", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.7, ease: "power3.out" }, 3.5)
+            .fromTo([".s4-hex-bg", ".s4-hex"], { scale: 0, opacity: 0, rotate: -40 }, { scale: 1, opacity: 1, rotate: 0, duration: 0.7, stagger: { each: 0.07, from: "start" }, ease: "back.out(1.8)" }, 3.7)
+            .fromTo(".s4-hex i", { opacity: 0 }, { opacity: 1, duration: 0.3, stagger: 0.18 }, 4.6)
+            .fromTo("#s4-nodesnote", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 5.0);
+
+          // 3: they must agree
+          pan(-3240, 6.3); setRail(3, 6.5);
+          tl.to("#s4-st2", { opacity: 0, duration: 0.6, ease: "power2.in" }, 6.5);
+          tl.fromTo("#s4-st3 .s4-lab", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.7, ease: "power3.out" }, 7.2)
+            .fromTo(".s4-mini", { opacity: 0, x: -60, scale: 0.5 }, { opacity: 1, x: 0, scale: 1, duration: 0.5, stagger: 0.1, ease: "back.out(1.7)" }, 7.4)
+            .fromTo("#s4-cap", { opacity: 0, scale: 0.8, x: 60 }, { opacity: 1, scale: 1, x: 0, duration: 0.8, ease: "expo.out" }, 8.0)
+            .fromTo("#s4-cap .same", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 8.7)
+            .to(".s4-mini", { color: "#19a463", scale: 1.1, duration: 0.3, stagger: 0.07, yoyo: true, repeat: 1 }, 8.9);
+
+          // 4: the token acts
+          pan(-4830, 9.2, 1.5); setRail(4, 9.5);
+          tl.to("#s4-st3", { opacity: 0, duration: 0.6, ease: "power2.in" }, 9.4);
+          tl.fromTo("#s4-st4 .s4-lab", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.7, ease: "power3.out" }, 10.3)
+            .fromTo("#s4-tok", { opacity: 0, y: 80, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.9, ease: "expo.out" }, 10.4)
+            .fromTo("#s4-pkt", { x: 0, opacity: 0, rotate: -10 }, { x: 640, opacity: 1, rotate: 0, duration: 0.9, ease: "power3.out" }, 11.2)
+            .to("#s4-pkt", { scale: 0.2, opacity: 0, duration: 0.35, ease: "power2.in" }, 12.2)
+            .fromTo("#s4-res", { yPercent: 100 }, { yPercent: 0, duration: 0.5, ease: "power4.out" }, 12.55)
+            .to("#s4-open", { yPercent: -100, duration: 0.5, ease: "power4.out" }, 12.55)
+            .fromTo("#s4-tok", { rotate: 0 }, { rotate: 0.8, duration: 0.06, repeat: 5, yoyo: true, ease: "none" }, 12.6)
+            .to("#s4-tok", { rotate: 0, duration: 0.06 }, 12.97)
+            .fromTo("#s4-cited", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 13.4)
+            .fromTo("#s4-issuer", { opacity: 0, x: 90, rotate: 2 }, { opacity: 1, x: 0, rotate: 0, duration: 0.8, ease: "expo.out" }, 17.1)
+            .fromTo("#s4-issuer svg path", { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.6, ease: "power2.out" }, 17.7);
+          // the camera drifts to frame the token; the last card sits where the demo opens
+          tl.to(cam, { x: -5100, duration: 4.4, ease: "sine.inOut" }, 15.9);
+          // hand off: everything but the issuer card clears as the demo window opens from it
+          tl.to(["#s4-rail", "#s4-path", "#s4-st4 .s4-lab", "#s4-tok"], { opacity: 0, duration: 0.5, ease: "power2.in" }, 21.4);
+          window.__timelines["s4-how"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

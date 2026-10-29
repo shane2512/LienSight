@@ -4,3 +4,11 @@ contracts/out/
 contracts/cache/
 .env
 *.env
+
+# large media and tool caches (final video goes on a release, not in git)
+pitch/renders/
+pitch/raw/
+pitch/.hyperframes/
+video/raw/
+*.mp4
+!pitch/assets/footage/*.mp4

@@ -1,0 +1,24 @@
+   dbg t0=0 first=0.20 last=2.64 end=6.68 n=5
+ok  title: 8s wall, 6.7s video, 5 frames
+   dbg t0=0 first=0.06 last=43.03 end=43.01 n=2195
+ok  landing: 55s wall, 43.0s video, 2195 frames
+   dbg t0=0 first=0.06 last=25.04 end=25.03 n=1348
+ok  check: 32s wall, 25.0s video, 1348 frames
+   dbg t0=0 first=0.08 last=14.03 end=14.36 n=100
+ok  tests: 17s wall, 14.4s video, 100 frames
+   dbg t0=0 first=0.06 last=19.41 end=19.76 n=140
+ok  cre: 23s wall, 19.8s video, 140 frames
+   dbg t0=0 first=0.03 last=6.71 end=11.57 n=34
+ok  eth_new: 13s wall, 11.6s video, 34 frames
+   dbg t0=0 first=0.69 last=21.14 end=21.13 n=1055
+ok  proof: 27s wall, 21.1s video, 1055 frames
+   dbg t0=0 first=0.06 last=13.99 end=14.33 n=199
+ok  cast: 17s wall, 14.3s video, 199 frames
+   dbg t0=0 first=0.04 last=2.67 end=11.66 n=84
+ok  eth_events: 14s wall, 11.7s video, 84 frames
+   dbg t0=0 first=0.05 last=8.32 end=16.68 n=94
+ok  eth_old: 19s wall, 16.7s video, 94 frames
+   dbg t0=0 first=0.06 last=23.95 end=23.93 n=1344
+ok  security: 31s wall, 23.9s video, 1344 frames
+   dbg t0=0 first=0.08 last=2.79 end=14.17 n=5
+ok  closing: 17s wall, 14.2s video, 5 frames

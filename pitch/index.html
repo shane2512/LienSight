@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Liensight: pitch</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Archivo"; src: url("assets/fonts/Archivo.woff2") format("woff2"); font-weight: 100 900; font-stretch: 62% 125%; }
+      @font-face { font-family: "Inter Tight"; src: url("assets/fonts/InterTight.woff2") format("woff2"); font-weight: 400 800; }
+      @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/JetBrainsMono.woff2") format("woff2"); font-weight: 400 800; }
+      @font-face { font-family: "Caveat"; src: url("assets/fonts/Caveat.woff2") format("woff2"); font-weight: 600; }
+      :root {
+        --sky1: #6fb0ea; --sky2: #9cccf3; --sky3: #cfe7fb;
+        --ink: #15181c; --ink2: #3c434c; --mute: #6b7480; --paper: #fff;
+        --red: #ef4f26; --red2: #d23a16; --ok: #19a463;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #6fb0ea; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; font-family: "Inter Tight", sans-serif; color: var(--ink); }
+      .fill { position: absolute; inset: 0; }
+      #sky { background: linear-gradient(180deg, #6fb0ea 0%, #9cccf3 42%, #cfe7fb 100%); }
+      #clouds { transform-origin: 50% 60%; }
+      .cloud { position: absolute; width: 440px; height: 150px; opacity: .92; filter: blur(2px);
+        background:
+          radial-gradient(60px 50px at 22% 62%, #fff 98%, transparent), radial-gradient(84px 72px at 42% 45%, #fff 98%, transparent),
+          radial-gradient(72px 62px at 63% 52%, #fff 98%, transparent), radial-gradient(58px 48px at 80% 66%, #fff 98%, transparent),
+          radial-gradient(170px 42px at 50% 82%, #fff 98%, transparent); }
+      .cloud.soft { opacity: .55; filter: blur(7px); }
+      #tone-ink { background: linear-gradient(180deg, #0d1016 0%, #151a24 60%, #1b2230 100%); opacity: 0; }
+      #tone-red { background: radial-gradient(120% 90% at 20% 0%, #ef5a30 0%, #d23a16 55%, #b92f10 100%); opacity: 0; }
+      #vig { background: radial-gradient(120% 100% at 50% 45%, transparent 55%, rgba(8, 14, 28, .28) 100%); pointer-events: none; }
+      /* ---- shared system (used by every scene) ---- */
+      .disp { font-family: "Archivo", sans-serif; font-weight: 900; font-stretch: 125%; text-transform: uppercase; letter-spacing: -0.035em; line-height: .9; }
+      .stip { color: transparent; background-image: radial-gradient(circle at 50% 50%, #b8310f 46%, transparent 52%), radial-gradient(circle at 50% 50%, #e0401b 40%, transparent 46%);
+        background-size: 7px 7px, 7px 7px; background-position: 0 0, 3.5px 3.5px; -webkit-background-clip: text; background-clip: text; -webkit-text-stroke: 2px rgba(184, 49, 15, .8); }
+      .card { background: #fff; border-radius: 28px; box-shadow: 0 2px 0 rgba(255,255,255,.7) inset, 0 34px 70px -30px rgba(16, 40, 80, .55); }
+      .kick { font: 700 20px/1 "JetBrains Mono", monospace; letter-spacing: .14em; text-transform: uppercase; }
+      .mono { font-family: "JetBrains Mono", monospace; }
+      .script { font: 600 46px/1 "Caveat", cursive; color: #ef4f26; }
+      .abs { position: absolute; }
+      .ln { display: block; overflow: hidden; }
+      .ln > span { display: block; will-change: transform; }
+      #scenes { position: absolute; inset: 0; }
+
+      /* ---- live demo: the real recordings, framed ---- */
+      #demo { position: absolute; inset: 0; opacity: 0; }
+      #win { position: absolute; left: 204px; top: 84px; width: 1511px; height: 850px; border-radius: 22px; overflow: hidden; background: #0c0e12;
+        box-shadow: 0 0 0 1px rgba(255,255,255,.5), 0 60px 120px -40px rgba(8, 24, 56, .7), 0 20px 40px -20px rgba(8, 24, 56, .45); transform-origin: 50% 50%; }
+      #winface { position: absolute; inset: 0; background: #fff; }
+      .seg { position: absolute; inset: 0; overflow: hidden; }
+      .cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; will-change: transform; }
+      .cam video { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+      .box { position: absolute; border: 6px solid #ef4f26; border-radius: 14px; opacity: 0; box-shadow: 0 0 0 3000px rgba(10, 14, 22, 0); }
+      .box.ok { border-color: #19a463; }
+      .note { position: absolute; padding: 12px 20px; border-radius: 12px; background: #15181c; color: #fff; font: 800 30px/1.1 "Inter Tight", sans-serif; letter-spacing: -.01em; white-space: nowrap; opacity: 0; box-shadow: 0 16px 30px -12px rgba(0,0,0,.5); }
+      .note em { font-style: normal; color: #ff7a4d; }
+      .note.ok em { color: #4fd18f; }
+      .chip { position: absolute; left: 204px; top: 22px; display: flex; align-items: center; gap: 14px; padding: 10px 22px 10px 10px; border-radius: 999px; background: #fff;
+        font: 700 21px/1 "JetBrains Mono", monospace; letter-spacing: .08em; color: var(--ink); box-shadow: 0 14px 30px -14px rgba(8, 20, 50, .5); opacity: 0; }
+      .chip b { display: grid; place-items: center; height: 32px; padding: 0 12px; border-radius: 999px; background: #b8310f; color: #fff; font-size: 17px; letter-spacing: .04em; }
+      #livebadge { position: absolute; right: 205px; top: 22px; display: flex; align-items: center; gap: 12px; padding: 13px 20px; border-radius: 999px;
+        background: #15181c; color: #fff; font: 700 19px/1 "JetBrains Mono", monospace; letter-spacing: .12em; opacity: 0; }
+      #livebadge i { width: 12px; height: 12px; border-radius: 50%; background: var(--red); display: block; }
+      .speed { position: absolute; right: 224px; top: 104px; padding: 10px 16px; border-radius: 10px; background: rgba(21,24,28,.92); color: #fff; font: 700 18px/1 "JetBrains Mono", monospace; letter-spacing: .1em; opacity: 0; }
+
+      /* ---- transitions: layered skewed panels ---- */
+      #wipe { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+      .wb { position: absolute; left: -3400px; top: -110px; width: 3200px; height: 1300px; background: #ef4f26; }
+
+      /* ---- captions ---- */
+      #caps { position: absolute; left: 0; right: 0; bottom: 34px; height: 70px; }
+      .cc { position: absolute; left: 0; right: 0; bottom: 0; margin: 0 auto; width: max-content; max-width: 1560px; padding: 13px 26px 15px; border-radius: 16px;
+        background: rgba(12, 15, 21, .84); font: 700 36px/1.15 "Inter Tight", sans-serif; letter-spacing: -.005em; color: rgba(255,255,255,.5); opacity: 0; white-space: nowrap; }
+      .cc span { display: inline-block; margin-right: .26em; }
+      .cc span:last-child { margin-right: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="179.4" data-width="1920" data-height="1080">
+      <div id="sky" class="fill"></div>
+      <div id="clouds" class="fill"></div>
+      <div id="tone-ink" class="fill"></div>
+      <div id="tone-red" class="fill"></div>
+      <div id="vig" class="fill"></div>
+
+      <div id="scenes">
+        <div id="s1" data-composition-id="s1-hook" data-composition-src="compositions/s1-hook.html" data-start="0" data-duration="11.4" data-track-index="2" data-width="1920" data-height="1080"></div>
+        <div id="s2" data-composition-id="s2-problem" data-composition-src="compositions/s2-problem.html" data-start="11" data-duration="19.9" data-track-index="2" data-width="1920" data-height="1080"></div>
+        <div id="s3" data-composition-id="s3-why" data-composition-src="compositions/s3-why.html" data-start="30.7" data-duration="19.7" data-track-index="2" data-width="1920" data-height="1080"></div>
+        <div id="s4" data-composition-id="s4-how" data-composition-src="compositions/s4-how.html" data-start="50.2" data-duration="22.6" data-track-index="2" data-width="1920" data-height="1080"></div>
+      </div>
+
+      <!-- LIVE DEMO: unedited screen recordings. Only framing, camera moves, labelled speed-ups and annotations are added. -->
+      <div id="demo">
+        <div id="win">
+          <div id="segA" class="seg"><div id="camA" class="cam">
+            <video id="vA" class="clip" src="assets/footage/browser_raw.mp4" data-start="72.5" data-duration="17.85" data-media-start="8" data-track-index="5" muted playsinline></video>
+            <div id="a1" class="box" style="left:244px; top:800px; width:826px; height:82px"></div>
+            <div id="a1n" class="note" style="left:244px; top:716px">One adverse filing: <em>the lien</em></div>
+            <div id="a2" class="box" style="left:250px; top:916px; width:456px; height:48px; border-width:5px"></div>
+            <div id="a3" class="box ok" style="left:244px; top:800px; width:704px; height:82px"></div>
+            <div id="a3n" class="note ok" style="left:244px; top:716px">Nothing adverse: <em>transfers stay open</em></div>
+          </div></div>
+          <div id="segC" class="seg"><div id="camC" class="cam">
+            <video id="vC" class="clip" src="assets/footage/term_cre.mp4" data-start="89.8" data-duration="18.7" data-media-start="0" data-track-index="6" muted playsinline></video>
+            <div id="c1" class="box" style="left:540px; top:966px; width:760px; height:46px; border-width:5px"></div>
+            <div id="c1n" class="note" style="left:540px; top:892px">The workflow flags <em>the lien</em></div>
+            <div id="c2" class="box" style="left:540px; top:506px; width:760px; height:44px; border-width:5px"></div>
+            <div id="c3" class="box" style="left:540px; top:542px; width:1350px; height:70px; border-width:5px"></div>
+            <div id="c3n" class="note" style="left:540px; top:626px">Signed report written to <em>Sepolia</em></div>
+          </div></div>
+          <div id="segB1" class="seg"><div id="camB1" class="cam">
+            <video id="vB1" class="clip" src="assets/footage/browser_raw.mp4" data-start="108.2" data-duration="8.1" data-media-start="33" data-track-index="7" muted playsinline></video>
+            <div id="b1" class="box ok" style="left:506px; top:784px; width:128px; height:52px; border-width:5px"></div>
+            <div id="b1n" class="note ok" style="left:650px; top:784px"><em>Success</em> on Sepolia</div>
+            <div id="b2" class="box" style="left:664px; top:550px; width:262px; height:46px; border-width:5px"></div>
+            <div id="b2n" class="note" style="left:664px; top:612px">Chainlink <em>forwarder</em></div>
+          </div></div>
+          <div id="segK" class="seg"><div id="camK" class="cam">
+            <video id="vK1" class="clip" src="assets/footage/term_cast.mp4" data-start="115.9" data-duration="4.7" data-media-start="0" data-track-index="8" muted playsinline></video>
+            <video id="vK2" class="clip" src="assets/footage/term_cast.mp4" data-start="120.6" data-duration="2.85" data-media-start="4.7" data-playback-rate="2" data-track-index="9" muted playsinline></video>
+            <video id="vK3" class="clip" src="assets/footage/term_cast.mp4" data-start="123.45" data-duration="2.95" data-media-start="10.4" data-playback-rate="0.03" data-track-index="10" muted playsinline></video>
+            <div id="k1" class="box ok" style="left:2px; top:840px; width:90px; height:40px; border-width:5px"></div>
+            <div id="k1n" class="note ok" style="left:108px; top:834px">restricted() = <em>true</em></div>
+            <div id="k2" class="box" style="left:2px; top:970px; width:1616px; height:42px; border-width:5px"></div>
+            <div id="k2n" class="note" style="left:620px; top:902px">Even the issuer’s transfer <em>reverts</em></div>
+          </div></div>
+          <div id="segB2" class="seg"><div id="camB2" class="cam">
+            <video id="vB2" class="clip" src="assets/footage/browser_raw.mp4" data-start="126.1" data-duration="9.7" data-media-start="65.5" data-track-index="11" muted playsinline></video>
+            <div id="e1" class="box" style="left:552px; top:774px; width:302px; height:46px; border-width:5px"></div>
+            <div id="e1n" class="note" style="left:552px; top:840px">The <em>report()</em> event</div>
+            <div id="e2" class="box" style="left:1026px; top:806px; width:790px; height:40px; border-width:5px"></div>
+            <div id="e2n" class="note" style="left:1026px; top:860px">Same document-set hash: <em>0xde6f…3948</em></div>
+          </div></div>
+          <div id="winface"></div>
+        </div>
+        <div id="chip1" class="chip"><b>01</b>LIVE READ · NYC ACRIS RECORDS</div>
+        <div id="chip2" class="chip"><b>02</b>CHAINLINK CRE WORKFLOW · REAL RUN</div>
+        <div id="chip3" class="chip"><b>03</b>BLOCK EXPLORER · SEPOLIA</div>
+        <div id="chip4" class="chip"><b>04</b>THE TOKEN, READ ON-CHAIN</div>
+        <div id="chip5" class="chip"><b>05</b>TOKEN EVENTS ON THE EXPLORER</div>
+        <div id="livebadge"><i id="liveDot"></i>REAL SCREEN RECORDING</div>
+        <div id="sp1" class="speed">COMPILE WAIT SPED UP 7×</div>
+        <div id="sp2" class="speed">TYPING SPED UP 2×</div>
+      </div>
+
+      <div id="s6" data-composition-id="s6-fit" data-composition-src="compositions/s6-fit.html" data-start="135.8" data-duration="22.4" data-track-index="3" data-width="1920" data-height="1080"></div>
+      <div id="s7" data-composition-id="s7-honest" data-composition-src="compositions/s7-honest.html" data-start="157.9" data-duration="16.6" data-track-index="3" data-width="1920" data-height="1080"></div>
+      <div id="s8" data-composition-id="s8-close" data-composition-src="compositions/s8-close.html" data-start="174.4" data-duration="5" data-track-index="3" data-width="1920" data-height="1080"></div>
+
+      <div id="wipe"><div id="wb0" class="wb"></div><div id="wb1" class="wb"></div><div id="wb2" class="wb"></div></div>
+      <div id="caps"></div>
+
+      <audio id="score" src="assets/score/score.mp3" data-start="0" data-duration="179.4" data-track-index="19"></audio>
+      <audio id="vo1" src="assets/vo/s1_hook.mp3" data-start="1.2" data-duration="9.22" data-track-index="20"></audio>
+      <audio id="vo2" src="assets/vo/s2_problem.mp3" data-start="11.1" data-duration="19.15" data-track-index="21"></audio>
+      <audio id="vo3" src="assets/vo/s3_why.mp3" data-start="30.8" data-duration="19.04" data-track-index="22"></audio>
+      <audio id="vo4" src="assets/vo/s4_how.mp3" data-start="50.4" data-duration="21.45" data-track-index="23"></audio>
+      <audio id="vo5" src="assets/vo/s5a_check.mp3" data-start="72.7" data-duration="16.17" data-track-index="24"></audio>
+      <audio id="vo6" src="assets/vo/s5b_cre.mp3" data-start="97.5" data-duration="9.06" data-track-index="25"></audio>
+      <audio id="vo7" src="assets/vo/s5c_chain.mp3" data-start="109.2" data-duration="5.85" data-media-start="0" data-track-index="26"></audio>
+      <audio id="vo7b" src="assets/vo/s5c_chain.mp3" data-start="117.4" data-duration="6.27" data-media-start="5.9" data-track-index="27"></audio>
+      <audio id="vo8" src="assets/vo/s6_fit.mp3" data-start="137" data-duration="20.24" data-track-index="28"></audio>
+      <audio id="vo9" src="assets/vo/s7_honest.mp3" data-start="158.4" data-duration="15.31" data-track-index="29"></audio>
+      <audio id="vo10" src="assets/vo/s8_close.mp3" data-start="175" data-duration="3.68" data-track-index="30"></audio>
+    </div>
+
+    <script>
+      /*CAPS*/const CAPS = [[1.2,2.86,[["A",1.2],["lien",1.42],["gets",1.6],["recorded",1.9],["against",2.44]]],[2.86,3.94,[["a",2.86],["New",3.14],["York",3.34],["building.",3.52]]],[3.94,5.72,[["And",3.94],["the",4.62],["token",4.82],["that",5.12],["represents",5.38]]],[5.72,6.96,[["shares",5.72],["in",6.18],["that",6.44],["building?",6.62]]],[6.96,9.06,[["It",6.96],["has",7.62],["no",7.8],["idea.",8.1]]],[9.06,10.4,[["This",9.06],["is",9.26],["Liensight.",9.68]]],[11.1,14.06,[["Real",11.1],["estate",11.68],["is",12.02],["being",12.3],["tokenized.",12.56]]],[14.06,14.74,[["Shares",14.06],["in",14.06],["a",14.34],["single",14.46]]],[14.74,17.62,[["building",14.74],["can",15.1],["trade",15.36],["on-chain,",15.85],["around",16.34],["the",16.52],["clock.",16.76]]],[17.62,19.0,[["But",17.62],["the",17.8],["law",18.0],["doesn't",18.16],["pause.",18.58]]],[19.0,20.92,[["A",19.0],["tax",19.14],["lien,",19.36],["a",19.98],["federal",20.02],["lien,",20.32]]],[20.92,21.72,[["a",20.92],["judgment:",20.92]]],[21.72,22.52,[["any",21.72],["of",21.9],["them",22.12],["can",22.32]]],[22.52,24.16,[["land",22.52],["on",22.8],["that",22.98],["property.",23.14]]],[24.16,25.96,[["Today,",24.16],["someone",24.36],["has",24.78],["to",25.18],["remember",25.36],["to",25.64]]],[25.96,27.28,[["check",25.96],["the",26.16],["county",26.34],["record.",26.66]]],[27.28,28.78,[["The",27.28],["chain",27.44],["never",27.66],["looks.",27.94]]],[28.78,30.28,[["And",28.78],["the",29.0],["shares",29.16],["keep",29.38],["moving.",29.66]]],[30.8,32.74,[["I'm",30.8],["building",31.22],["this",31.44],["because",31.8],["of",32.16],["what",32.46]]],[32.74,34.48,[["I",32.74],["saw",32.92],["in",33.16],["this",33.36],["hackathon.",33.52]]],[34.48,36.02,[["Sixteen",34.48],["submissions.",34.8]]],[36.02,37.5,[["Most",36.02],["of",36.32],["them",36.6],["took",36.8],["an",37.02],["AI",37.22]]],[37.5,39.98,[["decision",37.5],["and",37.9],["hashed",38.26],["it",38.62],["on-chain:",39.3]]],[39.98,41.76,[["evidence",39.98],["of",40.2],["what",40.5],["a",40.72],["model",40.86],["said.",41.06]]],[41.76,43.86,[["None",41.76],["of",41.86],["them",42.1],["were",42.24],["about",42.44],["real",42.82],["estate.",43.04]]],[43.86,45.36,[["I",43.86],["wanted",43.9],["the",44.2],["opposite.",44.42]]],[45.36,46.48,[["A",45.36],["chain",45.42],["that",45.7],["acts",45.96],["on",46.26]]],[46.48,48.16,[["a",46.48],["public",46.64],["government",46.92],["record,",47.36]]],[48.16,49.74,[["not",48.16],["on",48.36],["a",48.58],["model's",48.74],["opinion.",49.16]]],[50.4,51.84,[["Here's",50.4],["how",50.8],["it",50.94],["works.",51.08]]],[51.84,54.48,[["Every",51.84],["Chainlink",52.3],["node",52.76],["independently",53.12],["reads",53.72],["New",54.24]]],[54.48,56.9,[["York's",54.48],["property",54.88],["records",55.12],["for",55.58],["the",55.82],["building.",55.98]]],[56.9,58.2,[["They",56.9],["must",57.14],["agree",57.38],["on",57.78],["the",58.02]]],[58.2,59.86,[["exact",58.2],["set",58.48],["of",58.74],["documents.",59.4]]],[59.86,61.2,[["Then",59.86],["they",60.12],["send",60.34],["one",60.58],["signed",60.86]]],[61.2,62.6,[["report",61.2],["to",61.56],["the",61.8],["token.",61.94]]],[62.6,64.76,[["If",62.6],["there's",62.72],["a",63.0],["new",63.12],["lien,",63.527],["transfers",63.933],["stop,",64.34]]],[64.76,67.3,[["and",64.76],["the",65.2],["document",65.34],["is",65.78],["cited",65.98],["on-chain.",66.64]]],[67.3,68.84,[["Only",67.3],["the",67.48],["issuer",67.7],["can",68.0],["clear",68.3],["it,",68.62]]],[68.84,70.32,[["and",68.84],["only",69.12],["by",69.44],["naming",69.72],["the",70.04]]],[70.32,71.82,[["exact",70.32],["liens",70.63],["they",70.94],["reviewed.",71.18]]],[72.7,74.36,[["Now,",72.7],["the",73.04],["live",73.3],["demo.",73.5]]],[74.36,75.16,[["This",74.36],["is",74.58],["a",74.76],["real",74.94]]],[75.16,76.2,[["lot",75.16],["in",75.42],["the",75.6],["Bronx,",75.74]]],[76.2,77.64,[["read",76.2],["live",76.66],["from",76.94],["ACRIS",77.29]]],[77.64,79.06,[["Fourteen",77.64],["documents",77.94],["on",78.42],["record,",78.72]]],[79.06,80.58,[["and",79.06],["one",79.78],["of",80.02],["them",80.18],["is",80.36]]],[80.58,81.84,[["a",80.58],["lien",80.7],["of",80.9],["common",81.1],["charges,",81.4]]],[81.84,84.3,[["recorded",81.84],["on",82.4],["September",82.78],["thirtieth.",83.12]]],[84.3,86.08,[["A",84.3],["building",84.5],["in",84.8],["Manhattan:",85.16]]],[86.08,88.86,[["nothing",86.08],["adverse,",86.3],["so",86.78],["transfers",87.24],["would",87.7],["stay",88.0],["open.",88.26]]],[97.5,100.92,[["Now",97.5],["the",97.86],["Chainlink",98.13],["workflow,",98.4],["running",99.4],["for",99.68],["real.",100.04]]],[100.92,103.18,[["It",100.92],["reads",101.04],["the",101.34],["record,",101.58],["flags",102.64],["the",102.72],["lien,",102.95]]],[103.18,104.86,[["and",103.18],["sends",103.68],["a",103.96],["signed",104.2],["report",104.46]]],[104.86,106.68,[["to",104.86],["the",105.12],["token",105.28],["on",105.56],["Sepolia.",105.97]]],[109.2,112.48,[["There's",109.2],["the",109.52],["transaction",109.84],["on",110.34],["the",110.7],["block",110.86],["explorer:",111.08]]],[112.48,115.4,[["success,",112.48],["delivered",112.76],["by",113.52],["the",113.78],["Chainlink",114.04],["forwarder.",114.3]]],[117.54,119.4,[["And",117.54],["on",118.22],["the",118.38],["token",118.58],["itself,",118.94]]],[119.4,121.56,[["restricted",119.4],["is",120.12],["true.",120.84]]],[121.56,123.82,[["Even",121.56],["the",121.78],["issuer",122.0],["can't",122.3],["move",122.62],["shares",122.88],["now.",123.16]]],[137.0,139.12,[["Why",137.0],["this",137.36],["fits",137.58],["this",137.88],["hackathon.",138.22]]],[139.12,140.153,[["It's",139.12],["real-world",139.49],["assets,",139.86]]],[140.153,142.44,[["a",140.153],["track",140.447],["with",140.74],["no",141.04],["other",141.26],["entry.",141.48]]],[142.44,144.24,[["It's",142.44],["a",142.58],["working",142.72],["Chainlink",143.04],["CRE",143.62]]],[144.24,145.88,[["workflow",144.24],["that",144.68],["connects",145.04],["a",145.36],["blockchain",145.66]]],[145.88,147.88,[["to",145.88],["an",146.24],["external",146.38],["API,",146.78]]],[147.88,150.28,[["simulated",147.88],["and",148.3],["broadcast",148.66],["on",149.0],["Sepolia.",149.64]]],[150.28,151.52,[["Thirty-five",150.28],["tests",150.74],["pass,",151.1]]],[151.52,153.24,[["and",151.52],["a",151.92],["security",152.16],["review",152.4],["found",152.88]]],[153.24,154.82,[["and",153.24],["fixed",153.52],["one",153.8],["critical",154.1],["and",154.52]]],[154.82,157.12,[["five",154.82],["important",155.04],["issues",155.56],["before",155.9],["deployment.",156.38]]],[158.4,161.12,[["And",158.4],["it's",158.74],["honest",159.1],["about",159.5],["its",159.8],["limits.",160.02]]],[161.12,162.66,[["Testnet",161.12],["only.",161.44]]],[162.66,165.18,[["The",162.66],["records",162.7],["lag",163.05],["real",163.4],["events",163.68],["by",164.06],["days.",164.34]]],[165.18,167.26,[["And",165.18],["lis",165.433],["pendens",165.687],["aren't",165.94],["in",166.44],["ACRIS,",166.85]]],[167.26,168.98,[["so",167.26],["they're",167.48],["out",167.76],["of",167.9],["scope.",168.02]]],[168.98,169.76,[["Next:",168.98]]],[169.76,172.34,[["a",169.76],["deployed",169.8],["workflow,",170.14],["the",171.08],["production",171.14],["forwarder,",171.74]]],[172.34,173.68,[["and",172.34],["a",172.44],["second",172.56],["data",172.84],["source.",173.06]]]];/*/CAPS*/
+
+      // ---- the sky world: clouds are laid out from a fixed table (deterministic) ----
+      const CLOUDS = [
+        [-120, 70, 1.0, 0], [1380, 40, 1.25, 1], [520, 210, 0.7, 0], [1560, 360, 1.0, 0], [60, 480, 1.3, 1],
+        [900, 560, 0.8, 0], [1650, 700, 1.1, 1], [300, 760, 0.9, 0], [1100, 880, 1.4, 1], [-200, 930, 1.0, 0],
+        [760, -60, 1.1, 1], [1900, 220, 0.8, 0]
+      ];
+      const cloudsEl = document.getElementById("clouds");
+      CLOUDS.forEach(([x, y, s, soft], i) => {
+        const c = document.createElement("div"); c.className = "cloud" + (soft ? " soft" : ""); c.id = "cl" + i;
+        c.style.left = x + "px"; c.style.top = y + "px"; c.style.width = 440 * s + "px"; c.style.height = 150 * s + "px";
+        cloudsEl.appendChild(c);
+      });
+
+      const tl = gsap.timeline({ paused: true });
+      // slow parallax drift for the whole film
+      CLOUDS.forEach(([x, y, s], i) => tl.fromTo("#cl" + i, { x: 0 }, { x: (i % 2 ? -1 : 1) * (260 + 34 * i) * s, duration: 179.4, ease: "none" }, 0));
+      tl.fromTo("#clouds", { scale: 1 }, { scale: 1.14, duration: 179.4, ease: "none" }, 0);
+
+      // ---- transitions: three skewed panels sweep across; the cut happens under the last one ----
+      const wipe = (T, colors) => {
+        const n = colors.length;
+        colors.forEach((c, i) => {
+          const b = "#wb" + (3 - n + i), at = T - 0.436 - (n - 1 - i) * 0.08;
+          tl.set(b, { backgroundColor: c }, at - 0.01)
+            .fromTo(b, { x: 0, skewX: -12 }, { x: 5700, skewX: -12, duration: 0.9, ease: "none", immediateRender: false }, at);
+        });
+      };
+      wipe(11.0, ["#ffffff", "#ef4f26", "#151a24"]);
+      tl.set("#tone-ink", { opacity: 1 }, 11.0);
+      wipe(30.7, ["#151a24", "#ef4f26", "#9cccf3"]);
+      tl.set("#tone-ink", { opacity: 0 }, 30.7);
+      wipe(50.2, ["#ef4f26", "#ffffff"]);
+      wipe(135.8, ["#15181c", "#ffffff", "#d23a16"]);
+      tl.set("#tone-red", { opacity: 1 }, 135.8).set("#demo", { opacity: 0 }, 135.8);
+      wipe(157.9, ["#d23a16", "#ffffff", "#9cccf3"]);
+      tl.set("#tone-red", { opacity: 0 }, 157.9);
+
+      // ---- live demo ----
+      const FIT = 1511 / 1920;
+      // frame footage so that footage point (fx, fy) sits at the window's top-left, at zoom z
+      const focus = (cam, fx, fy, z, at, d, ease = "power3.inOut") => {
+        const s = FIT * z;
+        fx = Math.min(Math.max(fx, 0), 1920 - 1920 / z); fy = Math.min(Math.max(fy, 0), 1080 - 1080 / z);
+        if (d === 0) tl.set(cam, { scale: s, x: -s * fx, y: -s * fy }, at);
+        else tl.to(cam, { scale: s, x: -s * fx, y: -s * fy, duration: d, ease }, at);
+      };
+      ["#camA", "#camC", "#camB1", "#camK", "#camB2"].forEach((c) => tl.set(c, { scale: FIT, x: 0, y: 0 }, 0));
+      tl.set(["#segC", "#segB1", "#segK", "#segB2"], { xPercent: 101 }, 0);
+      // segment change: the next recording pushes the last one out of the frame
+      const push = (from, to, at) => {
+        tl.fromTo(to, { xPercent: 101 }, { xPercent: 0, duration: 0.6, ease: "power3.inOut" }, at)
+          .to(from, { xPercent: -30, opacity: 0.3, duration: 0.6, ease: "power3.inOut" }, at)
+          .set(from, { opacity: 0 }, at + 0.62);
+      };
+      // a callout: spotlight the box, draw it on, then the note
+      const callout = (box, note, a, b) => {
+        tl.fromTo(box, { opacity: 0, scale: 1.12 }, { opacity: 1, scale: 1, boxShadow: "0 0 0 3000px rgba(10,14,22,.42)", duration: 0.45, ease: "back.out(2)" }, a)
+          .to(box, { opacity: 0, boxShadow: "0 0 0 3000px rgba(10,14,22,0)", duration: 0.3, ease: "power2.in" }, b);
+        if (note) tl.fromTo(note, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, a + 0.2).to(note, { opacity: 0, duration: 0.25 }, b);
+      };
+      const chip = (id, a, b) => tl.fromTo(id, { opacity: 0, y: -14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, a).to(id, { opacity: 0, y: -10, duration: 0.3, ease: "power2.in" }, b);
+
+      // entry: the issuer card from the last scene opens into the recording window
+      tl.set("#demo", { opacity: 1 }, 71.9)
+        .fromTo("#win", { x: 400, y: 16, scale: 0.344, borderRadius: 70 }, { x: 0, y: 0, scale: 1, borderRadius: 22, duration: 1.0, ease: "expo.inOut" }, 71.9)
+        .to("#winface", { opacity: 0, duration: 0.4, ease: "power1.out" }, 72.55)
+        .fromTo("#livebadge", { opacity: 0, y: -14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, 72.8)
+        .fromTo("#liveDot", { opacity: 1 }, { opacity: 0.2, duration: 0.5, repeat: 61, yoyo: true, ease: "sine.inOut" }, 72.8)
+        .to("#livebadge", { opacity: 0, duration: 0.3 }, 135.3);
+
+      // 01: the checker reads ACRIS live
+      chip("#chip1", 72.9, 89.6);
+      focus("#camA", 0, 0, 1, 72.5, 0);
+      focus("#camA", 180, 330, 1.45, 74.4, 1.6);
+      callout("#a1", "#a1n", 79.6, 83.7);
+      callout("#a2", null, 80.5, 83.7);
+      callout("#a3", "#a3n", 86.3, 89.6);
+
+      // 02: the Chainlink workflow, run for real (camera rides the bottom of the terminal)
+      push("#segA", "#segC", 89.8);
+      chip("#chip2", 90.1, 108.0);
+      focus("#camC", 0, 1080, 1.3, 90.6, 2.2);
+      tl.fromTo("#sp1", { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 92.0).to("#sp1", { opacity: 0, duration: 0.3 }, 99.6);
+      callout("#c1", "#c1n", 101.0, 105.55);
+      callout("#c2", null, 105.75, 108.0);
+      callout("#c3", "#c3n", 106.0, 108.0);
+
+      // 03: the transaction on the block explorer
+      push("#segC", "#segB1", 108.2);
+      chip("#chip3", 108.5, 115.7);
+      focus("#camB1", 0, 0, 1, 108.2, 0);
+      focus("#camB1", 0, 262, 1.75, 108.9, 1.5);
+      callout("#b1", "#b1n", 112.3, 115.6);
+      callout("#b2", "#b2n", 113.4, 115.6);
+
+      // 04: the token, read on-chain
+      push("#segB1", "#segK", 115.9);
+      chip("#chip4", 116.2, 125.9);
+      focus("#camK", 0, 1080, 1.3, 115.9, 0);
+      focus("#camK", 0, 1080, 1.38, 116.6, 8, "sine.inOut");
+      tl.fromTo("#sp2", { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, 120.6).to("#sp2", { opacity: 0, duration: 0.3 }, 123.4);
+      callout("#k1", "#k1n", 123.5, 125.9);
+      callout("#k2", "#k2n", 123.9, 125.9);
+
+      // 05: the token's events on the explorer
+      push("#segK", "#segB2", 126.1);
+      chip("#chip5", 126.4, 135.3);
+      focus("#camB2", 0, 0, 1, 126.1, 0);
+      focus("#camB2", 40, 400, 2.0, 126.8, 1.6);
+      callout("#e1", "#e1n", 128.0, 130.6);
+      focus("#camB2", 860, 400, 2.0, 130.7, 1.5);
+      callout("#e2", "#e2n", 132.2, 135.4);
+
+      // ---- captions (script words, timed to the voice) ----
+      const capsEl = document.getElementById("caps");
+      CAPS.forEach(([a, b, words], i) => {
+        const el = document.createElement("div"); el.className = "cc"; el.id = "cc" + i;
+        words.forEach(([w], j) => { const s = document.createElement("span"); s.id = "cc" + i + "w" + j; s.textContent = w; el.appendChild(s); });
+        capsEl.appendChild(el);
+        tl.set(el, { opacity: 1 }, a).fromTo(el, { y: 12 }, { y: 0, duration: 0.2, ease: "power3.out" }, a).set(el, { opacity: 0 }, b);
+        words.forEach(([w, t], j) => tl.set("#cc" + i + "w" + j, { color: "#ffffff" }, t));
+      });
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

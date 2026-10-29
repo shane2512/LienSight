@@ -1,147 +1,41 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Liensight</title>
-<meta name="description" content="A property-SPV token that restricts transfers when NYC ACRIS records a new lien, checked by Chainlink CRE consensus.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
-</head>
-<body data-page="home">
-<header id="nav"></header>
-
-<main>
-  <div class="flip-zone">
-    <section class="hero" aria-label="Liensight">
-      <h1>The lien alarm<br>for the chain.</h1>
-    </section>
-
-    <section class="intro">
-      <div class="wrap intro-row">
-        <h2>Public record.<br>Every node checks.<br>Built for SPVs.</h2>
-        <div class="spacer"></div>
-        <p>Liensight restricts transfers of a property-SPV token the moment NYC ACRIS records a new lien. It cites the exact filing and asks the issuer to review before anything moves.</p>
-      </div>
-    </section>
-
-    <!-- the token card: flips from back to front as you scroll -->
-    <div class="card-track" aria-hidden="true">
-      <div class="card-stage">
-        <div class="tcard">
-          <div class="face front">
-            <div class="chip"></div>
-            <div class="status-dot"><i></i>RESTRICTED</div>
-            <div class="vert">
-              <span class="brand"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 10.5 12 3l10 7.5V21h-7v-6.5H9V21H2z"/><path d="M12 3v8l10-.5z" opacity=".55"/></svg>Liensight</span>
-              <span class="sub">LSPV · SPV EQUITY</span>
-            </div>
-          </div>
-          <div class="face back">
-            <div class="stripe"></div>
-            <div class="back-text">
-              <div class="num mono">2026 0929 0083 3001</div>
-              <div class="name">BBL 2-05789-1022 · BRONX</div>
-              <div class="row"><span>DOC TYPE<b>LOCC</b></span><span>RECORDED<b>09/26</b></span><span>CHAIN<b>SEPOLIA</b></span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <section class="coverage">
-    <div class="wrap sticky">
-      <div>
-        <span class="pill">Coverage</span>
-        <h2 class="h2">Every adverse filing, one clear signal</h2>
-        <p class="lead">Federal liens, tax-lien sales, common-charge liens and judgments: if ACRIS records it against the property, Liensight flags it. The list of filing types is versioned and its hash is stored on-chain, so anyone can check what counts as adverse.</p>
-      </div>
-      <div class="fan" aria-hidden="true">
-        <div class="lcard blue c1">
-          <div class="chip"></div>
-          <div class="lbrand"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 10.5 12 3l10 7.5V21h-7v-6.5H9V21H2z"/></svg>Liensight</div>
-          <div class="lfoot"><small>FEDERAL LIEN</small>FL · FTL</div>
-        </div>
-        <div class="lcard c2">
-          <div class="chip"></div>
-          <div class="lbrand"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 10.5 12 3l10 7.5V21h-7v-6.5H9V21H2z"/></svg>Liensight</div>
-          <div class="lfoot"><small>COMMON-CHARGE LIEN</small>LOCC</div>
-        </div>
-        <div class="lcard purple c3">
-          <div class="chip"></div>
-          <div class="lbrand"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 10.5 12 3l10 7.5V21h-7v-6.5H9V21H2z"/></svg>Liensight</div>
-          <div class="lfoot"><small>JUDGMENT · TAX-LIEN SALE</small>JUDG · TLS</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="how">
-    <div class="wrap grid">
-      <div class="how-art" aria-hidden="true">
-        <div class="widget w1">
-          <h4>Latest filings</h4>
-          <div class="li"><span>Lien of common charges<br><small class="mono">2026092900833001</small></span><span class="bad">Adverse</span></div>
-          <div class="li"><span>Satisfaction of mortgage</span><span class="ok">Discharge</span></div>
-        </div>
-        <div class="lcard">
-          <div class="chip"></div>
-          <div class="lbrand"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 10.5 12 3l10 7.5V21h-7v-6.5H9V21H2z"/></svg>Liensight</div>
-          <div class="lfoot"><small>BBL</small>2-05789-1022</div>
-        </div>
-        <div class="widget w2">
-          <h4>Records on this lot</h4>
-          <small>14 documents · 1 adverse</small>
-          <div class="bars"><i style="height:30%"></i><i style="height:55%"></i><i style="height:40%"></i><i style="height:70%"></i><i style="height:48%"></i><i class="hot" style="height:92%"></i></div>
-        </div>
-        <div class="widget w3">
-          <h4>Transfers paused</h4>
-          <small>Cites 1 filing. Issuer review needed.</small>
-        </div>
-      </div>
-      <div class="reveal">
-        <span class="pill">How it works</span>
-        <h2 class="h2" style="margin-top:14px">One record, every node, three steps</h2>
-        <ol class="steps">
-          <li><span class="n">1</span><span><strong>Every node reads the record.</strong> Each Chainlink CRE node queries NYC ACRIS for the property on its own.</span></li>
-          <li><span class="n">2</span><span><strong>The network agrees.</strong> Nodes must reach consensus on the exact set of filings before anything is written.</span></li>
-          <li><span class="n">3</span><span><strong>The token reacts.</strong> A new adverse filing pauses transfers and cites the document. Only the issuer can clear it, by naming the liens it reviewed.</span></li>
-        </ol>
-      </div>
-    </div>
-  </section>
-
-  <section class="phone-sec">
-    <div class="phone reveal" aria-label="Liensight app preview">
-      <div class="screen">
-        <div class="notch"></div>
-        <div class="lcard">
-          <div class="chip"></div>
-          <div class="lbrand"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 10.5 12 3l10 7.5V21h-7v-6.5H9V21H2z"/></svg>Liensight</div>
-          <div class="lfoot"><small>LSPV</small>SPV EQUITY</div>
-        </div>
-        <h5>Recent filings</h5>
-        <div class="tx"><span class="ic r">LC</span><div>Lien of common charges<small>Recorded 2026-09-30</small></div><span class="bad" style="color:var(--red);font-weight:700">Adverse</span></div>
-        <div class="tx"><span class="ic">SA</span><div>Satisfaction of mortgage<small>Discharge filing</small></div><span style="color:var(--green);font-weight:700">Clear</span></div>
-        <div class="tiles">
-          <div class="tile">On-chain<b>Cited by hash</b>Sepolia token</div>
-          <div class="tile">Issuer<b>Review needed</b>Before any transfer</div>
-        </div>
-        <div class="sum"><div><strong>14 records</strong><small>1 adverse filing</small></div><a class="btn" href="check.html">Details</a></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="cta wrap reveal">
-    <h2 class="h2">Ready to put your property token on the record?</h2>
-    <a class="btn" href="check.html">Check a property</a>
-  </section>
-</main>
-
-<footer id="footer"></footer>
-<script src="site.js"></script>
-</body>
-</html>
+<style>
+:root{--bg:#fff;--fg:#17202a;--mut:#667;--bad:#b3261e;--ok:#1a7f37;--line:#d8dee4}
+@media(prefers-color-scheme:dark){:root{--bg:#111418;--fg:#e6e9ee;--mut:#9aa4b2;--bad:#ff8a80;--ok:#6fdc8c;--line:#2b323b}}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,sans-serif}
+main{max-width:720px;margin:0 auto;padding:24px 16px}
+input,button{font:inherit;padding:8px;border:1px solid var(--line);border-radius:6px;background:transparent;color:inherit;width:100%;box-sizing:border-box}
+button{cursor:pointer;font-weight:600}.row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.bad{color:var(--bad)}.ok{color:var(--ok)}.mut{color:var(--mut);font-size:14px}
+table{width:100%;border-collapse:collapse}td,th{border-bottom:1px solid var(--line);padding:6px;text-align:left}
+</style></head><body><main>
+<h1>Liensight</h1>
+<p>Chain-enforced warning when a lien hits the property behind your token. This page runs the same check the Chainlink CRE workflow runs, live against NYC ACRIS.</p>
+<div class="row"><input id="b" placeholder="borough 1-5" value="2"><input id="k" placeholder="block" value="5789"><input id="l" placeholder="lot" value="1022"></div>
+<button id="go">Check property</button>
+<p id="status" class="mut"></p><div id="out"></div>
+<p class="mut">The token is SPV equity, not title. The restriction is issuer-governed. Adverse set: federal liens, tax-lien sales, common-charge liens, judgments (ACRIS has no lis pendens type).</p>
+<script>
+const ADVERSE=["FL","FTL","NTXL","TLS","LOCC","JUDG"],DISCHARGE=["RFL","RFTL","DTL","DPFTL","WFL","RTXL","TOLCC","PWFL","PRFL"];
+const B="https://data.cityofnewyork.us/resource";
+const q=p=>Object.entries(p).map(([k,v])=>encodeURIComponent(k)+"="+encodeURIComponent(v)).join("&");
+const $=id=>document.getElementById(id);
+const esc=x=>String(x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+async function get(u){const r=await fetch(u);if(!r.ok)throw new Error("ACRIS "+r.status);return r.json()}
+$("go").onclick=async()=>{
+  const b=+$("b").value,k=+$("k").value,l=+$("l").value;
+  $("status").textContent="Querying ACRIS...";$("out").innerHTML="";
+  try{
+    const legals=await get(`${B}/8h5j-fqxa.json?`+q({$select:"document_id",$where:`borough='${b}' AND block='${k}' AND lot='${l}'`,$limit:5000}));
+    const ids=legals.map(x=>x.document_id),master=[];
+    for(let i=0;i<ids.length;i+=80)master.push(...await get(`${B}/bnx9-e6tj.json?`+q({$select:"document_id,doc_type",$where:`document_id in(${ids.slice(i,i+80).map(x=>`'${x}'`).join(",")})`,$limit:5000})));
+    const docs=[...new Map(master.map(m=>[m.document_id,m.doc_type])).entries()].sort(([a],[c])=>a<c?-1:1);
+    const adv=docs.filter(([,t])=>ADVERSE.includes(t)),dis=docs.filter(([,t])=>DISCHARGE.includes(t));
+    $("status").innerHTML=adv.length?`<b class="bad">TRANSFERS RESTRICTED: ${adv.length} adverse filing(s)</b>`:`<b class="ok">No adverse filings: transfers open</b>`;
+    if(dis.length)$("status").innerHTML+=` <span class="mut">(${dis.length} discharge filing(s): issuer may clear)</span>`;
+    $("out").innerHTML="<table><tr><th>Document</th><th>Type</th><th>Class</th></tr>"+docs.map(([id,t])=>`<tr><td><a href="https://a836-acris.nyc.gov/DS/DocumentSearch/DocumentDetail?doc_id=${encodeURIComponent(id)}" target="_blank" rel="noopener">${esc(id)}</a></td><td>${esc(t)}</td><td class="${ADVERSE.includes(t)?"bad":""}">${ADVERSE.includes(t)?"adverse":DISCHARGE.includes(t)?"discharge":""}</td></tr>`).join("")+"</table>";
+  }catch(e){$("status").textContent="Error: "+e.message+" (state unchanged: fail static)"}
+};
+</script></main></body></html>

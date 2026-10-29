@@ -1,0 +1,59 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>terminal</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;height:100%;background:#14171c;overflow:hidden}
+  body{display:grid;place-items:center;background:radial-gradient(120% 100% at 50% 0%,#232a35,#0d0f13)}
+  .win{width:1740px;height:800px;border-radius:18px;background:#0c0e12;box-shadow:0 40px 90px -30px #000,0 0 0 1px #2a2f38;overflow:hidden;display:flex;flex-direction:column;margin-bottom:150px}
+  .bar{display:flex;align-items:center;gap:10px;padding:14px 18px;background:#1a1d23;color:#9aa3ad;font:600 16px "JetBrains Mono",monospace}
+  .bar i{width:14px;height:14px;border-radius:50%;background:#ff5f57}.bar i:nth-child(2){background:#febc2e}.bar i:nth-child(3){background:#28c840}
+  .bar span{margin-left:12px}
+  #out{flex:1;padding:22px 30px;font:500 24px/1.42 "JetBrains Mono",ui-monospace,monospace;color:#d3dae3;white-space:pre-wrap;overflow-wrap:anywhere;overflow:hidden}
+  .p{color:#7ee2a8;font-weight:700}.cmd{color:#fff;font-weight:600}
+  .ok{color:#7ee2a8}.warn{color:#ffd479}.bad{color:#ff8b6b}.dim{color:#6e7681}.note{color:#8ab4ff;font-style:italic}
+  .cur{display:inline-block;width:13px;height:26px;background:#d3dae3;vertical-align:-4px;animation:b 1s steps(1) infinite}
+  @keyframes b{50%{opacity:0}}
+</style></head>
+<body>
+<div class="win"><div class="bar"><i></i><i></i><i></i><span>PowerShell · C:\dfol\legalhk</span></div><div id="out"></div></div>
+<script>
+const out = document.getElementById("out");
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const esc = (s) => s.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+function paint(t) {
+  let h = esc(t);
+  if (/✓|passed|PASS|\bok\b|^true$|Success/.test(t)) h = '<span class="ok">' + h + "</span>";
+  else if (/FAIL|Error|error|revert/.test(t)) h = '<span class="bad">' + h + "</span>";
+  else if (/\[USER LOG\]/.test(t)) h = h.replace(/\[USER LOG\]/, '<span class="warn">[USER LOG]</span>').replace(/(adverse=[^\s]+)/, '<span class="bad">$1</span>');
+  else if (/\[SIMULATION\]/.test(t)) h = h.replace(/\[SIMULATION\]/, '<span class="dim">[SIMULATION]</span>');
+  return h;
+}
+async function typeCmd(text) {
+  const line = document.createElement("div");
+  line.innerHTML = '<span class="p">PS C:\\dfol\\legalhk&gt; </span><span class="cmd"></span><span class="cur"></span>';
+  out.appendChild(line);
+  const c = line.querySelector(".cmd");
+  const per = Math.max(10, Math.min(38, 3600 / text.length));
+  for (const ch of text) { c.textContent += ch; await sleep(per); }
+  await sleep(450);
+  line.querySelector(".cur").remove();
+}
+function addLine(html) { const d = document.createElement("div"); d.innerHTML = html || "&nbsp;"; out.appendChild(d); out.scrollTop = out.scrollHeight; }
+// Replays REAL captured output. Long real waits are compressed and labelled.
+window.runScene = async function (sc, opts = {}) {
+  const cap = opts.gapCap ?? 2.2;
+  out.style.fontSize = (opts.fs || 24) + "px";
+  await typeCmd(sc.shown);
+  let prev = 0;
+  for (const l of sc.lines) {
+    const gap = l.at - prev;
+    if (gap > cap) { addLine('<span class="dim"># … ' + Math.round(gap) + 's real wait, sped up in this video</span>'); await sleep(cap * 1000); }
+    else await sleep(Math.max(opts.minGap ?? 70, gap * 1000));
+    prev = l.at;
+    addLine(paint(l.t));
+  }
+  if (opts.note) { await sleep(700); addLine('<span class="note">' + esc(opts.note) + "</span>"); }
+  await sleep((opts.hold ?? 2.5) * 1000);  // hold is in seconds
+};
+window.clearTerm = () => { out.innerHTML = ""; };
+</script></body></html>
