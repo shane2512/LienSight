@@ -229,7 +229,7 @@ To find a property’s BBL, search the address on [NYC’s ACRIS](https://a836-a
 #### 1. Clone and install
 
 ```bash
-git clone --recursive REPO_URL liensight && cd liensight
+git clone --recursive https://github.com/shane2512/LienSight.git liensight && cd liensight
 # already cloned without --recursive?  git submodule update --init --recursive
 cd workflow && npm i && cd ..
 ```
