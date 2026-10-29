@@ -1,0 +1,135 @@
+<!doctype html>
+<html>
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <template>
+      <style>
+        #s3-root { position: absolute; inset: 0; color: #15181c; }
+        #s3-world { position: absolute; inset: 0; transform-origin: 50% 55%; }
+        .s3-t { position: absolute; left: 112px; top: 112px; font-size: 92px; white-space: nowrap; }
+        .s3-t .cl { color: #2f55d4; }
+        .s3-t .hot { color: #d23a16; }
+        /* phase 1: the gap and the bridge */
+        #s3-gap { position: absolute; inset: 0; }
+        .s3-end { position: absolute; top: 370px; width: 400px; padding: 30px 32px; display: flex; flex-direction: column; gap: 10px; }
+        .s3-end h4 { font: 900 40px/1 "Archivo", sans-serif; font-stretch: 120%; text-transform: uppercase; letter-spacing: -.02em; }
+        .s3-end p { font: 600 24px/1.25 "Inter Tight", sans-serif; color: #3c434c; }
+        .s3-end svg * { fill: none; stroke: #15181c; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+        #s3-db { left: 120px; } #s3-tk { left: 1400px; outline: 0 solid #2f55d4; }
+        #s3-link { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
+        #s3-link .dash { fill: none; stroke: #15181c; stroke-width: 5; stroke-dasharray: 14 14; stroke-linecap: round; }
+        #s3-link .flow { fill: none; stroke: #2f55d4; stroke-width: 7; stroke-linecap: round; }
+        #s3-x { position: absolute; left: 920px; top: 490px; width: 80px; height: 80px; border-radius: 50%; background: #b8310f; color: #fff; display: grid; place-items: center; font: 900 46px/1 "Archivo", sans-serif; }
+        #s3-xl { position: absolute; left: 760px; top: 588px; width: 400px; text-align: center; font: 800 26px/1.2 "Inter Tight", sans-serif; color: #b8310f; }
+        .s3-n { position: absolute; width: 112px; height: 98px; margin: -49px 0 0 -56px; background: #2f55d4; clip-path: polygon(25% 3%, 75% 3%, 100% 50%, 75% 97%, 25% 97%, 0 50%); display: grid; place-items: center; color: #fff; font: 800 20px/1 "JetBrains Mono", monospace; }
+        .s3-v { position: absolute; padding: 10px 18px; border-radius: 999px; background: #15181c; color: #fff; font: 800 24px/1 "JetBrains Mono", monospace; letter-spacing: .12em; }
+        #s3-nos { position: absolute; left: 0; right: 0; top: 810px; margin: 0 auto; width: max-content; display: flex; align-items: center; gap: 14px; padding: 12px 22px; border-radius: 999px; background: #fff; font: 800 26px/1 "Inter Tight", sans-serif; box-shadow: 0 16px 30px -16px rgba(8,24,56,.5); }
+        #s3-nos svg * { fill: none; stroke: #15181c; stroke-width: 4; stroke-linecap: round; }
+        #s3-nos svg .r { stroke: #b8310f; }
+        /* phase 2: the four-step workflow */
+        #s3-flow { position: absolute; inset: 0; }
+        .s3-s { position: absolute; top: 360px; width: 380px; height: 330px; padding: 28px 28px 26px; display: flex; flex-direction: column; }
+        .s3-s .k { display: flex; align-items: center; gap: 12px; font: 700 20px/1 "JetBrains Mono", monospace; letter-spacing: .12em; color: #565e69; }
+        .s3-s .k b { width: 40px; height: 40px; border-radius: 50%; background: #2f55d4; color: #fff; display: grid; place-items: center; font-size: 19px; letter-spacing: 0; }
+        .s3-s h4 { margin-top: 22px; font: 900 44px/1 "Archivo", sans-serif; font-stretch: 120%; text-transform: uppercase; letter-spacing: -.02em; }
+        .s3-s p { margin-top: 12px; font: 600 24px/1.25 "Inter Tight", sans-serif; color: #3c434c; }
+        .s3-s code { margin-top: auto; display: block; padding: 12px 14px; border-radius: 12px; background: #0f1218; color: #9fb4ff; font: 600 19px/1.35 "JetBrains Mono", monospace; }
+        #s3-s1 { left: 112px; } #s3-s2 { left: 536px; } #s3-s3 { left: 960px; } #s3-s4 { left: 1384px; }
+        .s3-ar { position: absolute; top: 505px; width: 44px; height: 40px; }
+        .s3-ar * { fill: none; stroke: #15181c; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+        #s3-a1 { left: 492px; } #s3-a2 { left: 916px; } #s3-a3 { left: 1340px; }
+        #s3-sdk { position: absolute; left: 112px; top: 740px; font: 700 24px/1.4 "JetBrains Mono", monospace; letter-spacing: .02em; color: #15181c; }
+      </style>
+
+      <div id="s3-root" data-composition-id="s3-cre" data-width="1920" data-height="1080">
+        <div id="s3-world">
+          <div id="s3-ta" class="s3-t disp" data-layout-ignore><span class="ln"><span>Why <span class="cl">Chainlink CRE</span>.</span></span></div>
+          <div id="s3-tb" class="s3-t disp" data-layout-ignore style="opacity:0"><span class="ln"><span>The workflow: <span class="cl">four steps</span>.</span></span></div>
+
+          <div id="s3-gap">
+            <svg id="s3-link" viewBox="0 0 1920 1080">
+              <path id="s3-dash" class="dash" d="M 530 530 H 1390" />
+              <path id="s3-f1" class="flow" d="M 530 530 C 640 530 700 530 790 530" pathLength="1" />
+              <path id="s3-f2" class="flow" d="M 1130 530 C 1220 530 1280 530 1390 530" pathLength="1" />
+            </svg>
+            <div id="s3-db" class="s3-end card">
+              <svg width="78" height="84" viewBox="0 0 78 84"><ellipse cx="39" cy="14" rx="32" ry="10" /><path d="M7 14 V70 a32 10 0 0 0 64 0 V14" /><path d="M7 42 a32 10 0 0 0 64 0" /></svg>
+              <h4>NYC ACRIS</h4><p>Public land records, behind a government API</p>
+            </div>
+            <div id="s3-tk" class="s3-end card">
+              <svg width="84" height="84" viewBox="0 0 84 84"><circle cx="42" cy="42" r="34" /><circle cx="42" cy="42" r="22" /></svg>
+              <h4>LSPV token</h4><p>A smart contract on Sepolia</p>
+            </div>
+            <div id="s3-x">✕</div>
+            <div id="s3-xl">A contract can’t call an API</div>
+            <div id="s3-nodes"></div>
+            <div id="s3-vf" class="s3-v" style="left:600px; top:410px">FETCH</div>
+            <div id="s3-va" class="s3-v" style="left:888px; top:690px">AGREE</div>
+            <div id="s3-vw" class="s3-v" style="left:1188px; top:410px">WRITE</div>
+            <div id="s3-nos"><svg width="40" height="40" viewBox="0 0 40 40"><rect x="8" y="5" width="24" height="30" rx="4" /><path d="M13 13 H27 M13 20 H27" /><path class="r" d="M4 36 L36 4" /></svg>No single server to trust</div>
+          </div>
+
+          <div id="s3-flow">
+            <div id="s3-s1" class="s3-s card"><div class="k"><b>1</b>TRIGGER</div><h4>Cron</h4><p>Fires every ten minutes</p><code>CronCapability<br />"0 */10 * * * *"</code></div>
+            <div id="s3-s2" class="s3-s card"><div class="k"><b>2</b>CAPABILITY</div><h4>HTTP</h4><p>Each node reads two ACRIS datasets</p><code>HTTPClient<br />.sendRequest(…)</code></div>
+            <div id="s3-s3" class="s3-s card"><div class="k"><b>3</b>CONSENSUS</div><h4>Identical</h4><p>Same document set, or no report</p><code>consensusIdentical<br />Aggregation()</code></div>
+            <div id="s3-s4" class="s3-s card"><div class="k"><b>4</b>TARGET</div><h4>EVM write</h4><p>Signed report to the token</p><code>runtime.report →<br />EVMClient.writeReport</code></div>
+            <svg id="s3-a1" class="s3-ar" viewBox="0 0 44 40"><path d="M4 20 H38 M26 8 L38 20 L26 32" /></svg>
+            <svg id="s3-a2" class="s3-ar" viewBox="0 0 44 40"><path d="M4 20 H38 M26 8 L38 20 L26 32" /></svg>
+            <svg id="s3-a3" class="s3-ar" viewBox="0 0 44 40"><path d="M4 20 H38 M26 8 L38 20 L26 32" /></svg>
+            <div id="s3-sdk">TypeScript · @chainlink/cre-sdk · compiled to WebAssembly</div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        (() => {
+          // five nodes bridging the gap (fixed layout)
+          const P = [[960, 400], [850, 470], [1070, 470], [890, 600], [1030, 600]];
+          const host = document.getElementById("s3-nodes");
+          P.forEach(([x, y], i) => { const n = document.createElement("div"); n.className = "s3-n"; n.id = "s3n" + i; n.style.left = x + "px"; n.style.top = y + "px"; n.textContent = "N" + (i + 1); host.appendChild(n); });
+
+          const tl = gsap.timeline({ paused: true });
+          const inn = (sel, at) => tl.fromTo(sel + " .ln > span", { yPercent: 135, rotate: 3 }, { yPercent: 0, rotate: 0, duration: 0.85, stagger: 0.12, ease: "expo.out" }, at);
+          tl.fromTo("#s3-world", { scale: 1.03 }, { scale: 1.0, duration: 20.9, ease: "none" }, 0);
+          tl.set(["#s3-flow .s3-s", "#s3-flow .s3-ar", "#s3-sdk"], { opacity: 0 }, 0);
+
+          // "Why Chainlink CRE?"
+          inn("#s3-ta", 0.2);
+          // "A lien lives in a government database, and a smart contract can't read one."
+          tl.fromTo("#s3-db", { opacity: 0, x: -80, rotate: -3 }, { opacity: 1, x: 0, rotate: 0, duration: 0.8, ease: "expo.out" }, 2.1)
+            .fromTo("#s3-tk", { opacity: 0, x: 80, rotate: 3 }, { opacity: 1, x: 0, rotate: 0, duration: 0.8, ease: "expo.out" }, 3.8)
+            .fromTo("#s3-dash", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 4.3)
+            .fromTo("#s3-x", { scale: 0, rotate: -90 }, { scale: 1, rotate: 0, duration: 0.5, ease: "back.out(2.4)" }, 4.7)
+            .fromTo("#s3-xl", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 4.9);
+          // "CRE lets a decentralized network of nodes fetch that API, agree on the answer, and write it on-chain"
+          tl.to(["#s3-x", "#s3-xl", "#s3-dash"], { opacity: 0, scale: 0.8, duration: 0.35, ease: "power2.in" }, 6.1)
+            .fromTo(".s3-n", { scale: 0, opacity: 0, rotate: -60 }, { scale: 1, opacity: 1, rotate: 0, duration: 0.55, stagger: 0.08, ease: "back.out(2)" }, 6.4)
+            .fromTo("#s3-f1", { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.6, ease: "power2.out" }, 8.1)
+            .fromTo("#s3-vf", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(2)" }, 8.15)
+            .to(".s3-n", { scale: 1.12, duration: 0.25, stagger: 0.04, yoyo: true, repeat: 1, ease: "power2.inOut" }, 9.3)
+            .fromTo("#s3-va", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(2)" }, 9.3)
+            .fromTo("#s3-f2", { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.6, ease: "power2.out" }, 10.6)
+            .fromTo("#s3-vw", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(2)" }, 10.65)
+            .to("#s3-tk", { outlineWidth: 6, duration: 0.4 }, 11.1)
+          // "with no single server to trust."
+            .fromTo("#s3-nos", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, 11.6);
+
+          // "Our workflow is four steps:" the diagram clears, the pipeline builds
+          tl.to("#s3-ta .ln > span", { yPercent: -135, duration: 0.5, ease: "power3.in" }, 13.3)
+            .to("#s3-gap", { opacity: 0, y: -40, scale: 0.96, duration: 0.55, ease: "power3.in" }, 13.3)
+            .set("#s3-ta", { opacity: 0 }, 13.85)
+            .set("#s3-tb", { opacity: 1 }, 13.7);
+          inn("#s3-tb", 13.75);
+          const step = (n, at) => tl.fromTo("#s3-s" + n, { opacity: 0, y: 70, rotate: n % 2 ? -2 : 2 }, { opacity: 1, y: 0, rotate: 0, duration: 0.7, ease: "expo.out" }, at);
+          step(1, 15.2); tl.fromTo("#s3-a1", { opacity: 0, x: -14 }, { opacity: 1, x: 0, duration: 0.3 }, 15.9);
+          step(2, 16.2); tl.fromTo("#s3-a2", { opacity: 0, x: -14 }, { opacity: 1, x: 0, duration: 0.3 }, 17.4);
+          step(3, 18.2); tl.fromTo("#s3-a3", { opacity: 0, x: -14 }, { opacity: 1, x: 0, duration: 0.3 }, 18.9);
+          step(4, 19.1);
+          tl.fromTo("#s3-sdk", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, 19.5);
+          window.__timelines["s3-cre"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

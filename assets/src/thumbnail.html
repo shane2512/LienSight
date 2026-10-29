@@ -1,0 +1,48 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="brand.css">
+<style>
+  :root { --w: 1280px; --h: 720px; }
+  .brand { position: absolute; left: 56px; top: 46px; display: flex; align-items: center; gap: 16px; }
+  .brand .mark { width: 64px; height: 64px; }
+  .brand b { font: 900 44px/1 "Archivo", sans-serif; font-stretch: 125%; text-transform: uppercase; letter-spacing: -.03em; }
+  .h { position: absolute; left: 56px; top: 172px; font-size: 104px; }
+  .h .r { color: var(--red2); }
+  .chip { position: absolute; left: 56px; bottom: 54px; display: flex; gap: 12px; }
+  .chip span { padding: 14px 20px; border-radius: 999px; background: var(--ink); color: #fff; font: 800 24px/1 "JetBrains Mono", monospace; letter-spacing: .06em; }
+  .chip span.cl { background: var(--cl); }
+  /* building */
+  .bld { position: absolute; left: 872px; top: 150px; width: 300px; height: 560px; border-radius: 10px 10px 0 0; background: linear-gradient(90deg, #f6f1ea, #eae3d9 70%, #ded6ca); box-shadow: 0 40px 80px -30px rgba(10,30,60,.55); }
+  .bld::before { content: ""; position: absolute; left: -16px; right: -16px; top: -20px; height: 28px; border-radius: 8px; background: #ddd5c9; }
+  .win { position: absolute; width: 40px; height: 58px; border-radius: 5px; background: #355c8a; box-shadow: inset 0 0 0 4px #f9f6f1; }
+  .win.lit { background: #ffd479; }
+  .door { position: absolute; left: 120px; bottom: 0; width: 60px; height: 96px; border-radius: 30px 30px 0 0; background: #2a3a52; }
+  .lien { position: absolute; left: 760px; top: 250px; width: 330px; padding: 22px 24px; transform: rotate(-7deg); }
+  .lien .t { font: 700 15px/1 "JetBrains Mono", monospace; letter-spacing: .12em; color: var(--mute); }
+  .lien .big { font: 800 60px/1 "JetBrains Mono", monospace; margin: 10px 0 4px; letter-spacing: -.04em; }
+  .lien .d { font: 700 19px/1.2 "Inter Tight", sans-serif; color: var(--ink2); }
+  .stamp { position: absolute; right: 16px; top: 22px; padding: 4px 14px; border: 6px solid var(--red); border-radius: 10px; color: var(--red); font: 900 44px/1 "Archivo", sans-serif; font-stretch: 125%; transform: rotate(-12deg); }
+  .tok { position: absolute; left: 930px; top: 520px; width: 300px; padding: 20px 22px; transform: rotate(4deg); }
+  .tok .k { font: 700 15px/1 "JetBrains Mono", monospace; letter-spacing: .12em; color: var(--mute); }
+  .tok .p { margin-top: 12px; height: 64px; border-radius: 14px; background: var(--red); color: #fff; display: grid; place-items: center; font: 900 32px/1 "Archivo", sans-serif; font-stretch: 125%; letter-spacing: .02em; }
+</style></head>
+<body>
+  <div class="sky">
+    <div class="cloud" style="left:-120px; top:40px"></div><div class="cloud soft" style="left:520px; top:-30px; width:520px; height:170px"></div>
+    <div class="cloud" style="left:1040px; top:70px; width:330px; height:110px"></div><div class="cloud soft" style="left:300px; top:520px; width:560px; height:190px"></div>
+    <div class="cloud" style="left:-60px; top:600px; width:400px; height:140px"></div>
+  </div>
+  <div class="bld" id="bld"><div class="door"></div></div>
+  <div class="lien card"><div class="t">ACRIS · RECORDED</div><div class="big">LOCC</div><div class="d">Lien of common charges</div><div class="stamp">LIEN</div></div>
+  <div class="tok card"><div class="k">LSPV TOKEN · SEPOLIA</div><div class="p">RESTRICTED</div></div>
+  <div class="brand"><div class="mark"><svg viewBox="0 0 512 512"><path d="M168 120 H262 V308 H352 V392 H168 Z" fill="#fff"/><circle cx="330" cy="164" r="26" fill="#fff"/></svg></div><b>Liensight</b></div>
+  <div class="h disp">A lien lands.<br /><span class="r">The token<br />locks.</span></div>
+  <div class="chip"><span class="cl">CHAINLINK CRE</span><span>LIVE DEMO</span></div>
+  <script>
+    const b = document.getElementById("bld");
+    for (let r = 0; r < 7; r++) for (let c = 0; c < 4; c++) {
+      if (r === 6 && (c === 1 || c === 2)) continue;
+      const w = document.createElement("div"); w.className = "win" + ((r * 7 + c * 3) % 5 === 0 ? " lit" : "");
+      w.style.left = 30 + c * 64 + "px"; w.style.top = 36 + r * 74 + "px"; b.appendChild(w);
+    }
+  </script>
+</body></html>

@@ -7,14 +7,20 @@ import difflib, json, re
 
 # where each voice clip (or part of one) sits on the root timeline: (id, clip_from, clip_to, root_start)
 PLACE = [
-    ("s1_hook", 0, 99, 1.2), ("s2_problem", 0, 99, 11.1), ("s3_why", 0, 99, 30.8), ("s4_how", 0, 99, 50.4),
-    ("s5a_check", 0, 99, 72.7), ("s5b_cre", 0, 99, 97.5),
-    ("s5c_chain", 0, 5.9, 109.2), ("s5c_chain", 5.9, 99, 117.5),
-    ("s6_fit", 0, 99, 137.0), ("s7_honest", 0, 99, 158.4),
+    ("s1_hook", 0, 99, 1.2), ("s2_problem", 0, 99, 11.1), ("s3_cre", 0, 99, 30.85), ("s4_how", 0, 99, 51.8),
+    ("s5a_check", 0, 99, 74.1), ("s5b1_cli", 0, 99, 91.5), ("s5b2_flag", 0, 99, 101.5),
+    ("s5c_chain", 0, 5.9, 110.6), ("s5c_chain", 5.9, 99, 118.1), ("s5d_events", 0, 99, 126.7),
+    ("s6_fit", 0, 99, 137.3), ("s7_honest", 0, 99, 159.2),
 ]
-SHOW = {"A.C.R.I.S.": "ACRIS", "C.R.E.": "CRE", "A.P.I.": "API", "A.I.": "AI", "A.P.I.,": "API,", "A.C.R.I.S.,": "ACRIS,"}
+SHOW0 = {"A.C.R.I.S.": "ACRIS", "C.R.E.": "CRE", "A.P.I.": "API", "A.I.": "AI", "A.P.I.,": "API,", "A.C.R.I.S.,": "ACRIS,"}
 NUM = {"14": "fourteen", "30th": "thirtieth", "16": "sixteen", "35": "thirtyfive"}
 
+import re as _re
+class _Show(dict):
+    def get(self, w, d=None):
+        # dotted acronyms read better without dots: A.C.R.I.S. -> ACRIS, C.R.E.? -> CRE?
+        return _re.sub(r"((?:[A-Z]\.){2,})", lambda m: m.group(1).replace(".", ""), w)
+SHOW = _Show()
 norm = lambda w: NUM.get(re.sub(r"[^a-z0-9]", "", w.lower()), re.sub(r"[^a-z0-9]", "", w.lower()))
 script = {n["id"]: n["text"] for n in json.load(open("narration.json", encoding="utf-8"))}
 heard = json.load(open("assets/vo/words.json", encoding="utf-8"))
@@ -51,8 +57,13 @@ for cid, c0, c1, at in PLACE:
     # one sentence at a time, split into even lines of at most 7 words
     sent, sents = [], []
     for k, (w, s) in enumerate(words):
-        sent.append([SHOW.get(w, w), round(at + s - c0, 3)])
-        if w[-1] in ".?!:" or k == len(words) - 1:
+        d = SHOW.get(w, w)
+        # a bare acronym ending a sentence ("... the C.R.E. C.L.I. It compiles") keeps its full stop
+        nxt = words[k + 1][0] if k + 1 < len(words) else ""
+        if _re.fullmatch(r"(?:[A-Z]\.){2,}", w) and nxt[:1].isupper() and not _re.match(r"(?:[A-Z]\.){2,}", nxt):
+            d += "."
+        sent.append([d, round(at + s - c0, 3)])
+        if d[-1] in ".?!:" or k == len(words) - 1:
             sents.append(sent); sent = []
     for sent in sents:
         # clauses (split at commas), packed into lines of at most 7 words; long clauses split evenly
@@ -64,14 +75,19 @@ for cid, c0, c1, at in PLACE:
         if cl: clauses.append(cl)
         parts = []
         for cl in clauses:
-            n = -(-len(cl) // 7); size = -(-len(cl) // n)
+            n = -(-len(cl) // 8); size = -(-len(cl) // n)
             parts += [cl[j:j + size] for j in range(0, len(cl), size)]
         line = []
         for part in parts:
             if line and len(line) + len(part) > 7:
                 chunks.append({"w": line}); line = []
             line = line + part
-        if line: chunks.append({"w": line})
+        if line:
+            # never leave a one-word tail on its own line
+            if len(line) == 1 and chunks and len(chunks[-1]["w"]) <= 7 and "end" not in chunks[-1]:
+                chunks[-1]["w"] += line
+            else:
+                chunks.append({"w": line})
     # end time for this clip's last chunk
     chunks[-1]["end"] = round(at + min(end, c1) - c0 + 0.3, 3)
 

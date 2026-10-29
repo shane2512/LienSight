@@ -1,0 +1,80 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="brand.css">
+<style>
+  :root { --w: 1920px; --h: 1080px; }
+  .top { position: absolute; left: 90px; right: 90px; top: 56px; display: flex; justify-content: space-between; align-items: flex-end; }
+  .h { font-size: 82px; }
+  .h .cl { color: var(--cl); }
+  .brand { display: flex; align-items: center; gap: 16px; }
+  .brand .mark { width: 64px; height: 64px; }
+  .brand b { font: 900 44px/1 "Archivo", sans-serif; font-stretch: 125%; text-transform: uppercase; letter-spacing: -.03em; }
+  /* the workflow: two rows of steps */
+  .lane { position: absolute; left: 90px; right: 90px; display: grid; gap: 26px; }
+  .lane.a { top: 210px; grid-template-columns: repeat(4, 1fr); }
+  .lane.b { top: 500px; grid-template-columns: repeat(3, 1fr); }
+  .lab { position: absolute; left: 92px; font: 800 19px/1 "JetBrains Mono", monospace; letter-spacing: .14em; text-transform: uppercase; }
+  .st { position: relative; padding: 24px 24px 22px; min-height: 236px; display: flex; flex-direction: column; }
+  .st .k { display: flex; align-items: center; gap: 12px; font: 700 17px/1 "JetBrains Mono", monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--mute); }
+  .st .k b { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: var(--ink); color: #fff; font-size: 18px; letter-spacing: 0; }
+  .st.cre .k b { background: var(--cl); } .st.chain .k b { background: var(--red); }
+  .st h4 { margin-top: 16px; font: 900 32px/1.02 "Archivo", sans-serif; font-stretch: 118%; text-transform: uppercase; letter-spacing: -.02em; }
+  .st p { margin-top: 10px; font: 600 21px/1.3 "Inter Tight", sans-serif; color: var(--ink2); }
+  .st code { margin-top: auto; padding-top: 12px; font: 700 17px/1.35 "JetBrains Mono", monospace; color: var(--deep); }
+  .st.cre code { color: var(--cl); }
+  .ar { position: absolute; top: 50%; right: -24px; width: 22px; height: 22px; margin-top: -11px; z-index: 2; }
+  .ar * { fill: none; stroke: var(--ink); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+  /* tech stack */
+  .stack { position: absolute; left: 90px; right: 90px; bottom: 56px; padding: 26px 30px 28px; }
+  .stack .t { display: flex; justify-content: space-between; align-items: baseline; }
+  .stack .t b { font: 900 30px/1 "Archivo", sans-serif; font-stretch: 120%; text-transform: uppercase; letter-spacing: -.02em; }
+  .stack .t span { font: 700 17px/1 "JetBrains Mono", monospace; letter-spacing: .1em; color: var(--mute); text-transform: uppercase; }
+  .grid { margin-top: 20px; display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }
+  .tech { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 16px; background: #f3f6f9; }
+  .tech img { width: 40px; height: 40px; object-fit: contain; flex: none; }
+  .tech .txt b { display: block; font: 800 20px/1.1 "Inter Tight", sans-serif; }
+  .tech .txt span { display: block; margin-top: 3px; font: 600 15px/1.2 "Inter Tight", sans-serif; color: var(--mute); }
+  .tech .nyc { width: 40px; height: 40px; border-radius: 10px; background: var(--ink); color: #fff; display: grid; place-items: center; font: 900 14px/1 "Archivo", sans-serif; font-stretch: 120%; flex: none; }
+</style></head>
+<body>
+  <div class="sky">
+    <div class="cloud soft" style="left:-140px; top:120px; width:600px; height:200px"></div><div class="cloud" style="left:1460px; top:-30px; width:520px; height:170px"></div>
+    <div class="cloud soft" style="left:700px; top:430px; width:640px; height:210px"></div><div class="cloud" style="left:-80px; top:560px"></div>
+  </div>
+  <div class="top">
+    <div class="h disp">How it works · <span class="cl">built on CRE</span></div>
+    <div class="brand"><div class="mark"><svg viewBox="0 0 512 512"><path d="M168 120 H262 V308 H352 V392 H168 Z" fill="#fff"/><circle cx="330" cy="164" r="26" fill="#fff"/></svg></div><b>Liensight</b></div>
+  </div>
+
+  <div class="lab" style="top:180px; color:#2f55d4">Chainlink CRE workflow · every 10 minutes</div>
+  <div class="lane a">
+    <div class="st card cre"><div class="k"><b>1</b>Trigger</div><h4>Cron fires</h4><p>The workflow wakes on schedule for one building (BBL).</p><code>CronCapability "0 */10 * * * *"</code><svg class="ar" viewBox="0 0 22 22"><path d="M4 11 H18 M12 5 L18 11 L12 17"/></svg></div>
+    <div class="st card cre"><div class="k"><b>2</b>HTTP capability</div><h4>Nodes read ACRIS</h4><p>Each node queries NYC Open Data on its own: legals, then master.</p><code>HTTPClient · 8h5j-fqxa + bnx9-e6tj</code><svg class="ar" viewBox="0 0 22 22"><path d="M4 11 H18 M12 5 L18 11 L12 17"/></svg></div>
+    <div class="st card cre"><div class="k"><b>3</b>Consensus</div><h4>Identical or nothing</h4><p>Nodes must return the same document set. Truncated or empty data fails closed.</p><code>consensusIdenticalAggregation</code><svg class="ar" viewBox="0 0 22 22"><path d="M4 11 H18 M12 5 L18 11 L12 17"/></svg></div>
+    <div class="st card cre"><div class="k"><b>4</b>EVM write</div><h4>Signed report</h4><p>Property key, doc-set hash, adverse and discharge IDs, ABI-encoded.</p><code>runtime.report → writeReport</code></div>
+  </div>
+
+  <div class="lab" style="top:470px; color:#b8310f">On-chain · LiensightToken (Sepolia)</div>
+  <div class="lane b">
+    <div class="st card chain"><div class="k"><b>5</b>Forwarder → onReport</div><h4>Checks the sender</h4><p>Only the CRE forwarder, the expected workflow owner and this property’s key are accepted.</p><code>onReport(metadata, report)</code><svg class="ar" viewBox="0 0 22 22"><path d="M4 11 H18 M12 5 L18 11 L12 17"/></svg></div>
+    <div class="st card chain"><div class="k"><b>6</b>Restrict</div><h4>Transfers stop</h4><p>A new adverse filing sets <b>restricted</b> and cites the lien. A cleared lien never re-restricts.</p><code>event Restricted(docSetHash, docIds)</code><svg class="ar" viewBox="0 0 22 22"><path d="M4 11 H18 M12 5 L18 11 L12 17"/></svg></div>
+    <div class="st card"><div class="k"><b>7</b>Issuer review</div><h4>Clear, in public</h4><p>Only the issuer multisig can clear, naming the exact liens it reviewed.</p><code>clearRestriction(citedHash, reason)</code></div>
+  </div>
+
+  <div class="stack card">
+    <div class="t"><b>Tech stack</b><span>Official logos · versions in the repo</span></div>
+    <div class="grid">
+      <div class="tech"><img src="../logos/chainlink.svg" style="filter: invert(29%) sepia(85%) saturate(2100%) hue-rotate(218deg) brightness(88%)"><div class="txt"><b>Chainlink CRE</b><span>Workflow · DON</span></div></div>
+      <div class="tech"><img src="../logos/typescript.svg" style="filter: invert(37%) sepia(77%) saturate(611%) hue-rotate(181deg) brightness(91%)"><div class="txt"><b>TypeScript</b><span>cre-sdk → WASM</span></div></div>
+      <div class="tech"><img src="../logos/bun.svg"><div class="txt"><b>Bun</b><span>Workflow build</span></div></div>
+      <div class="tech"><img src="../logos/viem.svg"><div class="txt"><b>viem</b><span>ABI · keccak</span></div></div>
+      <div class="tech"><img src="../logos/zod.svg" style="filter: invert(31%) sepia(84%) saturate(1352%) hue-rotate(205deg) brightness(91%)"><div class="txt"><b>Zod</b><span>Config schema</span></div></div>
+      <div class="tech"><img src="../logos/vitest.svg" style="filter: invert(62%) sepia(54%) saturate(512%) hue-rotate(39deg) brightness(95%)"><div class="txt"><b>Vitest</b><span>17 workflow tests</span></div></div>
+      <div class="tech"><img src="../logos/solidity.svg"><div class="txt"><b>Solidity</b><span>LiensightToken</span></div></div>
+      <div class="tech"><img src="../logos/foundry.png" style="border-radius: 8px"><div class="txt"><b>Foundry</b><span>18 forge tests</span></div></div>
+      <div class="tech"><img src="../logos/openzeppelin.svg" style="filter: invert(40%) sepia(64%) saturate(1500%) hue-rotate(222deg) brightness(92%)"><div class="txt"><b>OpenZeppelin</b><span>ERC-20 base</span></div></div>
+      <div class="tech"><img src="../logos/ethereum.svg"><div class="txt"><b>Ethereum Sepolia</b><span>Token + reports</span></div></div>
+      <div class="tech"><img src="../logos/etherscan.svg"><div class="txt"><b>Etherscan</b><span>Public proof</span></div></div>
+      <div class="tech"><div class="nyc">NYC</div><div class="txt"><b>NYC Open Data</b><span>ACRIS · Socrata API</span></div></div>
+    </div>
+  </div>
+</body></html>

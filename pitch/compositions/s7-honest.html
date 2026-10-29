@@ -64,8 +64,8 @@
             .fromTo("#s7-n" + n, { y: 50, opacity: 0, rotate: n % 2 ? -2 : 2 }, { y: 0, opacity: 1, rotate: 0, duration: 0.8, ease: "expo.out" }, at + 0.1);
           node(1, 11.1); node(2, 12.9); node(3, 14.4);
           // exit into the close
-          tl.to(["#s7-tb .ln > span"], { yPercent: -135, duration: 0.5, stagger: 0.06, ease: "power3.in" }, 16.0)
-            .to(["#s7-road", ".s7-pin", ".s7-n"], { opacity: 0, y: -30, duration: 0.6, stagger: 0.03, ease: "power2.in" }, 15.9);
+          tl.to(["#s7-tb .ln > span"], { yPercent: -135, duration: 0.5, stagger: 0.06, ease: "power3.in" }, 15.5)
+            .to(["#s7-road", ".s7-pin", ".s7-n"], { opacity: 0, y: -30, duration: 0.6, stagger: 0.03, ease: "power2.in" }, 15.4);
           window.__timelines["s7-honest"] = tl;
         })();
       </script>

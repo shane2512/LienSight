@@ -7,7 +7,7 @@ import json, subprocess
 import numpy as np
 from scipy.signal import butter, sosfilt, fftconvolve
 
-SR, DUR = 48000, 179.4
+SR, DUR = 48000, 179.9
 N = int(SR * DUR)
 rng = np.random.default_rng(7)
 L, R = np.zeros(N), np.zeros(N)          # dry bus
@@ -152,43 +152,44 @@ for t in np.arange(16.9, 30.4, BEAT): kick(t, 0.32)
 for t in (19.15, 20.35, 21.4): impact(t, 0.32)
 riser(30.7, 1.3, 0.1); whoosh(30.7)
 
-# C. why 30.7 - 50.2: lighter, arpeggio
-progression(30.7, 50.2, ["F", "C", "Dm", "Bb"], 2, lambda c, t, d: (pad(CH[c][0], t, d, 0.045, 2200), arp(CH[c][0], t, d, BEAT / 2, 0.035)))
-progression(30.7, 50.2, ["F", "C", "Dm", "Bb"], 2, lambda c, t, d: bass(CH[c][1], t, d * 0.9, 0.16))
-riser(50.2, 1.2, 0.1); whoosh(50.2)
+# C. why Chainlink CRE 30.7 - 51.6: lighter, arpeggio; accents on each idea and each workflow step
+for t in (37.1, 38.85, 40.0, 41.35, 45.9, 46.9, 48.9, 49.8): ping(t, 76, 0.05)
+progression(30.7, 51.6, ["F", "C", "Dm", "Bb"], 2, lambda c, t, d: (pad(CH[c][0], t, d, 0.045, 2200), arp(CH[c][0], t, d, BEAT / 2, 0.035)))
+progression(30.7, 51.6, ["F", "C", "Dm", "Bb"], 2, lambda c, t, d: bass(CH[c][1], t, d * 0.9, 0.16))
+riser(51.6, 1.2, 0.1); whoosh(51.6)
 
-# D. how 50.2 - 71.9: driving groove, restriction hit
-progression(50.2, 71.9, ["Dm", "Bb", "F", "C"], 1, lambda c, t, d: (pad(CH[c][0], t, d, 0.04, 2000, a=0.3, r=0.6), arp(CH[c][0], t, d, BEAT / 4, 0.028, dec=7)))
-progression(50.2, 71.9, ["Dm", "Bb", "F", "C"], 1, lambda c, t, d: [bass(CH[c][1], t + i * BEAT / 2, 0.28, 0.15) for i in range(int(d / (BEAT / 2)))])
-for t in np.arange(50.2, 71.6, BEAT): kick(t, 0.36)
-for t in np.arange(50.2 + BEAT / 2, 71.6, BEAT): hat(t, 0.03)
-impact(62.75, 0.45)
-riser(72.0, 1.2, 0.09)
+# D. how 51.6 - 73.3: driving groove, restriction hit
+progression(51.6, 73.3, ["Dm", "Bb", "F", "C"], 1, lambda c, t, d: (pad(CH[c][0], t, d, 0.04, 2000, a=0.3, r=0.6), arp(CH[c][0], t, d, BEAT / 4, 0.028, dec=7)))
+progression(51.6, 73.3, ["Dm", "Bb", "F", "C"], 1, lambda c, t, d: [bass(CH[c][1], t + i * BEAT / 2, 0.28, 0.15) for i in range(int(d / (BEAT / 2)))])
+for t in np.arange(51.6, 73.0, BEAT): kick(t, 0.36)
+for t in np.arange(51.6 + BEAT / 2, 73.0, BEAT): hat(t, 0.03)
+impact(69.6, 0.45)
+riser(73.4, 1.2, 0.09)
 
-# E. live demo 71.9 - 135.8: minimal bed, a ping on every callout
-progression(71.9, 135.8, ["Dm", "Bb", "F", "C"], 2, lambda c, t, d: (pad(CH[c][0], t, d, 0.04, 1500), arp(CH[c][0], t, d, BEAT, 0.02, dec=4)))
-progression(71.9, 135.8, ["Dm", "Bb", "F", "C"], 2, lambda c, t, d: bass(CH[c][1], t, d * 0.9, 0.12))
-for t in (79.6, 86.3, 101.0, 105.75, 112.3, 113.4, 123.5, 128.0, 132.2): ping(t)
-for t in (89.8, 108.2, 115.9, 126.1): whoosh(t + 0.3, 0.08)
-riser(135.8, 1.4, 0.11); whoosh(135.8)
+# E. live demo 73.3 - 136.3: minimal bed, a ping on every callout
+progression(73.3, 136.3, ["Dm", "Bb", "F", "C"], 2, lambda c, t, d: (pad(CH[c][0], t, d, 0.04, 1500), arp(CH[c][0], t, d, BEAT, 0.02, dec=4)))
+progression(73.3, 136.3, ["Dm", "Bb", "F", "C"], 2, lambda c, t, d: bass(CH[c][1], t, d * 0.9, 0.12))
+for t in (81.0, 87.7, 102.4, 107.15, 113.7, 114.8, 124.4, 128.9, 131.9): ping(t)
+for t in (91.2, 109.6, 116.8, 126.1): whoosh(t + 0.3, 0.08)
+riser(136.3, 1.4, 0.11); whoosh(136.3)
 
-# F. why this fits 135.8 - 157.9: the lift
-progression(135.8, 157.9, ["F", "C", "Dm", "Bb"], 1, lambda c, t, d: (pad(CH[c][0], t, d, 0.045, 2800, a=0.2, r=0.6), arp(CH[c][0], t, d, BEAT / 4, 0.03, dec=6)))
-progression(135.8, 157.9, ["F", "C", "Dm", "Bb"], 1, lambda c, t, d: [bass(CH[c][1], t + i * BEAT / 2, 0.28, 0.16) for i in range(int(d / (BEAT / 2)))])
-for t in np.arange(135.8, 157.6, BEAT): kick(t, 0.36)
-for t in np.arange(135.8 + BEAT, 157.6, 2 * BEAT): clap(t, 0.07)
-for t in np.arange(135.8 + BEAT / 2, 157.6, BEAT): hat(t, 0.03)
-riser(157.9, 1.2, 0.09); whoosh(157.9)
+# F. why this fits 136.3 - 158.7: the lift
+progression(136.3, 158.7, ["F", "C", "Dm", "Bb"], 1, lambda c, t, d: (pad(CH[c][0], t, d, 0.045, 2800, a=0.2, r=0.6), arp(CH[c][0], t, d, BEAT / 4, 0.03, dec=6)))
+progression(136.3, 158.7, ["F", "C", "Dm", "Bb"], 1, lambda c, t, d: [bass(CH[c][1], t + i * BEAT / 2, 0.28, 0.16) for i in range(int(d / (BEAT / 2)))])
+for t in np.arange(136.3, 158.4, BEAT): kick(t, 0.36)
+for t in np.arange(136.3 + BEAT, 158.4, 2 * BEAT): clap(t, 0.07)
+for t in np.arange(136.3 + BEAT / 2, 158.4, BEAT): hat(t, 0.03)
+riser(158.7, 1.2, 0.09); whoosh(158.7)
 
-# G. honest 157.9 - 174.4: reflective
-progression(157.9, 174.4, ["Bb", "F", "C", "Dm"], 2, lambda c, t, d: (pad(CH[c][0], t, d, 0.045, 1600), arp(CH[c][0], t, d, BEAT, 0.022, dec=3.5)))
-progression(157.9, 174.4, ["Bb", "F", "C", "Dm"], 2, lambda c, t, d: bass(CH[c][1], t, d * 0.9, 0.12))
-riser(174.5, 1.6, 0.1)
+# G. honest 158.7 - 174.9: reflective
+progression(158.7, 174.9, ["Bb", "F", "C", "Dm"], 2, lambda c, t, d: (pad(CH[c][0], t, d, 0.045, 1600), arp(CH[c][0], t, d, BEAT, 0.022, dec=3.5)))
+progression(158.7, 174.9, ["Bb", "F", "C", "Dm"], 2, lambda c, t, d: bass(CH[c][1], t, d * 0.9, 0.12))
+riser(175.0, 1.6, 0.1)
 
-# H. close 174.4 - 179.4: resolve on F
-impact(174.55, 0.5); bass(41, 174.55, 3.5, 0.22)
-pad([53, 57, 60, 65, 72], 174.55, 4.85, 0.07, 3000, a=0.08, r=2.6)
-for k, m in enumerate([65, 69, 72, 77]): pluck(m + 12, 174.6 + k * 0.15, 0.04, (-0.5, -0.15, 0.15, 0.5)[k], dec=2.5, verb=1.0)
+# H. close 174.9 - 179.9: resolve on F
+impact(175.05, 0.5); bass(41, 175.05, 3.5, 0.22)
+pad([53, 57, 60, 65, 72], 175.05, 4.85, 0.07, 3000, a=0.08, r=2.6)
+for k, m in enumerate([65, 69, 72, 77]): pluck(m + 12, 175.1 + k * 0.15, 0.04, (-0.5, -0.15, 0.15, 0.5)[k], dec=2.5, verb=1.0)
 
 # ---------- reverb, duck, master ----------
 ir_n = int(2.6 * SR); it = np.arange(ir_n) / SR
@@ -198,9 +199,9 @@ L += fftconvolve(RL, irl)[:N] * 0.12; R += fftconvolve(RR, irr)[:N] * 0.12
 
 # duck under the voice (where each clip actually speaks)
 words = json.load(open("assets/vo/words.json", encoding="utf-8"))
-PLACE = [("s1_hook", 0, 99, 1.2), ("s2_problem", 0, 99, 11.1), ("s3_why", 0, 99, 30.8), ("s4_how", 0, 99, 50.4), ("s5a_check", 0, 99, 72.7),
-         ("s5b_cre", 0, 99, 97.5), ("s5c_chain", 0, 5.9, 109.2), ("s5c_chain", 5.9, 99, 117.4), ("s6_fit", 0, 99, 137.0),
-         ("s7_honest", 0, 99, 158.4), ("s8_close", 0, 99, 175.0)]
+PLACE = [("s1_hook", 0, 99, 1.2), ("s2_problem", 0, 99, 11.1), ("s3_cre", 0, 99, 30.85), ("s4_how", 0, 99, 51.8), ("s5a_check", 0, 99, 74.1),
+         ("s5b1_cli", 0, 99, 91.5), ("s5b2_flag", 0, 99, 101.5), ("s5c_chain", 0, 5.9, 110.6), ("s5c_chain", 5.9, 99, 118.1),
+         ("s5d_events", 0, 99, 126.7), ("s6_fit", 0, 99, 137.3), ("s7_honest", 0, 99, 159.2), ("s8_close", 0, 99, 175.5)]
 g = np.ones(N)
 for cid, c0, c1, at in PLACE:
     ws = [w for w in words[cid] if c0 <= w["s"] < c1]

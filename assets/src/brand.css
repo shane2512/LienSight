@@ -1,0 +1,21 @@
+/* Liensight brand: sky, clouds, ink, one red. Shared by every asset in assets/src. */
+@font-face { font-family: "Archivo"; src: url("../../pitch/assets/fonts/Archivo.woff2") format("woff2"); font-weight: 100 900; font-stretch: 62% 125%; }
+@font-face { font-family: "Inter Tight"; src: url("../../pitch/assets/fonts/InterTight.woff2") format("woff2"); font-weight: 400 800; }
+@font-face { font-family: "JetBrains Mono"; src: url("../../pitch/assets/fonts/JetBrainsMono.woff2") format("woff2"); font-weight: 400 800; }
+:root { --ink: #15181c; --ink2: #3c434c; --mute: #565e69; --red: #ef4f26; --red2: #d23a16; --deep: #b8310f; --cl: #2f55d4; --ok: #19a463; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { width: var(--w); height: var(--h); overflow: hidden; font-family: "Inter Tight", sans-serif; color: var(--ink); }
+.sky { position: absolute; inset: 0; background: linear-gradient(180deg, #6fb0ea 0%, #9cccf3 46%, #cfe7fb 100%); overflow: hidden; }
+.cloud { position: absolute; width: 440px; height: 150px; opacity: .92; filter: blur(2px);
+  background: radial-gradient(60px 50px at 22% 62%, #fff 98%, transparent), radial-gradient(84px 72px at 42% 45%, #fff 98%, transparent),
+    radial-gradient(72px 62px at 63% 52%, #fff 98%, transparent), radial-gradient(58px 48px at 80% 66%, #fff 98%, transparent),
+    radial-gradient(170px 42px at 50% 82%, #fff 98%, transparent); }
+.cloud.soft { opacity: .55; filter: blur(7px); }
+.disp { font-family: "Archivo", sans-serif; font-weight: 900; font-stretch: 125%; text-transform: uppercase; letter-spacing: -0.035em; line-height: .9; }
+.stip { color: transparent; background-image: radial-gradient(circle at 50% 50%, #b8310f 46%, transparent 52%), radial-gradient(circle at 50% 50%, #e0401b 40%, transparent 46%);
+  background-size: 7px 7px, 7px 7px; background-position: 0 0, 3.5px 3.5px; -webkit-background-clip: text; background-clip: text; -webkit-text-stroke: 2px rgba(184, 49, 15, .8); }
+.card { background: #fff; border-radius: 26px; box-shadow: 0 2px 0 rgba(255,255,255,.7) inset, 0 34px 70px -30px rgba(16, 40, 80, .55); }
+.kick { font: 700 20px/1 "JetBrains Mono", monospace; letter-spacing: .14em; text-transform: uppercase; }
+.mono { font-family: "JetBrains Mono", monospace; }
+.mark { display: grid; place-items: center; border-radius: 50%; background: var(--red); box-shadow: 0 24px 40px -18px rgba(120, 30, 10, .55); }
+.mark svg { width: 62%; height: 62%; }

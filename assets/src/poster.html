@@ -1,0 +1,52 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="brand.css">
+<style>
+  :root { --w: 1920px; --h: 1080px; }
+  .top { position: absolute; left: 110px; right: 110px; top: 70px; display: flex; justify-content: space-between; align-items: center; }
+  .brand { display: flex; align-items: center; gap: 22px; }
+  .brand .mark { width: 96px; height: 96px; }
+  .brand b { font: 900 66px/1 "Archivo", sans-serif; font-stretch: 125%; text-transform: uppercase; letter-spacing: -.03em; }
+  .pills { display: flex; gap: 12px; }
+  .pills span { padding: 13px 20px; border-radius: 999px; background: rgba(255,255,255,.92); font: 700 20px/1 "JetBrains Mono", monospace; letter-spacing: .1em; text-transform: uppercase; }
+  .pills span.cl { background: var(--cl); color: #fff; }
+  .h { position: absolute; left: 110px; top: 250px; font-size: 128px; }
+  .sub { position: absolute; left: 116px; top: 570px; width: 820px; font: 600 34px/1.35 "Inter Tight", sans-serif; color: var(--ink2); }
+  .sub b { color: var(--ink); }
+  /* the story, in three cards */
+  .flow { position: absolute; left: 1080px; top: 250px; width: 730px; display: flex; flex-direction: column; gap: 22px; }
+  .row { display: flex; align-items: center; gap: 22px; padding: 24px 28px; }
+  .row .n { width: 54px; height: 54px; flex: none; border-radius: 50%; display: grid; place-items: center; background: var(--ink); color: #fff; font: 800 24px/1 "JetBrains Mono", monospace; }
+  .row .n.cl { background: var(--cl); } .row .n.r { background: var(--red); }
+  .row h4 { font: 900 34px/1 "Archivo", sans-serif; font-stretch: 120%; text-transform: uppercase; letter-spacing: -.02em; }
+  .row p { margin-top: 8px; font: 600 23px/1.3 "Inter Tight", sans-serif; color: var(--ink2); }
+  .row code { font: 700 20px/1 "JetBrains Mono", monospace; color: var(--deep); }
+  .facts { position: absolute; left: 110px; right: 110px; bottom: 70px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+  .fact { padding: 24px 26px; }
+  .fact b { display: block; font: 900 50px/1 "Archivo", sans-serif; font-stretch: 122%; letter-spacing: -.03em; }
+  .fact span { display: block; margin-top: 10px; font: 700 19px/1.3 "JetBrains Mono", monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--mute); }
+  .fact.r b { color: var(--red2); } .fact.g b { color: var(--ok); } .fact.c b { color: var(--cl); }
+</style></head>
+<body>
+  <div class="sky">
+    <div class="cloud" style="left:-120px; top:150px"></div><div class="cloud soft" style="left:760px; top:40px; width:600px; height:200px"></div>
+    <div class="cloud" style="left:1500px; top:-20px; width:520px; height:170px"></div><div class="cloud soft" style="left:420px; top:640px; width:620px; height:210px"></div>
+    <div class="cloud" style="left:1380px; top:820px; width:560px; height:190px"></div>
+  </div>
+  <div class="top">
+    <div class="brand"><div class="mark"><svg viewBox="0 0 512 512"><path d="M168 120 H262 V308 H352 V392 H168 Z" fill="#fff"/><circle cx="330" cy="164" r="26" fill="#fff"/></svg></div><b>Liensight</b></div>
+    <div class="pills"><span>Real-world assets</span><span class="cl">Chainlink CRE</span><span>Sepolia</span></div>
+  </div>
+  <div class="h disp">The token<br />finds out<br /><span class="stip">when the<br />building does.</span></div>
+  <div class="sub">When a lien is recorded against a tokenized New York building, a <b>Chainlink CRE workflow</b> reads the public land record and <b>restricts the token’s transfers</b>, citing the exact filing.</div>
+  <div class="flow">
+    <div class="row card"><div class="n">1</div><div><h4>A lien is recorded</h4><p>NYC ACRIS · <code>LOCC 2026092900833001</code></p></div></div>
+    <div class="row card"><div class="n cl">2</div><div><h4>The DON reads it</h4><p>Every node fetches ACRIS; identical consensus or no report</p></div></div>
+    <div class="row card"><div class="n r">3</div><div><h4>The token restricts</h4><p><code>onReport</code> → <code>restricted() = true</code>, lien cited on-chain</p></div></div>
+  </div>
+  <div class="facts">
+    <div class="fact card c"><b>CRE</b><span>Cron · HTTP · consensus · EVM write</span></div>
+    <div class="fact card r"><b>1 lien</b><span>Restricted live on Sepolia</span></div>
+    <div class="fact card g"><b>35 tests</b><span>18 Foundry + 17 Vitest</span></div>
+    <div class="fact card"><b>Fail-closed</b><span>Bad or partial data writes nothing</span></div>
+  </div>
+</body></html>

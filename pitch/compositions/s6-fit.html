@@ -31,7 +31,7 @@
           <div id="s6-title" class="disp"><span class="ln"><span>Why</span></span><span class="ln"><span>this</span></span><span class="ln"><span>fits.</span></span></div>
           <div id="s6-sub">BLI Legal Tech Hackathon 2<br />DoraHacks · Real-world assets<br /><b>Chainlink CRE bounty</b></div>
 
-          <div id="s6-r1" class="s6-row"><div class="s6-k"><i>✓</i>Track</div><div class="s6-h">Real-world <em>assets</em></div><div class="s6-p">A track with no other entry</div></div>
+          <div id="s6-r1" class="s6-row"><div class="s6-k"><i>✓</i>Track</div><div class="s6-h">Real-world <em>assets</em></div><div class="s6-p">Built on official NYC land records</div></div>
 
           <div id="s6-r2" class="s6-row">
             <div class="s6-k"><i>✓</i>Bounty requirement</div><div class="s6-h">Chainlink <em>CRE</em> workflow</div><div class="s6-p">Chain ⇄ external API · simulated and broadcast on Sepolia</div>
@@ -41,7 +41,7 @@
           <div id="s6-r3" class="s6-row">
             <div class="s6-k"><i>✓</i>Proof</div><div class="s6-h"><em>35</em> tests pass</div><div class="s6-p" id="s6-p3">Security review: 1 critical + 5 important findings fixed</div>
             <div id="s6-sq"></div>
-            <div id="s6-vid"><video id="s6-video" class="clip" src="assets/footage/term_tests.mp4" data-start="14.6" data-duration="8" data-media-start="0" data-track-index="30" muted playsinline></video></div>
+            <div id="s6-vid"><video id="s6-video" class="clip" src="assets/footage/term_tests.mp4" data-start="15.7" data-duration="8" data-media-start="0.8" data-track-index="30" muted playsinline></video></div>
           </div>
         </div>
       </div>
@@ -57,19 +57,19 @@
           tl.fromTo("#s6-r1", { x: 260, opacity: 0, rotate: 2 }, { x: 0, opacity: 1, rotate: 0, duration: 0.9, ease: "expo.out" }, 3.0)
             .fromTo("#s6-r1 .s6-k i", { scale: 0 }, { scale: 1, duration: 0.5, ease: "back.out(3)" }, 3.55);
           // row 2: the CRE workflow
-          tl.fromTo("#s6-r2", { x: 260, opacity: 0, rotate: 2 }, { x: 0, opacity: 1, rotate: 0, duration: 0.9, ease: "expo.out" }, 6.3)
-            .fromTo("#s6-r2 .s6-k i", { scale: 0 }, { scale: 1, duration: 0.5, ease: "back.out(3)" }, 9.5)
-            .fromTo("#s6-lk", { strokeDashoffset: 44 }, { strokeDashoffset: 0, duration: 1.4, repeat: 4, ease: "none" }, 7.0)
-            .fromTo("#s6-pulse", { attr: { cx: 96 } }, { attr: { cx: 234 }, duration: 1.1, repeat: 4, ease: "power2.inOut" }, 7.0);
+          tl.fromTo("#s6-r2", { x: 260, opacity: 0, rotate: 2 }, { x: 0, opacity: 1, rotate: 0, duration: 0.9, ease: "expo.out" }, 7.3)
+            .fromTo("#s6-r2 .s6-k i", { scale: 0 }, { scale: 1, duration: 0.5, ease: "back.out(3)" }, 9.9)
+            .fromTo("#s6-lk", { strokeDashoffset: 44 }, { strokeDashoffset: 0, duration: 1.4, repeat: 4, ease: "none" }, 8.0)
+            .fromTo("#s6-pulse", { attr: { cx: 96 } }, { attr: { cx: 234 }, duration: 1.1, repeat: 4, ease: "power2.inOut" }, 8.0);
           // row 3: tests + review
-          tl.fromTo("#s6-r3", { x: 260, opacity: 0, rotate: 2 }, { x: 0, opacity: 1, rotate: 0, duration: 0.9, ease: "expo.out" }, 14.0)
-            .fromTo("#s6-vid", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.6, ease: "power3.out" }, 14.5)
-            .fromTo("#s6-sq i", { background: "#e3e7ec" }, { background: "#19a463", duration: 0.12, stagger: 0.075 }, 14.8)
-            .fromTo("#s6-r3 .s6-k i", { scale: 0 }, { scale: 1, duration: 0.5, ease: "back.out(3)" }, 17.6)
-            .fromTo("#s6-p3", { opacity: 0.3 }, { opacity: 1, duration: 0.5 }, 18.2);
+          tl.fromTo("#s6-r3", { x: 260, opacity: 0, rotate: 2 }, { x: 0, opacity: 1, rotate: 0, duration: 0.9, ease: "expo.out" }, 15.1)
+            .fromTo("#s6-vid", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.6, ease: "power3.out" }, 15.6)
+            .fromTo("#s6-sq i", { background: "#e3e7ec" }, { background: "#19a463", duration: 0.12, stagger: 0.075 }, 15.9)
+            .fromTo("#s6-r3 .s6-k i", { scale: 0 }, { scale: 1, duration: 0.5, ease: "back.out(3)" }, 18.4)
+            .fromTo("#s6-p3", { opacity: 0.3 }, { opacity: 1, duration: 0.5 }, 18.4);
           // exit
-          tl.to(["#s6-r1", "#s6-r2", "#s6-r3"], { x: -160, opacity: 0, duration: 0.7, stagger: 0.06, ease: "power3.in" }, 21.3)
-            .to(["#s6-title", "#s6-sub"], { opacity: 0, y: -30, duration: 0.6, ease: "power2.in" }, 21.4);
+          tl.to(["#s6-r1", "#s6-r2", "#s6-r3"], { x: -160, opacity: 0, duration: 0.7, stagger: 0.06, ease: "power3.in" }, 21.75)
+            .to(["#s6-title", "#s6-sub"], { opacity: 0, y: -30, duration: 0.6, ease: "power2.in" }, 21.85);
           window.__timelines["s6-fit"] = tl;
         })();
       </script>
