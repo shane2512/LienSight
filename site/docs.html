@@ -4,17 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Docs · Liensight</title>
-<meta name="description" content="How the Liensight token, CRE workflow and adverse map are built, run and limited.">
+<meta name="description" content="Liensight documentation: quickstart, architecture, the Chainlink CRE workflow, the token contract, deployment, verification, testing, security and FAQ.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Caveat:wght@600&family=Inter+Tight:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/docs.css">
 </head>
 <body>
 <div class="sky" aria-hidden="true"></div>
 <div class="cursor-you" aria-hidden="true">you</div>
 <div class="drag-pill" aria-hidden="true">DRAG</div>
-
 
 <header class="nav">
   <a class="pill brand" href="index.html" aria-label="Liensight home"><span class="mark">L</span>Liensight</a>
@@ -29,129 +29,403 @@
   <a class="pill mail" href="proof.html"><span class="dot"></span>live on Sepolia</a>
 </header>
 
-<main>
-  <section class="page-head">
-    <div class="wrap">
-      <span class="script">the docs</span>
-      <h1 class="display">How it's <span class="hot">built.</span></h1>
-      <p>A token, a workflow and an adverse map. Here is what each part does, how to run it, and where it stops.</p>
-      <div class="toc">
-        <a class="pill" href="#token">01 · Token</a><a class="pill" href="#workflow">02 · Workflow</a><a class="pill" href="#codes">03 · Adverse map</a><a class="pill" href="#run">04 · Run it</a><a class="pill" href="#limits">05 · Limits</a>
-      </div>
-    </div>
-  </section>
+<div class="docs">
+  <div class="shell">
 
-  <section id="token" style="padding-top:30px">
-    <div class="wrap">
-      <article class="panel" data-reveal style="width:auto">
-        <div><div class="no">01</div><h3>The token <span>LiensightToken.sol</span></h3><p>An ERC-20 for shares in the company (SPV) that owns the building. It is not the title. The restriction comes from the issuer's own operating rules.</p></div>
-        <div class="kv">
-          <div>onReport(metadata, report)</div><div>Called by the CRE forwarder. Checks the workflow owner and the property key, then restricts if a cited lien is new.</div>
-          <div>clearRestriction(hash, reason)</div><div>Issuer only. The hash must match the liens it reviewed, so a lien that arrived mid-review can't be cleared unseen.</div>
-          <div>setExpectedWorkflowOwner(addr)</div><div>Issuer only. Moves the token from the simulator to a deployed workflow.</div>
-          <div>restricted · citedHash</div><div>Public state. Transfers revert with TransferRestricted() while restricted is true.</div>
+    <!-- ===== sidebar ===== -->
+    <aside class="dside" aria-label="Documentation">
+      <label class="find"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg><input id="dfind" type="search" placeholder="Filter sections" aria-label="Filter documentation sections"></label>
+      <nav id="dnav">
+        <div class="grp"><span>Getting started</span><a href="#overview">Overview</a><a href="#quickstart">Quickstart</a><a href="#verify">Verify the live deployment</a><a href="#website">Using the website</a></div>
+        <div class="grp"><span>Concepts</span><a href="#architecture">Architecture</a><a href="#cre">Why Chainlink CRE</a><a href="#workflow">How the workflow runs</a><a href="#adverse">The adverse map</a></div>
+        <div class="grp"><span>Reference</span><a href="#workflow-ref">Workflow reference</a><a href="#contract-ref">Contract reference</a><a href="#report">Report format</a><a href="#config">Configuration</a></div>
+        <div class="grp"><span>Guides</span><a href="#deploy">Deploy your own token</a><a href="#testing">Testing</a></div>
+        <div class="grp"><span>Operations</span><a href="#security">Security model</a><a href="#limits">Limits</a><a href="#troubleshooting">Troubleshooting</a><a href="#faq">FAQ</a><a href="#glossary">Glossary</a></div>
+        <div class="none" id="dnone">No section matches.</div>
+      </nav>
+      <div class="meta">Source on <a href="https://github.com/shane2512/LienSight" target="_blank" rel="noopener">GitHub</a><br>Video on <a href="https://youtu.be/HZOAwJRiEF8" target="_blank" rel="noopener">YouTube</a></div>
+    </aside>
+
+    <main class="dmain">
+      <div class="dmenu"><details><summary>Sections</summary><div class="list" id="dmlist"></div></details></div>
+
+      <!-- ===== overview ===== -->
+      <header class="dhead" id="overview">
+        <div class="crumb">Documentation · v1 · Sepolia testnet</div>
+        <h1>Liensight <span class="hot">docs.</span></h1>
+        <p>Liensight restricts a real-estate token’s transfers when a lien is recorded against the building. A Chainlink CRE workflow reads New York City’s public land records (ACRIS), the nodes agree on what they say, and a signed report tells the token on-chain. This page covers how to run it, how it works, and where it stops.</p>
+        <div class="facts">
+          <div><b>Chainlink CRE</b><span>cron · HTTP · consensus · EVM write</span></div>
+          <div><b>Sepolia</b><span>token 0xf813…04aE</span></div>
+          <div><b>NYC ACRIS</b><span>Legals + Master datasets</span></div>
+          <div><b>35 tests</b><span>18 Foundry · 17 Vitest</span></div>
         </div>
-        <div class="cols"><div><div class="kicker">Tested</div><p>18 Foundry tests: access control, replays, cleared liens never re-restricting, stale clears reverting, gas for 20 liens at once.</p></div><div><div class="kicker">Source</div><div class="chips"><span class="chip">contracts/src/LiensightToken.sol</span><span class="chip">contracts/test/</span></div></div></div>
-      </article>
-    </div>
-  </section>
+      </header>
 
-  <section id="workflow" style="padding-top:30px">
-    <div class="wrap">
-      <article class="panel" data-reveal style="width:auto">
-        <div><div class="no">02</div><h3>The workflow <span>Chainlink CRE.</span></h3><p>A cron-triggered TypeScript workflow. Each run follows four steps.</p>
-          <div class="chat" style="margin:0;box-shadow:none;border:1px solid var(--line)"><div class="body" style="padding:4px 18px 14px">
-            <div class="stage-sep">01 · Fetch</div><p style="margin:0;color:var(--ink-2)">Each node queries the ACRIS Legals dataset for the BBL, then Master for document types, 80 IDs at a time.</p>
-            <div class="stage-sep">02 · Agree</div><p style="margin:0;color:var(--ink-2)">Nodes reach identical consensus on the sorted document list.</p>
-            <div class="stage-sep">03 · Classify</div><p style="margin:0;color:var(--ink-2)">The adverse map splits documents into adverse, discharge and other.</p>
-            <div class="stage-sep">04 · Report</div><p style="margin:0;color:var(--ink-2)">A signed report goes to the token through the forwarder.</p>
-          </div></div>
-        </div>
-        <div class="window"><div class="tb"><i></i><i></i><i></i></div><pre><span class="c">// workflow/workflow.ts (excerpt)</span>
-<span class="k">const</span> fetchDocs = (req, config) =&gt; {
-  <span class="k">const</span> legals = get(<span class="f">legalsUrl</span>(config.bbl));
-  <span class="k">for</span> (chunk <span class="k">of</span> ids, 80 at a time)
-    master.push(...get(<span class="f">masterUrl</span>(chunk)));
-  <span class="k">return</span> JSON.stringify(<span class="f">canonicalDocs</span>(legals, master));
-};
+      <!-- ===== quickstart ===== -->
+      <section class="dsec" id="quickstart">
+        <span class="eyebrow">Getting started</span>
+        <h2>Quickstart</h2>
+        <p class="lead">From a fresh clone to passing tests and a live workflow simulation against real NYC records in about ten minutes. You don’t need a wallet or any keys for this.</p>
+        <h3>Prerequisites</h3>
+        <div class="tbl"><table><thead><tr><th>Tool</th><th>Version used</th><th>Get it</th></tr></thead><tbody>
+          <tr><td>Foundry (<code>forge</code>, <code>cast</code>)</td><td>1.5.1</td><td><a href="https://getfoundry.sh" target="_blank" rel="noopener">getfoundry.sh</a>, then <code>foundryup</code></td></tr>
+          <tr><td>Node.js and npm</td><td>20 or newer</td><td><a href="https://nodejs.org" target="_blank" rel="noopener">nodejs.org</a></td></tr>
+          <tr><td>Chainlink CRE CLI (<code>cre</code>)</td><td>v1.2.0</td><td><a href="https://docs.chain.link/cre" target="_blank" rel="noopener">docs.chain.link/cre</a></td></tr>
+          <tr><td>Git</td><td>any</td><td><a href="https://git-scm.com" target="_blank" rel="noopener">git-scm.com</a></td></tr>
+        </tbody></table></div>
+        <ol class="steps">
+          <li><b>Clone, with submodules</b><p>The contracts pull OpenZeppelin (and <code>forge-std</code> through it) as git submodules.</p>
+            <div class="code"><div class="bar">bash<button class="copy">Copy</button></div><pre>git clone --recursive https://github.com/shane2512/LienSight.git liensight
+cd liensight</pre></div></li>
+          <li><b>Install the workflow’s packages</b><p>This also installs Bun locally, which the CRE CLI uses to build the TypeScript workflow.</p>
+            <div class="code"><div class="bar">bash<button class="copy">Copy</button></div><pre>cd workflow &amp;&amp; npm i &amp;&amp; cd ..</pre></div></li>
+          <li><b>Run all 35 tests</b>
+            <div class="code"><div class="bar">bash<button class="copy">Copy</button></div><pre>cd contracts &amp;&amp; forge test &amp;&amp; cd ..   <span class="c"># 18 passed</span>
+cd workflow &amp;&amp; npm test &amp;&amp; cd ..      <span class="c"># 17 passed (3 files)</span></pre></div></li>
+          <li><b>Simulate the workflow against live ACRIS</b><p>Log in once, put the local Bun on your <code>PATH</code>, and simulate both configured properties.</p>
+            <div class="code"><div class="bar">bash<button class="copy">Copy</button></div><pre>cre login
+export PATH="$PWD/workflow/node_modules/.bin:$PATH"
 
-<span class="f">assertComplete</span>(rows);  <span class="c">// 5,000-row cut-off: refuse</span>
-<span class="f">assertNonEmpty</span>(docs);  <span class="c">// zero docs: refuse</span></pre></div>
-        <div class="cols"><div><div class="kicker">Tested</div><p>17 Vitest tests: canonical ordering, legacy FT_ document IDs, truncation, empty results, report encoding.</p></div><div><div class="kicker">Source</div><div class="chips"><span class="chip">workflow/workflow.ts</span><span class="chip">workflow/src/</span></div></div></div>
-      </article>
-    </div>
-  </section>
-
-  <section id="codes" style="padding-top:30px">
-    <div class="wrap center">
-      <span class="script">03 · adverse map</span>
-      <h2 class="display">What <span class="hot">counts.</span></h2>
-    </div>
-    <div class="wrap">
-      <div class="diff" data-reveal>
-        <div class="tb"><span>codeMap.json · v1</span><span style="color:var(--mute)">ACRIS dataset 7isb-wh4c</span></div>
-        <div class="grid" style="grid-template-columns:1fr 1fr">
-          <div class="side us"><h4>Adverse <span class="tag red">restricts</span></h4><ul>
-            <li><b class="mono">FL</b>&nbsp;Federal lien, IRS</li><li><b class="mono">FTL</b>&nbsp;Federal lien, other</li><li><b class="mono">NTXL</b>&nbsp;Notice of estate tax lien</li>
-            <li><b class="mono">TLS</b>&nbsp;Tax lien sale certificate</li><li><b class="mono">LOCC</b>&nbsp;Lien of common charges</li><li><b class="mono">JUDG</b>&nbsp;Judgment</li></ul></div>
-          <div class="side them"><h4>Discharge <span class="tag">suggests a clear</span></h4><ul>
-            <li><b class="mono">RFL</b>&nbsp;Release of federal lien</li><li><b class="mono">RFTL</b>&nbsp;Release of federal tax lien</li><li><b class="mono">DTL</b>&nbsp;Discharge of tax lien</li>
-            <li><b class="mono">DPFTL</b>&nbsp;Discharge of property from FTL</li><li><b class="mono">WFL</b>&nbsp;Withdrawal of a federal lien</li><li><b class="mono">RTXL</b>&nbsp;Release of estate tax lien</li>
-            <li><b class="mono">TOLCC</b>&nbsp;Termination of lien of common charges</li><li><b class="mono">PWFL</b>&nbsp;Partial withdrawal of federal lien</li><li><b class="mono">PRFL</b>&nbsp;Partial release of federal lien</li></ul></div>
-        </div>
-        <div class="foot"><b>No lis pendens, no foreclosure. <span>ACRIS has no type for them.</span></b><span class="mono" style="font-size:12px;color:var(--mute)">hash 0xf85b5521…4326faf3</span></div>
-      </div>
-    </div>
-  </section>
-
-  <section id="run" style="padding-top:30px">
-    <div class="wrap center">
-      <span class="script">04 · run it</span>
-      <h2 class="display">Run it <span class="hot">yourself.</span></h2>
-    </div>
-    <div class="wrap" style="max-width:900px">
-      <div class="window" data-reveal style="margin-top:40px"><div class="tb"><i></i><i></i><i></i></div><pre><span class="c"># contract tests</span>
-cd contracts &amp;&amp; forge test
-
-<span class="c"># workflow tests</span>
-cd workflow &amp;&amp; npm i &amp;&amp; npm test
-
-<span class="c"># CRE simulation (needs: cre login, bun on PATH)</span>
+<span class="c"># Bronx 2-5789-1022: has a recorded lien of common charges</span>
 cre workflow simulate ./workflow -T staging-settings --non-interactive --trigger-index 0
 
-<span class="c"># Sepolia deploy: this network charges far more gas for contract code</span>
-forge script script/Deploy.s.sol --rpc-url $SEPOLIA --account &lt;keystore&gt; --broadcast --gas-estimate-multiplier 800</pre></div>
-    </div>
-  </section>
+<span class="c"># Manhattan 1-905-1347: nothing adverse</span>
+cre workflow simulate ./workflow -T clean-settings --non-interactive --trigger-index 0</pre></div>
+            <p>Expect <code>ACRIS docs=14 adverse=2026092900833001:LOCC</code> for the Bronx lot and <code>ACRIS docs=12 adverse=none</code> for Manhattan. Counts can grow as the city records new filings.</p>
+            <div class="note"><span class="i">i</span><p>Without <code>--broadcast</code> the write is a dry run and logs a zero transaction hash. That’s expected. On Windows PowerShell, set the path with <code>$env:Path = "$PWD\workflow\node_modules\.bin;$env:Path"</code>.</p></div></li>
+          <li><b>Read the result on-chain</b><p>The same workflow, run with <code>--broadcast</code>, already restricted the demo token.</p>
+            <div class="code"><div class="bar">bash<button class="copy">Copy</button></div><pre>cast call 0xf813c584Fe5e8c86A3F6c7265923CeE0850604aE "restricted()(bool)" \
+  --rpc-url https://ethereum-sepolia-rpc.publicnode.com
+<span class="g"># true</span></pre></div></li>
+        </ol>
+      </section>
 
-  <section id="limits" style="padding-top:30px">
-    <div class="wrap center">
-      <span class="script">05 · limits</span>
-      <h2 class="display">Where it <span class="hot">stops.</span></h2>
-    </div>
-    <div class="wrap">
-      <div class="bento" data-stagger>
-        <div class="card" style="grid-column:span 4"><span class="label">LIMIT 01</span><div class="kicker" style="color:var(--red)">Lag</div><p style="font:600 17px/1.4 var(--body)">ACRIS records filings days after the real event. Early warning, not a title search.</p></div>
-        <div class="card" style="grid-column:span 4"><span class="label">LIMIT 02</span><div class="kicker" style="color:var(--red)">One source</div><p style="font:600 17px/1.4 var(--body)">Every node reads the same public API. A second source is a stretch goal.</p></div>
-        <div class="card" style="grid-column:span 4"><span class="label">LIMIT 03</span><div class="kicker" style="color:var(--red)">Testnet</div><p style="font:600 17px/1.4 var(--body)">The demo token accepts the simulator's public placeholder owner. Production needs a deployed workflow.</p></div>
-        <div class="card" style="grid-column:span 6"><span class="label">LIMIT 04</span><div class="kicker" style="color:var(--red)">Issuer power</div><p style="font:600 17px/1.4 var(--body)">The issuer can clear a restriction. It has to do it publicly and name the liens it reviewed.</p></div>
-        <div class="card" style="grid-column:span 6"><span class="label">LIMIT 05</span><div class="kicker" style="color:var(--red)">Not legal advice</div><p style="font:600 17px/1.4 var(--body)">A hackathon build. It flags public filings; it does not judge their legal effect.</p></div>
-      </div>
-    </div>
-  </section>
-</main>
+      <!-- ===== verify ===== -->
+      <section class="dsec" id="verify">
+        <span class="eyebrow">Getting started</span>
+        <h2>Verify the live deployment</h2>
+        <p>Every claim about the Sepolia token can be checked independently. Steps 1–3 need nothing but a browser.</p>
+        <ol class="steps">
+          <li><b>See the lien in the public record</b><p>Open <a href="check.html">Check a lot</a> and click <b>Bronx 2-5789-1022 · has a lien</b>. The page reads ACRIS live and shows one adverse filing: <code>LOCC 2026092900833001</code>, recorded 2026-09-30.</p></li>
+          <li><b>See the report on-chain</b><p>Open the <a href="https://sepolia.etherscan.io/address/0xf813c584Fe5e8c86A3F6c7265923CeE0850604aE#events" target="_blank" rel="noopener">token’s events on Etherscan</a>. The <code>report(...)</code> call carries the document-set hash the nodes agreed on (<code>0xde6f…3948</code>).</p></li>
+          <li><b>See the restriction</b><p>Open <a href="proof.html">Proof</a>, which reads <code>restricted()</code> from Sepolia in your browser.</p></li>
+          <li><b>Ask the chain directly</b> (needs Foundry)
+            <div class="code"><div class="bar">bash<button class="copy">Copy</button></div><pre>RPC=https://ethereum-sepolia-rpc.publicnode.com
+TOKEN=0xf813c584Fe5e8c86A3F6c7265923CeE0850604aE
+cast call $TOKEN "restricted()(bool)" --rpc-url $RPC        <span class="c"># true</span>
+cast call $TOKEN "citedHash()(bytes32)" --rpc-url $RPC      <span class="c"># 0xb87dc80e…49f4</span>
+cast call $TOKEN "reportReceiver()(address)" --rpc-url $RPC <span class="c"># 0x15fC6ae9…9F88 (CRE forwarder)</span>
+<span class="c"># even the issuer can't move shares: reverts with TransferRestricted() (0xe827105e)</span>
+cast call $TOKEN "transfer(address,uint256)(bool)" 0x000000000000000000000000000000000000dEaD 1 \
+  --from 0xd51E7130B55f10595939f274cCB8c00b52C915b4 --rpc-url $RPC</pre></div>
+            <p><code>citedHash</code> equals <code>keccak256(abi.encode([bytes32(2026092900833001)]))</code>, so the restriction provably cites that ACRIS document.</p></li>
+        </ol>
+        <h3>Deployment record</h3>
+        <div class="tbl"><table><thead><tr><th>Item</th><th>Value</th></tr></thead><tbody>
+          <tr><td>Token</td><td><a href="https://sepolia.etherscan.io/address/0xf813c584Fe5e8c86A3F6c7265923CeE0850604aE" target="_blank" rel="noopener"><code>0xf813c584Fe5e8c86A3F6c7265923CeE0850604aE</code></a></td></tr>
+          <tr><td>Deploy tx</td><td><a href="https://sepolia.etherscan.io/tx/0xb27c9ed1891c763325412789f3d05e1d221584353186e80eb9ad31ea9769c4d9" target="_blank" rel="noopener"><code>0xb27c9ed1…69c4d9</code></a></td></tr>
+          <tr><td>First restricting report</td><td><a href="https://sepolia.etherscan.io/tx/0xc0cc238205a36246731feddba275b3df50b4c781f3958b8d4cab8a862bda85ab" target="_blank" rel="noopener"><code>0xc0cc2382…bda85ab</code></a></td></tr>
+          <tr><td>Report in the demo video</td><td><a href="https://sepolia.etherscan.io/tx/0x5e301044fbb77ae37e096d0752208fa19f6e0d23f8292a2bbc45217aff160d94" target="_blank" rel="noopener"><code>0x5e301044…160d94</code></a></td></tr>
+          <tr><td>Forwarder</td><td><code>0x15fC6ae953E024d975e77382eEeC56A9101f9F88</code> (CRE simulator)</td></tr>
+          <tr><td>Expected workflow owner</td><td><code>0xaAaA…aAaA</code> (the simulator’s public placeholder)</td></tr>
+          <tr><td>Property key</td><td><code>keccak256("BBL:2-5789-1022")</code></td></tr>
+          <tr><td>Code-map hash</td><td><code>0xf85b55218f5961096bde039896bb3b115179f44c76446ff88e22e3b94326faf3</code></td></tr>
+        </tbody></table></div>
+      </section>
+
+      <!-- ===== website ===== -->
+      <section class="dsec" id="website">
+        <span class="eyebrow">Getting started</span>
+        <h2>Using the website</h2>
+        <p>The site is static and needs no wallet. Nothing on it writes to the chain.</p>
+        <div class="cards2">
+          <a class="mini" href="check.html"><span class="k">Check a lot</span><b>Read any NYC lot against ACRIS</b><p>Pick a borough, enter block and lot, press Check. The page applies the same adverse map as the workflow, in your browser.</p></a>
+          <a class="mini" href="proof.html"><span class="k">Proof</span><b>The token’s live state</b><p>Reads the deployed token from Sepolia, with links to every transaction.</p></a>
+          <a class="mini" href="security.html"><span class="k">Security</span><b>Threats and checks</b><p>What the token refuses, and why.</p></a>
+          <a class="mini" href="roadmap.html"><span class="k">Roadmap</span><b>What comes next</b><p>From the simulator to a deployed workflow.</p></a>
+        </div>
+        <p>To find a property’s borough-block-lot (BBL), search its address on <a href="https://a836-acris.nyc.gov/" target="_blank" rel="noopener">ACRIS</a>. To run the site locally:</p>
+        <div class="code"><div class="bar">bash<button class="copy">Copy</button></div><pre>python -m http.server 5181 --directory site
+<span class="c"># open http://localhost:5181</span></pre></div>
+      </section>
+
+      <!-- ===== architecture ===== -->
+      <section class="dsec" id="architecture">
+        <span class="eyebrow">Concepts</span>
+        <h2>Architecture</h2>
+        <p>Three parts: a public data source, a Chainlink CRE workflow, and a token contract. The workflow carries facts from the first to the third, and nothing else can set the token’s restriction.</p>
+        <div class="figure"><img src="assets/poster-workflow-stack.png" alt="The Liensight workflow and tech stack" loading="lazy"></div>
+        <div class="tbl"><table><thead><tr><th>Component</th><th>Role</th></tr></thead><tbody>
+          <tr><td>ACRIS on NYC Open Data</td><td>The city’s land records. <b>Legals</b> (<code>8h5j-fqxa</code>) maps a lot to document IDs; <b>Master</b> (<code>bnx9-e6tj</code>) gives each document’s type.</td></tr>
+          <tr><td>CRE workflow</td><td>Runs on every node of a Chainlink DON on a schedule. Fetches, agrees, signs and writes.</td></tr>
+          <tr><td>Chainlink forwarder</td><td>Verifies the DON’s signatures and calls the receiver contract with the report and metadata.</td></tr>
+          <tr><td><code>LiensightToken</code></td><td>ERC-20 SPV share token. Restricts transfers on a new adverse filing; only the issuer can clear.</td></tr>
+          <tr><td>Issuer multisig</td><td>Holds the supply, reviews restrictions, and clears them publicly.</td></tr>
+          <tr><td>Website</td><td>Explains, checks lots and reads state. Not part of the trust path.</td></tr>
+        </tbody></table></div>
+        <h3>Design decisions</h3>
+        <div class="tbl"><table><thead><tr><th>Decision</th><th>Why</th></tr></thead><tbody>
+          <tr><td>A DON for one public API</td><td>No single server or operator decides what the chain sees, and the restriction cites a document anyone can look up.</td></tr>
+          <tr><td>Identical consensus, not median</td><td>The output is a set of documents, not a number. Byte-identical canonical JSON makes agreement exact.</td></tr>
+          <tr><td>Fail closed</td><td>A truncated or empty answer is more likely an outage or a wrong lot than a clean property, so nothing is written.</td></tr>
+          <tr><td>Restrict automatically, clear by a person</td><td>A lien appearing is a fact. Whether it still matters (paid, disputed, bonded) is a judgment, made publicly by an accountable issuer.</td></tr>
+          <tr><td>Discharges only suggest a clear</td><td>A release can be partial or for another lien, so <code>ClearSuggested</code> flags it instead of lifting the restriction.</td></tr>
+          <tr><td>Cleared liens never re-restrict</td><td><code>seenAdverse</code> remembers every reported document; only a genuinely new lien restricts again.</td></tr>
+          <tr><td>SPV equity, not title</td><td>The token represents shares in a holding company. Liensight signals risk; it doesn’t settle ownership.</td></tr>
+        </tbody></table></div>
+      </section>
+
+      <!-- ===== why CRE ===== -->
+      <section class="dsec" id="cre">
+        <span class="eyebrow">Concepts</span>
+        <h2>Why Chainlink CRE</h2>
+        <p>A lien lives in a government database, and a smart contract can’t call an API. Closing that gap takes three things a contract can’t do alone, and CRE provides each one:</p>
+        <div class="cards3">
+          <div class="mini"><span class="k">Read</span><b>HTTP capability</b><p>Every node queries NYC Open Data directly and independently.</p></div>
+          <div class="mini"><span class="k">Agree</span><b>Identical consensus</b><p><code>consensusIdenticalAggregation</code>: one differing node means no report.</p></div>
+          <div class="mini"><span class="k">Act</span><b>Signed EVM write</b><p><code>runtime.report</code> signs; <code>EVMClient.writeReport</code> delivers via the forwarder.</p></div>
+        </div>
+        <p>The workflow is TypeScript on <code>@chainlink/cre-sdk</code>, compiled to WebAssembly by the CRE CLI. Its whole entry point is <a href="https://github.com/shane2512/LienSight/blob/main/workflow/workflow.ts" target="_blank" rel="noopener"><code>workflow/workflow.ts</code></a>, 73 lines.</p>
+      </section>
+
+      <!-- ===== workflow ===== -->
+      <section class="dsec" id="workflow">
+        <span class="eyebrow">Concepts</span>
+        <h2>How the workflow runs</h2>
+        <p>One run, for one property, every ten minutes:</p>
+        <ol class="steps">
+          <li><b>Trigger</b><p><code>CronCapability</code> fires on <code>"0 */10 * * * *"</code>.</p></li>
+          <li><b>Fetch the lot’s documents</b><p>Each node asks ACRIS <b>Legals</b> for every document ID on the BBL, then asks <b>Master</b> for their types, 80 IDs per request so URLs stay short.</p></li>
+          <li><b>Fail closed</b><p>A non-200 response, a response that hits the 5,000-row limit, or zero documents throws. No report is written.</p></li>
+          <li><b>Canonicalize</b><p>Keep documents present in both datasets, dedupe, sort by ID, and serialize to JSON, so every honest node produces identical bytes.</p></li>
+          <li><b>Reach consensus</b><p><code>consensusIdenticalAggregation&lt;string&gt;()</code> requires all nodes to return the same string.</p></li>
+          <li><b>Classify and encode</b><p>The adverse map splits documents into adverse and discharge IDs; the report carries the property key, the document-set hash and both ID lists.</p></li>
+          <li><b>Sign and write</b><p><code>runtime.report</code> signs it, and <code>EVMClient.writeReport</code> sends it through the forwarder to <code>LiensightToken.onReport</code>. The run logs <code>report written tx=…</code>.</p></li>
+        </ol>
+      </section>
+
+      <!-- ===== adverse map ===== -->
+      <section class="dsec" id="adverse">
+        <span class="eyebrow">Concepts</span>
+        <h2>The adverse map</h2>
+        <p>Which ACRIS document types count is a policy, kept in <code>workflow/src/codeMap.json</code> (version 1) and verified against ACRIS Document Control Codes (dataset <code>7isb-wh4c</code>). Its hash is fixed in the token at deploy time, so any change is visible.</p>
+        <div class="cards2">
+          <div class="mini"><span class="k">Adverse · restricts</span><p><code>FL</code> federal lien (IRS) · <code>FTL</code> federal lien, other · <code>NTXL</code> notice of estate tax lien · <code>TLS</code> tax lien sale certificate · <code>LOCC</code> lien of common charges · <code>JUDG</code> judgment</p></div>
+          <div class="mini"><span class="k">Discharge · suggests a clear</span><p><code>RFL</code> · <code>RFTL</code> · <code>DTL</code> · <code>DPFTL</code> · <code>WFL</code> · <code>RTXL</code> · <code>TOLCC</code> · <code>PWFL</code> · <code>PRFL</code>: releases, discharges, withdrawals and terminations of those liens</p></div>
+        </div>
+        <div class="note warn"><span class="i">!</span><p>ACRIS has no document type for lis pendens or foreclosure. Those are court and county-clerk filings, so Liensight does not claim to detect them.</p></div>
+      </section>
+
+      <!-- ===== workflow reference ===== -->
+      <section class="dsec" id="workflow-ref">
+        <span class="eyebrow">Reference</span>
+        <h2>Workflow reference</h2>
+        <div class="tbl"><table><thead><tr><th>Function</th><th>File</th><th>What it does</th></tr></thead><tbody>
+          <tr><td><code>initWorkflow(config)</code></td><td>workflow.ts</td><td>Registers one handler: the cron trigger → <code>onCronTrigger</code>.</td></tr>
+          <tr><td><code>onCronTrigger</code></td><td>workflow.ts</td><td>Runs the HTTP fetch with identical consensus, builds the report, writes it, returns the tx hash.</td></tr>
+          <tr><td><code>fetchDocs</code></td><td>workflow.ts</td><td>Per node: Legals then Master (chunks of 80), checks status and completeness, returns canonical JSON.</td></tr>
+          <tr><td><code>legalsUrl(bbl)</code>, <code>masterUrl(ids)</code></td><td>src/acris.ts</td><td>Build ordered, limited Socrata queries so every node pages the same rows.</td></tr>
+          <tr><td><code>canonicalDocs</code></td><td>src/acris.ts</td><td>Intersects both datasets, dedupes and sorts.</td></tr>
+          <tr><td><code>assertComplete</code>, <code>assertNonEmpty</code></td><td>src/acris.ts</td><td>Fail-closed guards: 5,000-row limit and zero documents.</td></tr>
+          <tr><td><code>docSetHash</code>, <code>docIdToBytes32</code></td><td>src/acris.ts</td><td>Hash of the whole set; numeric IDs padded to <code>bytes32</code>, legacy IDs hashed.</td></tr>
+          <tr><td><code>classify</code>, <code>codeMapHash</code></td><td>src/classify.ts</td><td>Adverse / discharge / other split; stable hash of the map.</td></tr>
+          <tr><td><code>buildReport</code>, <code>propertyKey</code></td><td>src/report.ts</td><td>ABI-encodes the report; <code>keccak256("BBL:b-block-lot")</code>.</td></tr>
+        </tbody></table></div>
+      </section>
+
+      <!-- ===== contract reference ===== -->
+      <section class="dsec" id="contract-ref">
+        <span class="eyebrow">Reference</span>
+        <h2>Contract reference</h2>
+        <p><code>LiensightToken</code> is an OpenZeppelin ERC-20 (Solidity 0.8.24) with an issuer-governed transfer restriction. Constructor: <code>(name, symbol, issuerMultisig, reportReceiver, codeMapHash, expectedWorkflowOwner, propertyKey)</code>; the full supply of 1,000,000 LSPV is minted to the issuer.</p>
+        <h3>Functions</h3>
+        <div class="tbl"><table><thead><tr><th>Function</th><th>Who</th><th>Behavior</th></tr></thead><tbody>
+          <tr><td><code>onReport(bytes metadata, bytes report)</code></td><td>Forwarder only</td><td>Checks owner and property, ignores a repeated <code>docSetHash</code>, restricts on any never-seen adverse ID, emits <code>ClearSuggested</code> for discharges.</td></tr>
+          <tr><td><code>clearRestriction(bytes32 reviewedCitedHash, string reason)</code></td><td>Issuer</td><td>Clears only if <code>reviewedCitedHash == citedHash</code>; emits <code>Cleared(reason)</code>.</td></tr>
+          <tr><td><code>setExpectedWorkflowOwner(address)</code></td><td>Issuer</td><td>Rotates the accepted workflow owner (simulator → deployed workflow).</td></tr>
+          <tr><td><code>supportsInterface(bytes4)</code></td><td>Anyone</td><td>True for the CRE receiver interface <code>0x805f2132</code> and ERC-165.</td></tr>
+          <tr><td>ERC-20 transfers</td><td>Holders</td><td>Revert with <code>TransferRestricted()</code> while restricted (minting excepted).</td></tr>
+        </tbody></table></div>
+        <h3>State</h3>
+        <div class="tbl"><table><thead><tr><th>Variable</th><th>Meaning</th></tr></thead><tbody>
+          <tr><td><code>restricted</code></td><td>Whether transfers are blocked.</td></tr>
+          <tr><td><code>citedHash</code></td><td><code>keccak256(abi.encode(citedIds))</code> of the liens behind the current restriction.</td></tr>
+          <tr><td><code>lastDocSetHash</code></td><td>Last processed document set; equal reports are no-ops.</td></tr>
+          <tr><td><code>seenAdverse[id]</code></td><td>Every adverse document already reported.</td></tr>
+          <tr><td><code>issuerMultisig</code>, <code>reportReceiver</code>, <code>codeMapHash</code>, <code>propertyKey</code></td><td>Immutable, set at deploy.</td></tr>
+          <tr><td><code>expectedWorkflowOwner</code></td><td>The only workflow owner whose reports are accepted.</td></tr>
+        </tbody></table></div>
+        <h3>Events and errors</h3>
+        <div class="cards2">
+          <div class="mini"><span class="k">Events</span><p><code>Restricted(bytes32 docSetHash, bytes32[] docIds)</code><br><code>Cleared(string reason)</code><br><code>ClearSuggested(bytes32[] dischargeDocIds)</code></p></div>
+          <div class="mini"><span class="k">Errors</span><p><code>TransferRestricted</code> · <code>NotReceiver</code> · <code>NotIssuer</code> · <code>BadMetadata</code> · <code>WrongWorkflowOwner</code> · <code>WrongProperty</code> · <code>ReviewMismatch</code></p></div>
+        </div>
+      </section>
+
+      <!-- ===== report ===== -->
+      <section class="dsec" id="report">
+        <span class="eyebrow">Reference</span>
+        <h2>Report format</h2>
+        <p>The report is ABI-encoded as <code>(bytes32, bytes32, bytes32[], bytes32[])</code>:</p>
+        <div class="tbl"><table><thead><tr><th>Field</th><th>Content</th></tr></thead><tbody>
+          <tr><td><code>propertyKey</code></td><td><code>keccak256("BBL:2-5789-1022")</code> for the demo property</td></tr>
+          <tr><td><code>docSetHash</code></td><td><code>keccak256</code> of every <code>documentId:docType</code> on the lot, sorted, joined by newlines</td></tr>
+          <tr><td><code>adverse</code></td><td>Adverse document IDs as <code>bytes32</code></td></tr>
+          <tr><td><code>discharge</code></td><td>Discharge document IDs as <code>bytes32</code></td></tr>
+        </tbody></table></div>
+        <p>Numeric 16-digit ACRIS IDs are left-padded, so <code>2026092900833001</code> stays readable on-chain; legacy IDs such as <code>FT_2300000813130</code> are hashed. The forwarder’s <code>metadata</code> is packed as <code>workflowId (32) | workflowName (10) | workflowOwner (20)</code>; the token reads the owner from bytes 42–62.</p>
+      </section>
+
+      <!-- ===== config ===== -->
+      <section class="dsec" id="config">
+        <span class="eyebrow">Reference</span>
+        <h2>Configuration</h2>
+        <p>Each CRE target in <code>workflow/workflow.yaml</code> points at a JSON config. <code>staging-settings</code> uses <code>config.staging.json</code> (the Bronx lot and the live token); <code>clean-settings</code> uses <code>config.clean.json</code> (a clean Manhattan lot, for comparison). RPCs per target live in <code>project.yaml</code>.</p>
+        <div class="tbl"><table><thead><tr><th>Key</th><th>Example</th><th>Meaning</th></tr></thead><tbody>
+          <tr><td><code>schedule</code></td><td><code>"0 */10 * * * *"</code></td><td>Cron with seconds; every 10 minutes</td></tr>
+          <tr><td><code>bbl</code></td><td><code>{ "borough": 2, "block": 5789, "lot": 1022 }</code></td><td>Borough 1–5 (Manhattan, Bronx, Brooklyn, Queens, Staten Island)</td></tr>
+          <tr><td><code>tokenAddress</code></td><td><code>0xf813…04aE</code></td><td>The receiver contract</td></tr>
+          <tr><td><code>chainSelectorName</code></td><td><code>ethereum-testnet-sepolia</code></td><td>Target chain</td></tr>
+          <tr><td><code>gasLimit</code></td><td><code>"10000000"</code></td><td>Gas for the write</td></tr>
+        </tbody></table></div>
+        <div class="note warn"><span class="i">!</span><p>To watch a different property, change <code>bbl</code> <b>and</b> the <code>BBL:</code> string in <code>contracts/script/Deploy.s.sol</code>, then deploy a new token. The token rejects reports for any other property key.</p></div>
+        <p>After editing <code>codeMap.json</code>, recompute its hash and deploy with it:</p>
+        <div class="code"><div class="bar">bash<button class="copy">Copy</button></div><pre>cd workflow
+npx bun -e "import {codeMapHash} from './src/classify'; import m from './src/codeMap.json'; console.log(codeMapHash(m))"</pre></div>
+      </section>
+
+      <!-- ===== deploy ===== -->
+      <section class="dsec" id="deploy">
+        <span class="eyebrow">Guides</span>
+        <h2>Deploy your own token</h2>
+        <p>Deploy a token on Sepolia, point the workflow at it, and send it a real report. You need a funded Sepolia account.</p>
+        <ol class="steps">
+          <li><b>Create a keystore account</b><p>Foundry keeps the key encrypted; nothing goes on the command line.</p>
+            <div class="code"><div class="bar">bash<button class="copy">Copy</button></div><pre>cast wallet import liensight-deployer --interactive</pre></div></li>
+          <li><b>Set the constructor inputs</b>
+            <div class="code"><div class="bar">bash<button class="copy">Copy</button></div><pre>cd contracts
+export FORWARDER=0x15fC6ae953E024d975e77382eEeC56A9101f9F88        <span class="c"># CRE simulator forwarder</span>
+export WORKFLOW_OWNER=0xaAaAaAaaAaAaAaaAaAAAAAAAAaaaAaAaAaaAaaAa   <span class="c"># simulator placeholder owner</span>
+export CODEMAP_HASH=0xf85b55218f5961096bde039896bb3b115179f44c76446ff88e22e3b94326faf3
+export ISSUER=&lt;your address&gt;                                        <span class="c"># receives supply, can clear</span></pre></div></li>
+          <li><b>Deploy</b><p>Sepolia charges far more gas for contract code than Foundry estimates, so keep the multiplier.</p>
+            <div class="code"><div class="bar">bash<button class="copy">Copy</button></div><pre>forge script script/Deploy.s.sol --rpc-url https://ethereum-sepolia-rpc.publicnode.com \
+  --account liensight-deployer --broadcast --gas-estimate-multiplier 800
+<span class="c"># LiensightToken: 0x…</span></pre></div></li>
+          <li><b>Point the workflow at it</b><p>Put the printed address in <code>tokenAddress</code> in <code>workflow/config.staging.json</code>.</p></li>
+          <li><b>Broadcast a real report</b><p>Add <code>CRE_ETH_PRIVATE_KEY</code> for a funded Sepolia key to a <code>.env</code> file at the repo root (it is git-ignored; never commit it), then:</p>
+            <div class="code"><div class="bar">bash<button class="copy">Copy</button></div><pre>cre workflow simulate ./workflow -T staging-settings --non-interactive --trigger-index 0 --broadcast
+<span class="c"># ... [USER LOG] report written tx=0x…</span></pre></div>
+            <p>Open the hash on Etherscan, then run <code>cast call &lt;token&gt; "restricted()(bool)"</code>.</p></li>
+        </ol>
+        <div class="note"><span class="i">i</span><p>For production, deploy the workflow on a CRE DON, then have the issuer call <code>setExpectedWorkflowOwner</code> with the deployed workflow’s owner and use the production forwarder (requires <code>cre account access</code>).</p></div>
+      </section>
+
+      <!-- ===== testing ===== -->
+      <section class="dsec" id="testing">
+        <span class="eyebrow">Guides</span>
+        <h2>Testing</h2>
+        <p>35 tests: <code>forge test</code> (18) in <code>contracts/</code> and <code>npm test</code> (17) in <code>workflow/</code>.</p>
+        <div class="cards2">
+          <div class="mini"><span class="k">Contract · 18</span><p>Restricts on an adverse report · only the forwarder can report · only the issuer can clear · clearing re-enables transfers · discharge only suggests a clear · repeated doc set is a no-op · empty list never restricts · cleared lien never re-restricts · a new lien after a clear does · wrong workflow owner, short metadata and wrong property revert · stale review hash reverts · many liens fit the gas budget · owner rotation is issuer-only · receiver interface.</p></div>
+          <div class="mini"><span class="k">Workflow · 17</span><p>Canonical sort and dedupe · zero rows · order-independent doc-set hash · URL encoding · ordered queries · reversible ID padding · legacy <code>FT_</code>/<code>BK_</code> IDs · row-limit and empty fail-closed guards · classification of liens, releases and other codes · stable code-map hash · report encoding, empty arrays and input-order independence.</p></div>
+        </div>
+        <p>Recorded ACRIS responses for the demo lot are in <code>workflow/fixtures/</code> (document IDs and types only, no party names).</p>
+      </section>
+
+      <!-- ===== security ===== -->
+      <section class="dsec" id="security">
+        <span class="eyebrow">Operations</span>
+        <h2>Security model</h2>
+        <div class="tbl"><table><thead><tr><th>Threat</th><th>What stops it</th></tr></thead><tbody>
+          <tr><td>Anyone calls <code>onReport</code></td><td>Only the configured forwarder (<code>NotReceiver</code>).</td></tr>
+          <tr><td>Another workflow uses the shared forwarder</td><td>The owner in the metadata must match <code>expectedWorkflowOwner</code> (<code>WrongWorkflowOwner</code>).</td></tr>
+          <tr><td>A report for a different building</td><td>The property key must match (<code>WrongProperty</code>).</td></tr>
+          <tr><td>Malformed metadata</td><td>Shorter than 62 bytes reverts (<code>BadMetadata</code>).</td></tr>
+          <tr><td>Replayed report</td><td>An unchanged <code>docSetHash</code> is ignored.</td></tr>
+          <tr><td>Outage or partial data reads as “clean”</td><td>The workflow fails closed: no report.</td></tr>
+          <tr><td>Clearing a lien nobody reviewed</td><td><code>clearRestriction</code> needs the current <code>citedHash</code> (<code>ReviewMismatch</code>).</td></tr>
+          <tr><td>An old lien re-locking after review</td><td><code>seenAdverse</code> remembers it.</td></tr>
+        </tbody></table></div>
+        <p>A pre-deployment review found <b>1 critical and 5 important</b> issues, all fixed and covered by tests. More on the <a href="security.html">Security page</a>.</p>
+      </section>
+
+      <!-- ===== limits ===== -->
+      <section class="dsec" id="limits">
+        <span class="eyebrow">Operations</span>
+        <h2>Limits</h2>
+        <ul>
+          <li><b>Testnet only.</b> Reports were written with <code>cre workflow simulate --broadcast</code> through the simulator’s forwarder; consensus ran in the local simulator, not on a live multi-node DON.</li>
+          <li><b>The demo token trusts the simulator’s placeholder owner,</b> so anyone using that forwarder could report to it. Production rotates to a deployed workflow’s owner.</li>
+          <li><b>Records lag.</b> ACRIS records filings days after the event: an early warning, not a title search.</li>
+          <li><b>No lis pendens or foreclosure</b>: ACRIS has no type for them.</li>
+          <li><b>One source.</b> Every node reads the same public API; a second source is on the roadmap.</li>
+          <li><b>Not legal advice.</b> It flags public filings; it does not judge their legal effect.</li>
+        </ul>
+      </section>
+
+      <!-- ===== troubleshooting ===== -->
+      <section class="dsec" id="troubleshooting">
+        <span class="eyebrow">Operations</span>
+        <h2>Troubleshooting</h2>
+        <div class="tbl"><table><thead><tr><th>Symptom</th><th>Fix</th></tr></thead><tbody>
+          <tr><td><code>forge test</code> can’t find OpenZeppelin or <code>forge-std</code></td><td><code>git submodule update --init --recursive</code></td></tr>
+          <tr><td><code>cre workflow simulate</code> can’t find <code>bun</code></td><td>Run <code>npm i</code> in <code>workflow/</code> and add <code>workflow/node_modules/.bin</code> to <code>PATH</code>.</td></tr>
+          <tr><td>The simulation asks you to log in</td><td><code>cre login</code> once.</td></tr>
+          <tr><td><code>ACRIS request failed</code> or truncated</td><td>NYC Open Data was unreachable or the lot is huge; by design nothing is written. Retry later.</td></tr>
+          <tr><td><code>no ACRIS documents for this BBL</code></td><td>Check the borough, block and lot.</td></tr>
+          <tr><td>The report was written but the token didn’t change</td><td>Wrong property key, an unexpected workflow owner, or the same <code>docSetHash</code> as last time; the token ignores all three.</td></tr>
+          <tr><td>Sepolia deploy runs out of gas</td><td>Keep <code>--gas-estimate-multiplier 800</code>.</td></tr>
+          <tr><td>The Proof page says “read failed”</td><td>The public RPC is busy; refresh, or use the <code>cast call</code> commands above.</td></tr>
+        </tbody></table></div>
+      </section>
+
+      <!-- ===== faq ===== -->
+      <section class="dsec" id="faq">
+        <span class="eyebrow">Operations</span>
+        <h2>FAQ</h2>
+        <h3>Does the token own the building?</h3><p>No. It represents shares in the company (SPV) that owns the building. The restriction comes from the issuer’s own rules, not from property law.</p>
+        <h3>Why not just run a server that checks ACRIS?</h3><p>Then that server decides what the chain sees. With CRE, every node reads the record independently and they must agree before anything is written.</p>
+        <h3>Can a lien be removed automatically?</h3><p>No. A discharge filing emits <code>ClearSuggested</code>; only the issuer clears, publicly, naming the liens it reviewed.</p>
+        <h3>What happens if ACRIS is down?</h3><p>The workflow fails closed and writes nothing, so the token keeps its last known state.</p>
+        <h3>Does it work outside New York City?</h3><p>Not yet. Any county with open, queryable land records could be added the same way.</p>
+        <h3>Is any personal data on-chain?</h3><p>No. Only document IDs, document types and hashes. No party names.</p>
+      </section>
+
+      <!-- ===== glossary ===== -->
+      <section class="dsec" id="glossary">
+        <span class="eyebrow">Operations</span>
+        <h2>Glossary</h2>
+        <div class="tbl"><table><tbody>
+          <tr><td>ACRIS</td><td>Automated City Register Information System: New York City’s public record of property documents.</td></tr>
+          <tr><td>BBL</td><td>Borough-block-lot: the city’s identifier for a tax lot, for example <code>2-5789-1022</code>.</td></tr>
+          <tr><td>CRE</td><td>Chainlink Runtime Environment: runs workflows across a decentralized oracle network.</td></tr>
+          <tr><td>DON</td><td>Decentralized oracle network: the nodes that run the workflow and reach consensus.</td></tr>
+          <tr><td>Forwarder</td><td>The Chainlink contract that verifies a DON report and calls the receiver.</td></tr>
+          <tr><td>SPV</td><td>Special-purpose vehicle: the company that owns the building; the token is its shares.</td></tr>
+          <tr><td>LOCC</td><td>Lien of common charges: a condominium’s lien for unpaid charges (the demo filing).</td></tr>
+          <tr><td>docSetHash</td><td>Hash of every document on the lot; changes whenever the record changes.</td></tr>
+          <tr><td>citedHash</td><td>Hash of the liens behind the current restriction; the issuer must name it to clear.</td></tr>
+          <tr><td>Fail closed</td><td>On bad or partial data, write nothing rather than a possibly false answer.</td></tr>
+        </tbody></table></div>
+        <div class="pager"><a href="check.html"><span>Try it</span><b>Check a lot →</b></a><a href="proof.html"><span>See it</span><b>Live proof →</b></a></div>
+      </section>
+    </main>
+  </div>
+</div>
 
 <footer class="footer">
   <div class="top">
     <div>
       <div class="kick">Have a building worth checking?</div>
       <a class="mail" href="check.html">Run the checker<span> ↗</span></a>
-      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><a class="btn btn-red" href="docs.html">Read the docs →</a><span class="mono" style="font-size:12px"><span class="dot"></span> live on Sepolia</span></div>
+      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><a class="btn btn-red" href="#quickstart">Quickstart →</a><span class="mono" style="font-size:12px"><span class="dot"></span> live on Sepolia</span></div>
     </div>
     <div><h5>Product</h5><ul><li><a href="check.html">Check a lot</a></li><li><a href="proof.html">Proof</a></li><li><a href="docs.html">Docs</a></li><li><a href="index.html#faq">FAQ</a></li></ul></div>
     <div><h5>Project</h5><ul><li><a href="use-cases.html">Use cases</a></li><li><a href="security.html">Security</a></li><li><a href="roadmap.html">Roadmap</a></li><li><a href="about.html">About</a></li></ul></div>
     <div><h5>On-chain</h5><ul><li><a href="https://sepolia.etherscan.io/address/0xf813c584Fe5e8c86A3F6c7265923CeE0850604aE" target="_blank" rel="noopener">Token</a></li><li><a href="https://sepolia.etherscan.io/tx/0xc0cc238205a36246731feddba275b3df50b4c781f3958b8d4cab8a862bda85ab" target="_blank" rel="noopener">Report tx</a></li><li><a href="https://data.cityofnewyork.us/resource/7isb-wh4c.json" target="_blank" rel="noopener">ACRIS codes</a></li></ul></div>
-    <div><h5>Built for</h5><ul><li><a href="https://dorahacks.io/hackathon/legal-hack-2026/detail" target="_blank" rel="noopener">BLI Legal Hack 2</a></li><li><a href="https://docs.chain.link/cre" target="_blank" rel="noopener">Chainlink CRE</a></li></ul></div>
+    <div><h5>Built for</h5><ul><li><a href="https://dorahacks.io/hackathon/legal-hack-2026/detail" target="_blank" rel="noopener">BLI Legal Hack 2</a></li><li><a href="https://docs.chain.link/cre" target="_blank" rel="noopener">Chainlink CRE</a></li><li><a href="https://github.com/shane2512/LienSight" target="_blank" rel="noopener">GitHub</a></li></ul></div>
   </div>
   <div class="wordmark" aria-hidden="true"><span>L</span>iensight</div>
   <div class="base"><span>liensight.fig</span><span><span class="dot"></span> Testnet only · not legal advice</span><span>2026 · BLI Legal Tech Hackathon 2</span></div>
@@ -161,5 +435,50 @@ forge script script/Deploy.s.sol --rpc-url $SEPOLIA --account &lt;keystore&gt; -
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Draggable.min.js"></script>
 <script src="assets/site.js"></script>
+<script>
+  (() => {
+    const links = [...document.querySelectorAll("#dnav a")];
+    const secs = links.map((a) => document.querySelector(a.getAttribute("href"))).filter(Boolean);
+
+    // copy buttons
+    document.querySelectorAll(".code .copy").forEach((b) => b.addEventListener("click", async () => {
+      const text = b.closest(".code").querySelector("pre").innerText;
+      try { await navigator.clipboard.writeText(text); b.textContent = "Copied"; } catch { b.textContent = "Select + copy"; }
+      setTimeout(() => (b.textContent = "Copy"), 1500);
+    }));
+
+    // highlight the section in view
+    const io = new IntersectionObserver((es) => {
+      es.forEach((e) => {
+        if (!e.isIntersecting) return;
+        links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+      });
+    }, { rootMargin: "-30% 0px -60% 0px" });
+    secs.forEach((s) => io.observe(s));
+
+    // filter the sidebar
+    const none = document.getElementById("dnone");
+    document.getElementById("dfind").addEventListener("input", (ev) => {
+      const q = ev.target.value.trim().toLowerCase(); let shown = 0;
+      document.querySelectorAll("#dnav .grp").forEach((g) => {
+        let any = false;
+        g.querySelectorAll("a").forEach((a) => {
+          const sec = document.querySelector(a.getAttribute("href"));
+          const hit = !q || a.textContent.toLowerCase().includes(q) || (sec && sec.textContent.toLowerCase().includes(q));
+          a.style.display = hit ? "" : "none"; if (hit) { any = true; shown++; }
+        });
+        g.style.display = any ? "" : "none";
+      });
+      none.style.display = shown ? "none" : "block";
+    });
+
+    // phone menu mirrors the sidebar
+    const ml = document.getElementById("dmlist");
+    document.querySelectorAll("#dnav .grp").forEach((g) => {
+      const h = document.createElement("span"); h.textContent = g.querySelector("span").textContent; ml.appendChild(h);
+      g.querySelectorAll("a").forEach((a) => { const c = a.cloneNode(true); c.addEventListener("click", () => ml.closest("details").removeAttribute("open")); ml.appendChild(c); });
+    });
+  })();
+</script>
 </body>
 </html>

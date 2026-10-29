@@ -24,6 +24,7 @@
 
 ## Contents
 
+- [Documentation](#documentation)
 - [Pitch video](#pitch-video)
 - [The problem](#the-problem)
 - [The solution](#the-solution)
@@ -43,6 +44,19 @@
 - [Honest limits](#honest-limits)
 - [Roadmap](#roadmap)
 - [Brand assets](#brand-assets)
+
+---
+
+## Documentation
+
+Full docs live in [`docs/`](docs/README.md) and, in a searchable layout, at **https://liensight.vercel.app/docs.html**.
+
+| Start here | Reference | Operate |
+|---|---|---|
+| [Quickstart](docs/quickstart.md) | [Architecture](docs/architecture.md) | [Deployment](docs/deployment.md) |
+| [Verify the live deployment](docs/verification.md) | [Workflow reference](docs/workflow.md) | [Configuration](docs/configuration.md) |
+| [User guide](#user-guide) | [Contract reference](docs/contract.md) | [Testing](docs/testing.md) |
+| [Glossary](docs/glossary.md) | [Security model](docs/security.md) | [Troubleshooting and FAQ](docs/troubleshooting.md) |
 
 ---
 
