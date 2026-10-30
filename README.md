@@ -22,8 +22,38 @@
 
 ---
 
+## In plain English
+
+Imagine you own a share of an apartment building through a company, and that share can be bought and sold online, any time of day, like a digital coin.
+
+**The problem.** If the building’s owners don’t pay a tax bill, or someone wins a court judgment against them, the city writes it down in a public record. Nobody tells the digital coin. People keep buying shares in a building that has a debt stuck to it, without knowing, because the website that sells the shares can’t read the city’s records.
+
+**Our idea.** A team of independent computers (Chainlink’s network) checks the city’s record book every 10 minutes. Each one looks it up on its own, then they compare notes. If they all see the same new debt, they tell the token: *“stop trading, there’s a problem,”* and they name the exact page in the record that says so.
+
+**Why several computers instead of one?** With one computer, you’d have to trust it. With many checking independently and having to agree, no single party can fake the result or hide it.
+
+**Who can undo it?** Only the building company’s own officer, and they have to say publicly which debts they reviewed. If a new debt shows up while they’re reviewing, the unlock fails.
+
+**In one sentence:** a smoke alarm for tokenized real estate that listens to the city’s records and freezes trading when a debt appears.
+
+**What it isn’t.** It doesn’t decide who owns the building and it isn’t legal advice. It’s an early warning, because the city posts filings a few days late. Today it is a working test version on a practice blockchain (Sepolia), not live with real money.
+
+### Jargon, decoded
+
+| Term | Plain meaning |
+|---|---|
+| **Lien** | A claim on a property for an unpaid debt (taxes, building charges, a court judgment). |
+| **ACRIS** | New York City’s public record book of property documents. |
+| **Token** | The digital share of the building company that can be traded online. |
+| **Chainlink CRE** | The system that lets a group of computers fetch outside information, agree on it, and report it to a blockchain. |
+| **Issuer** | The company officer who controls the token and can lift a freeze. |
+| **Sepolia** | A practice blockchain, so nothing here involves real money. |
+
+---
+
 ## Contents
 
+- [In plain English](#in-plain-english)
 - [Documentation](#documentation)
 - [Pitch video](#pitch-video)
 - [The problem](#the-problem)
@@ -72,26 +102,22 @@ Three minutes: the problem, the CRE workflow, and a live demo built from **real 
 
 ## The problem
 
-Real estate is being tokenized. Shares in a single building, held through an SPV, can trade on-chain around the clock.
+Real estate is being tokenized. Shares in a single building, held through a company (an SPV), can trade on-chain around the clock.
 
-But the law keeps moving off-chain. A **tax lien, a federal lien, a judgment or unpaid common charges** can be recorded against the property at any time. In New York City those filings land in **ACRIS**, the city’s public land-records system.
+But the law keeps moving off-chain. A **tax lien, a federal lien, a judgment or unpaid building charges** can be recorded against the property at any time. In New York City those filings go into **ACRIS**, the city’s public property-records system.
 
-Today the token has no idea. Someone has to remember to check the county record, and until they do, shares in an encumbered building keep changing hands. The chain never looks.
+Today the token has no idea. Someone has to remember to check the county record, and until they do, shares in a building with a debt on it keep changing hands. A smart contract can’t read a government database, so the chain never looks.
 
 ## The solution
 
-Liensight connects the token to the public record:
+Liensight connects the token to the public record, so the token finds out when the building does:
 
-1. A **Chainlink CRE workflow** runs on a schedule for one property (its NYC borough-block-lot, BBL).
-2. Every node in the decentralized oracle network **independently reads ACRIS** through NYC Open Data.
-3. The nodes must agree on the **exact same document set**, or nothing is written.
-4. The workflow sends a **signed report** to `LiensightToken` on Sepolia.
-5. If there is a new adverse filing, the token **restricts transfers** and cites the filing’s document ID on-chain.
-6. Only the **issuer multisig** can clear the restriction, and only by naming the exact liens it reviewed.
-
-`LiensightToken` is SPV **equity**, not title to the property. Liensight is an **early-warning signal from a public record**, not a title search and not legal advice.
-
-**Adverse document types** (verified against ACRIS Document Control Codes, dataset `7isb-wh4c`): `FL`, `FTL`, `NTXL`, `TLS`, `LOCC`, `JUDG`. Discharge types (`RFL`, `RFTL`, `DTL`, `DPFTL`, `WFL`, `RTXL`, `TOLCC`, `PWFL`, `PRFL`) only emit `ClearSuggested`; they never clear on their own. The map is versioned in [`workflow/src/codeMap.json`](workflow/src/codeMap.json) and its hash is stored on the token.
+1. **Check on a schedule.** A **Chainlink CRE workflow** runs every 10 minutes for one property (its NYC borough-block-lot, BBL).
+2. **Read the record independently.** Every node in the oracle network looks up ACRIS through NYC Open Data on its own.
+3. **Agree, or do nothing.** The nodes must see the **exact same list of documents**; if they don’t, or the data looks incomplete, nothing is written.
+4. **Tell the token.** The workflow sends a **signed report** to `LiensightToken` on Sepolia.
+5. **Freeze and cite.** If there is a new adverse filing, the token **restricts transfers** and names the filing’s document ID on-chain, so anyone can look it up.
+6. **A person unlocks, in public.** Only the **issuer multisig** can clear the restriction, and only by naming the exact liens it reviewed.
 
 ---
 
